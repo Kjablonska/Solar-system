@@ -1,5 +1,5 @@
 import { Engine, Scene } from "@babylonjs/core";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 const SceneComponent = (props:any) => {
   const reactCanvas = useRef(null);
@@ -38,6 +38,7 @@ const SceneComponent = (props:any) => {
         }
       };
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reactCanvas]);
 
   return <canvas ref={reactCanvas} {...rest} />;
