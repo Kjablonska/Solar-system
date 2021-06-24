@@ -1,52 +1,41 @@
 import {CreateScene} from './components/Scene/SceneData'
-import { GetPlanetData } from "./components/Planet/PlanetData";
+import  {PlanetData} from './utils/planetInterfaces'
 import "./App.css";
 import { useEffect, useState } from "react";
-
-interface PlanetDataProps {
-    planets: string[]
-}
-
-interface PositionProps {
-    x: number[],
-    y: number[],
-    z: number[]
-}
-
-interface PlanetData {
-    planet: string,
-    position: PositionProps
-}
 
 const App = () => {
     // Change this
     const [planetsData, setPlanetsData] = useState<PlanetData[]>([]);
+    const planets = ["Venus", "Earth", "Mars", "Jupiter"]
 
     useEffect(() => {
-        const planets = ["Earth"]
         async function getPlanetOrbite(planetName: string) {
             const response = await fetch(`http://localhost:5000/getObjectJPLData?name=${planetName}`)
             const orbite = await response.json()
             console.log(planetName, orbite)
             const newPlanetData = {planet: planetName, position: orbite}
-            setPlanetsData([...planetsData, newPlanetData])
+            setPlanetsData(data => [...data, newPlanetData])
         }
         
-        for (const planetName of planets)
+        for (const planetName of planets) {
+            console.log(planetName)
             getPlanetOrbite(planetName)
+        }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
 
     useEffect(() =>{
+        console.log("app", planetsData)
     }, [planetsData])
 
+    console.log(planetsData.length === planets.length)
     return (
         <>
         {
-            planetsData !== undefined && planetsData.length !== 0 ?
-            <CreateScene/>
+            planetsData !== undefined && planetsData.length === planets.length ?
+            <CreateScene planetsData={planetsData}/>
             :
             <></>
         }
