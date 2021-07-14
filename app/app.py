@@ -11,7 +11,7 @@ from astropy.coordinates import SkyCoord
 from astropy.table import Table
 import pymongo
 import json
-from astropy import units as u
+import numpy as np
 
 # TODO:
 # 1. possition according to the revolution time: according to the planet that has the longest one?
@@ -41,13 +41,15 @@ def get_planets_satellites():
 @app.route("/getObjectJPLData")
 def get_JPL_data():
     name = request.args.get('name')
+    start = request.args.get('start')
+    end = request.args.get('end')
     print(name)
     planet = get_planet(name)
     print(planet)
     print(planet["_id"])
 
     # 1 MO
-    obj = Horizons(id = str(planet["_id"]), location='@Sun', epochs = {"start": "2010-04-01", "stop": "2021-03-30", "step": "1MO"}, id_type='majorbody')
+    obj = Horizons(id = str(planet["_id"]), location='@Sun', epochs = {"start": start, "stop": end, "step": "1m"}, id_type='majorbody')
 
     vec = obj.vectors()
     possitons_data = {}
@@ -55,6 +57,35 @@ def get_JPL_data():
         if name in ['x', 'y', 'z']:
             possitons_data[name] = vec[name].to(u.km).value.tolist()
     return possitons_data
+
+@app.route("/getObjectsJPLData")
+def get_JPL_planets_data():
+    names = request.args.get('name')
+    names = parsePlanetsNames(names)
+    start = request.args.get('start')
+    end = request.args.get('end')
+    step = request.args.get('step')
+    planets = get_planets(names)
+
+    objects = {}
+    data = {}
+    for planet in planets:
+        print("here")
+        res = Horizons(id = planet["_id"], location='@Sun', epochs = {"start": start, "stop": end, "step": step}, id_type='majorbody')
+        vec = res.vectors()
+        possitons_data = {}
+        for name in vec.colnames:
+            if name in ['x', 'y', 'z']:
+                possitons_data[name] = vec[name].to(u.km).value.tolist()
+        data[planet["name"]] = possitons_data
+    
+    return data
+
+def parsePlanetsNames(names):
+    names = names.replace("[", "")
+    names = names.replace("]", "")
+    return names.split(",")
+
 
 
 @app.route("/getStars")
@@ -90,6 +121,17 @@ def get_planet(name):
     db = connectToDatabase()
     planet_collection = db["planets"]
     return planet_collection.find_one({'name': name})
+
+def get_planets(names):
+    db = connectToDatabase()
+    planet_collection = db["planets"]
+    print(type(names))
+    print(names)
+    res = planet_collection.find({'name': {"$in":names}})
+    data = []
+    for doc in res:
+        data.append(doc)
+    return data
 
 
 # Init db.
