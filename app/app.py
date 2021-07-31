@@ -16,7 +16,6 @@ import numpy as np
 # TODO:
 # 1. possition according to the revolution time: according to the planet that has the longest one?
 # 2. add rotation time to database.
-# 3. clean the code.
 
 app = Flask(__name__)
 CORS(app)
@@ -85,7 +84,6 @@ def parsePlanetsNames(names):
     names = names.replace("[", "")
     names = names.replace("]", "")
     return names.split(",")
-
 
 
 @app.route("/getStars")

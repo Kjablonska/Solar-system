@@ -3,18 +3,18 @@ import {PlanetData} from '../../utils/planetInterfaces'
 import RealTimeData from "./RealTimeData"
 import CreateScene from './SceneData'
 
-export const InitSceneData = () => {
-    const timePeriod = 30
+const fetchPeriod = 10;  // in days.
 
+export const InitSceneData = () => {
     const getStartDate = () => {
         const date = new Date();
-        return date.getFullYear().toString() + '-' +  (date.getMonth() + 1).toString() + '-' + date.getDate().toString();
+        return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
     }
 
     const getEndDate = () => {
         const newEnd = new Date(start);
-        newEnd.setDate(newEnd.getDate() + timePeriod);
-        return newEnd.getFullYear().toString() + '-' +  (newEnd.getMonth() + 1).toString() + '-' + newEnd.getDate().toString();
+        newEnd.setDate(newEnd.getDate() + fetchPeriod);
+        return `${newEnd.getFullYear()}-${newEnd.getMonth() + 1}-${newEnd.getDate()}`;
     }
 
     const [planetsData, setPlanetsData] = useState<PlanetData[]>([]);
@@ -27,8 +27,6 @@ export const InitSceneData = () => {
     async function getPlanetOrbite(planets: string[], step: string) {
         const response = await fetch(`http://localhost:5000/getObjectsJPLData?name=${planets}&start=${start}&end=${end}&step=${step}`)
         const data = await response.json()
-        console.log("data")
-        console.log(planets, data)
 
         for (const key in data) {
             const newPlanetData = {planet: key, position: data[key]}
@@ -53,7 +51,11 @@ export const InitSceneData = () => {
             planetsData !== undefined && planetsData.length === planets.length ?
             <CreateScene realTimeData={RealTimeData} realTime={realTime} planetsData={planetsData} startDate={start} endDate={end}/>
             :
-            <></>
+            <>
+                <div>
+                    Loading c:
+                </div>
+            </>
         }
         </>
     )
