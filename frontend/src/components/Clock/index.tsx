@@ -1,4 +1,9 @@
 import { useEffect, useState } from 'react';
+import { RootStateOrAny, useSelector } from 'react-redux';
+
+interface ClockProps {
+    clockDelay: number;
+}
 
 interface ClockData {
     date: Date;
@@ -7,9 +12,10 @@ interface ClockData {
     seconds: string;
 }
 
-export const Clock = () => {
+export const Clock: React.FC<ClockProps> = ({ clockDelay }) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [interval, setClockInterval] = useState<number>(0);
+    const options = useSelector((state: RootStateOrAny) => state.selectedOptions.userOptions);
 
     const formatData = (data: number): string => {
         const dataToString = data.toString();
@@ -30,8 +36,9 @@ export const Clock = () => {
     useEffect(() => {
         setInterval(() => {
             setClockInterval((el) => el + 1);
-        }, 1000);
-    }, []);
+        }, clockDelay);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [options.delay]);
 
     return (
         <div>

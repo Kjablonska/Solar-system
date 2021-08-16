@@ -22,5 +22,5 @@
   },
   "include": [
     "src"
-  ]
+, "src/types/userOptions.ts", "src/types/planetInterfaces.ts"  ]
 }
