@@ -110,7 +110,7 @@ def get_starts():
 
 # TODO: put db credentials in config file.
 def connectToDatabase():
-    myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+    myclient = pymongo.MongoClient("172.19.0.2:27017")
     mydb = myclient["solar-system"]
     return mydb
 

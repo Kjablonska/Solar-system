@@ -1,16 +1,11 @@
-FROM alpine:latest
+FROM python:3.6.9
+WORKDIR /app
+COPY requirements.txt requirements.txt
+RUN pip3 install -r requirements.txt
+COPY . .
+CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
 
-LABEL MAINTAINER="FirstName LastName <example@domain.com>"
-
-RUN apk --update add nginx && \
-    ln -sf /dev/stdout /var/log/nginx/access.log && \
-    ln -sf /dev/stderr /var/log/nginx/error.log && \
-    mkdir /etc/nginx/sites-enabled/ && \
-    mkdir -p /run/nginx && \
-    rm -rf /etc/nginx/conf.d/default.conf && \
-    rm -rf /var/cache/apk/*
-
-COPY conf.d/app.conf /etc/nginx/conf.d/app.conf
-
-EXPOSE 80 443
-CMD ["nginx", "-g", "daemon off;"]
+# FROM mongo:latest
+# RUN apt-get update && apt-get install -y python3 python3-pip
+# RUN pip3 install pymongo
+# EXPOSE 27017
