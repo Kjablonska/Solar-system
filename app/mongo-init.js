@@ -1,11 +1,11 @@
 db.createUser(
     {
-        user: "kj",
-        pwd: "kj-thesis",
+        user: "solar-system",
+        pwd: "solar-system",
         roles: [
             {
                 role: "readWrite",
-                db: "solar-system"
+                db: "celestial-bodies"
             }
         ]
     }

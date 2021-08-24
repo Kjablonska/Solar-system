@@ -10,6 +10,7 @@ from astropy.coordinates import SkyCoord
 
 from astropy.table import Table
 import pymongo
+import urllib.parse
 import json
 import numpy as np
 
@@ -77,7 +78,7 @@ def get_JPL_planets_data():
             if name in ['x', 'y', 'z']:
                 possitons_data[name] = vec[name].to(u.km).value.tolist()
         data[planet["name"]] = possitons_data
-    
+
     return data
 
 def parsePlanetsNames(names):
@@ -108,17 +109,35 @@ def get_starts():
     # 0.10280963
 
 
+# @app.route("/connect")
 # TODO: put db credentials in config file.
 def connectToDatabase():
-    myclient = pymongo.MongoClient("172.19.0.2:27017")
-    mydb = myclient["solar-system"]
+    # 172.19.0.2:
+    myclient = pymongo.MongoClient("mongodb://solar-system:solar-system@127.0.0.1:27017")
+    # username='solar-system', password='solar-system'
+    print(myclient)
+    mydb = myclient["celestial-bodies"]
+    # planet_collection = mydb["planets"]
+    # data = planet_collection.find({'_id': '399'})
     return mydb
 
+@app.route("/conn")
+def conn():
+    client = pymongo.MongoClient("mongodb://solar-system:solar-system@mongo:27017")
+    mydb = client["celestial-bodies"]
+    planet_collection = mydb["planets"]
+    data = planet_collection.find_one({'_id': '399'})
+    return data
 
 def get_planet(name):
     db = connectToDatabase()
     planet_collection = db["planets"]
     return planet_collection.find_one({'name': name})
+
+@app.route("/sth")
+def sth():
+    db = connectToDatabase()
+    return db.collections.count()
 
 def get_planets(names):
     db = connectToDatabase()
