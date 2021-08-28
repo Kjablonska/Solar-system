@@ -12,7 +12,6 @@ export const userOptionsReducer = (
             isRealTime: true,
             startDate: formatDate(new Date()),
             endDate: undefined,
-            delay: 1000,
         },
     },
     action: any,

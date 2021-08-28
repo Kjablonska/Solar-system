@@ -2,45 +2,37 @@ import { ChangeEvent, useState } from 'react';
 import { RootStateOrAny, useSelector, useDispatch } from 'react-redux';
 import UserOptions from '../../types/userOptions';
 import findFetchPeriod from '../../utils/findFetchPeriod';
-import DatePicker from 'react-date-picker';
+import DatePicker from "react-datepicker";
 import { setUserSelection } from '../../redux/action';
+import "react-datepicker/dist/react-datepicker.css";
 
 const DataSelection = () => {
     const { formatDate } = findFetchPeriod();
     const options = useSelector((state: RootStateOrAny) => state.selectedOptions.userOptions);
     console.log('data sel', options);
-    const [userOptions, setUserOptions] = useState<UserOptions>({
-        ...options,
-    });
 
-    const [startValue, handleStartChange] = useState(new Date());
-    const [endValue, handleEndChange] = useState(new Date());
-    const [speed, setSpeed] = useState<number>(1000);
+    const [startValue, setStart] = useState<Date>(new Date());
+    const [endValue, setEnd] = useState<Date>();
+    const realTime = endValue === undefined;
+
     const dispatch = useDispatch();
 
-    const handleVisualisationSpeedChange = (event: ChangeEvent<HTMLInputElement>) => {
-        event.preventDefault();
-        setSpeed(parseInt(event.target.value));
-    };
-
     const handleUserOptionsChange = () => {
+        console.log(endValue);
         const newUserOptions: UserOptions = {
-            isRealTime: userOptions.isRealTime,
-            delay: speed,
+            isRealTime: realTime,
             startDate: formatDate(startValue),
-            endDate: userOptions.isRealTime ? undefined : formatDate(endValue),
+            endDate: realTime === false && endValue !== undefined ? formatDate(endValue) : undefined,
         };
-        setUserOptions(newUserOptions);
-        dispatch(setUserSelection(userOptions));
+        dispatch(setUserSelection(newUserOptions));
     };
 
     return (
-        <>
-            <DatePicker onChange={handleStartChange} value={startValue} />
-            <DatePicker onChange={handleEndChange} value={endValue} />
-            <input type='number' min='0.5' max='10000' id='speed' onChange={handleVisualisationSpeedChange} />
+        <div style={{position: 'absolute', top: '5%'}}>
+            <DatePicker selected={startValue} onChange={(date: Date) => setStart(date)} />
+            <DatePicker selected={endValue} onChange={(date: Date) => setEnd(date)} />
             <button onClick={handleUserOptionsChange}>Save</button>
-        </>
+        </div>
     );
 };
 

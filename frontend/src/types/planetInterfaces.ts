@@ -2,10 +2,11 @@ import {
     Vector3,
     Mesh,
 } from '@babylonjs/core';
+import { DeepImmutableArray } from 'babylonjs';
 
 export interface PlanetData {
     planet: string,
-    position: Vector3[];
+    position: DeepImmutableArray<Vector3>;
 }
 
 export interface PositionData {

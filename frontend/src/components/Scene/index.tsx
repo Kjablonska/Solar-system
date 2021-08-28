@@ -10,9 +10,8 @@ export const InitSceneData = () => {
     const [planetsData, setPlanetsData] = useState<PlanetData[]>([]);
     const planets = ['Venus', 'Earth'];
     const options = useSelector((state: RootStateOrAny) => state.selectedOptions.userOptions);
-    console.log("scene", options.startDate);
+
     const isRealTime: boolean = options.isRealTime;
-    const visualisationSpeed = options.delay;
     const {start, end} = defineStartingPeriod(options.startDate, options.endDate);
 
     async function getPlanetOrbite(planets: string[], step: string) {
@@ -20,12 +19,12 @@ export const InitSceneData = () => {
             `http://localhost:5000/getObjectsJPLData?name=${planets}&start=${start}&end=${end}&step=${step}`,
         );
         const data = await response.json();
-        console.log(data);
+        const readyData = [];
         for (const key in data) {
             const newPlanetData: PlanetData = { planet: key, position: rescaleData(data[key]) };
-            console.log(newPlanetData);
-            setPlanetsData((data) => [...data, newPlanetData]);
+            readyData.push(newPlanetData);
         }
+        setPlanetsData(readyData);
     }
 
     useEffect(() => {
@@ -33,12 +32,16 @@ export const InitSceneData = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    console.log('index', planetsData);
-    console.log(planetsData.length === planets.length);
+    // TODO: It forces another 2 renders at first reload.
+    useEffect(() => {
+        console.log(options);
+        getPlanetOrbite(planets, '1m');
+    }, [options])
+
     return (
         <>
             {planetsData !== undefined && planetsData.length === planets.length ? (
-                <CreateScene isRealTime={isRealTime} planetsData={planetsData} startDate={start} endDate={end} speed={visualisationSpeed}/>
+                <CreateScene isRealTime={isRealTime} planetsData={planetsData} startDate={start} endDate={end}/>
             ) : (
                 <>
                     <div>Loading</div>

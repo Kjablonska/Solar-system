@@ -18,9 +18,11 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "strictPropertyInitialization": false
   },
   "include": [
     "src"
 , "src/types/userOptions.ts", "src/types/planetInterfaces.ts"  ]
+
 }
