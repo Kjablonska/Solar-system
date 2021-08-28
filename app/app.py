@@ -10,6 +10,7 @@ from astropy.coordinates import SkyCoord
 
 from astropy.table import Table
 import pymongo
+import urllib.parse
 import json
 import numpy as np
 
@@ -65,20 +66,22 @@ def get_JPL_planets_data():
     end = request.args.get('end')
     step = request.args.get('step')
     planets = get_planets(names)
-
+    print(planets)
     objects = {}
     data = {}
     for planet in planets:
         print("here")
-        res = Horizons(id = planet["_id"], location='@Sun', epochs = {"start": start, "stop": end, "step": step}, id_type='majorbody')
+        res = Horizons(id = str(planet["_id"]), location='@Sun', epochs = {"start": str(start), "stop": str(end), "step": str(step)}, id_type='majorbody')
         vec = res.vectors()
+        print(planet)
+        print(vec)
         possitons_data = {}
         for name in vec.colnames:
             if name in ['x', 'y', 'z']:
                 possitons_data[name] = vec[name].to(u.km).value.tolist()
         data[planet["name"]] = possitons_data
-    
-    return data
+
+    return json.dumps(data)
 
 def parsePlanetsNames(names):
     names = names.replace("[", "")
@@ -108,21 +111,37 @@ def get_starts():
     # 0.10280963
 
 
+# @app.route("/connect")
 # TODO: put db credentials in config file.
 def connectToDatabase():
-    myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-    mydb = myclient["solar-system"]
+    client = pymongo.MongoClient("mongodb://solar-system:solar-system@mongo:27017")
+    mydb = client["celestial-bodies"]
     return mydb
 
+@app.route("/conn")
+def conn():
+    # client = pymongo.MongoClient("mongodb://solar-system:solar-system@mongo:27017")
+    mydb = connectToDatabase()
+    planet_collection = mydb["planets"]
+    data = planet_collection.find_one({'_id': '399'})
+    return data
 
 def get_planet(name):
-    db = connectToDatabase()
-    planet_collection = db["planets"]
+    mydb = connectToDatabase()
+    planet_collection = mydb["planets"]
     return planet_collection.find_one({'name': name})
 
+@app.route("/sth")
+def sth():
+    mydb = connectToDatabase()
+    planet_collection = mydb["planets"]
+    ids = ['399', '499']
+    data = planet_collection.find({'_id': {"$in": ids}})
+    return data
+
 def get_planets(names):
-    db = connectToDatabase()
-    planet_collection = db["planets"]
+    mydb = connectToDatabase()
+    planet_collection = mydb["planets"]
     print(type(names))
     print(names)
     res = planet_collection.find({'name': {"$in":names}})
@@ -161,3 +180,8 @@ def dbConnect():
 
 # Docker commands:
 # docker run --name solar-system -p 27017:27017 mongo
+
+
+# mongo --username solar-system --password solar-system
+# sudo docker-compose build
+# sudo docker-compose up

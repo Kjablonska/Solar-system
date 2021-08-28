@@ -1,0 +1,4 @@
+astropy==4.1
+astroquery==0.4.3
+Flask-Cors==3.0.10
+Flask-PyMongo==2.3.0

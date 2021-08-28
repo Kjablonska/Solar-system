@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  web:
+    environment:
+      MONGODB_DATABASE: solar-system
+      MONGO_INITDB_ROOT_USERNAME: solar-system
+      MONGO_INITDB_ROOT_PASSWORD: solar-system
+      MONGODB_HOSTNAME: mongodb
+    build: .
+    ports:
+      - "5000:5000"
+    links:
+      - mongo
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: solar-system
+      MONGO_INITDB_ROOT_PASSWORD: solar-system
+      MONGO_INITDB_DATABASE: celestial-bodies
+      MONGODB_HOSTNAME: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js

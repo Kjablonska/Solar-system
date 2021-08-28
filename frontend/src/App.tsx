@@ -1,5 +1,4 @@
 import { InitSceneData } from './components/Scene';
-import Clock from './components/Clock';
 import './App.css';
 import DataSelection from './components/DataSelection';
 import configureStore from './redux/store';
@@ -11,7 +10,6 @@ const App = () => {
     return (
         <>
             <Provider store={store}>
-                <Clock clockDelay={1000} />
                 <DataSelection />
                 <InitSceneData />
             </Provider>
