@@ -1,6 +1,6 @@
 import DatesPeriod from '../../types/period';
 import { PlanetData, VisualisationData } from '../../types/planetInterfaces';
-import findFetchPeriod, { defineStartingPeriod, findNewPeriod } from '../../utils/findFetchPeriod';
+import { defineStartingPeriod, findNewPeriod } from '../../utils/findFetchPeriod';
 import getOrbiteData from '../../utils/getOrbiteData';
 
 const INIT_MOVEMENT = 1;

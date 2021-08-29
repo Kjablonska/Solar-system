@@ -1,17 +1,12 @@
-import * as GUI from '@babylonjs/gui';
 import { Scene, AdvancedTimer } from '@babylonjs/core';
-import { PlanetData, VisualisationData } from '../types/planetInterfaces';
-import { UserPanel } from '../components/Scene/UserPanel';
 import { MovePlanets } from '../components/Scene/MovePlanets';
 
 interface MovementTimer {
     scene: Scene;
     planetsMovement: MovePlanets;
-    movePlanet(arg1: VisualisationData[], arg2: number): void;
-    visualisationData: VisualisationData[];
     speed: number;
     movement: number;
-    updateClock: any;
+    updateClock: () => void;
 }
 
 const formatData = (data: number): string => {
@@ -24,31 +19,27 @@ const setTime = () => {
     return `${formatData(date.getHours())}-${formatData(date.getMinutes())}-${formatData(date.getSeconds())}`;
 };
 
+// TODO: update clock.
+
 export default function setMovementTimer({
     scene,
     planetsMovement,
-    movePlanet,
-    visualisationData,
     speed,
     movement,
     updateClock,
 }: MovementTimer) {
-    console.log('movement', movement, speed);
     const advancedTimer: AdvancedTimer<Scene> = new AdvancedTimer({
         timeout: 3000,
         contextObservable: scene.onBeforeRenderObservable,
     });
     advancedTimer.onEachCountObservable.add(() => {
-        console.log(movePlanet);
-        // movePlanet(visualisationData, movement);
         planetsMovement.movePlanet();
-        // updateClock();
+        updateClock();
     });
 
     advancedTimer.onTimerAbortedObservable.add(() => {});
 
     advancedTimer.onTimerEndedObservable.add(() => {
-        // movePlanet(visualisationData, movement);
         advancedTimer.start(speed);
     });
 

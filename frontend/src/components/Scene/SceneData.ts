@@ -8,10 +8,7 @@ import {
     MeshBuilder,
     Mesh,
 } from '@babylonjs/core';
-import { MeshExploder } from 'babylonjs/Misc/meshExploder';
-import useFillOrbitesData from '../../hooks/useFillOrbitesPoints';
 import { PlanetData, VisualisationData } from "../../types/planetInterfaces";
-import setMovementTimer from '../../utils/setMovementTimer';
 
 export class SceneData {
     private camera: ArcRotateCamera;
@@ -25,7 +22,7 @@ export class SceneData {
         this.scene = scene;
         this.attacheCamera(scene);
         this.attacheLight(scene);
-        this.addPlantes(planetsData, scene);
+        this.addPlanets(planetsData, scene);
     }
 
     attacheLight = (scene: Scene) => {
@@ -48,7 +45,7 @@ export class SceneData {
         this.camera.upperBetaLimit = Infinity;
     }
 
-    addPlantes = (planetsData: PlanetData[], scene: Scene) => {
+    addPlanets = (planetsData: PlanetData[], scene: Scene) => {
         if (planetsData === undefined) return;
 
         for (const el of planetsData) {

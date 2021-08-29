@@ -1,14 +1,8 @@
-import { Engine, Scene, AdvancedTimer } from '@babylonjs/core';
-import { TimerState } from 'babylonjs/Misc/timer';
+import { Engine, Scene } from '@babylonjs/core';
 import { useEffect, useRef, useState } from 'react';
-import useFillOrbitesData from '../../hooks/useFillOrbitesPoints';
-import setMovementTimer from '../../utils/setMovementTimer';
 import { MovePlanets } from './MovePlanets';
 import { SceneData } from './SceneData';
 import { UserPanel } from './UserPanel';
-
-let SPEED: number = 1000;
-let MOVEMENT: number = 1;
 
 const SceneComponent = (props: any) => {
     const reactCanvas = useRef(null);
@@ -23,12 +17,10 @@ const SceneComponent = (props: any) => {
         isRealTime,
         ...rest
     } = props;
-    const { movePlanet } = useFillOrbitesData({ isRealTime, startDate, endDate });
-
     const [scene, setScene] = useState<Scene>();
     const [data, setData] = useState<SceneData>();
     const [userPanel, setUserPanel] = useState<UserPanel>();
-    const [planetsMovement, initPlanetsMovement]= useState<MovePlanets>();
+    const [_blink, initPlanetsMovement] = useState<MovePlanets>();
 
     useEffect(() => {
         if (reactCanvas.current) {
@@ -40,7 +32,7 @@ const SceneComponent = (props: any) => {
                 setData(initData);
                 const initMovement = new MovePlanets(initData.visualisationData, isRealTime, startDate, endDate);
                 initPlanetsMovement(initMovement);
-                const initUI = new UserPanel(initScene, startDate, initMovement, movePlanet, initData.visualisationData);
+                const initUI = new UserPanel(initScene, startDate, initMovement, initData.visualisationData);
                 setUserPanel(initUI);
                 initUI.timer.start();
             } else if (scene !== undefined && !scene.isReady()) {

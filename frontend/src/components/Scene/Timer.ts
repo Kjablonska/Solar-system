@@ -11,23 +11,19 @@ export class Timer {
     private planetsMovement: MovePlanets;
     private speed: number;
     private movement: number;
-    private movePlanet: (arg1: VisualisationData[], arg2: number) => void;
     private visualisationData: VisualisationData[];
     private scene: Scene;
-    private updateClock: any;
+    private updateClock: () => void;
 
     speedUp = () => {
         this.timer.stop();
         this.timer.dispose();
         this.speed /= 2;
         this.movement *= 2;
-        console.log(this.movePlanet);
         this.planetsMovement.changeSpeed(this.movement);
         this.timer = setMovementTimer({
             scene: this.scene,
             planetsMovement: this.planetsMovement,
-            movePlanet: this.movePlanet,
-            visualisationData: this.visualisationData,
             speed: this.speed,
             movement: this.movement,
             updateClock: this.updateClock,
@@ -51,9 +47,7 @@ export class Timer {
         this.visualisationData = data;
         this.timer = setMovementTimer({
             scene: this.scene,
-            movePlanet: this.movePlanet,
             planetsMovement: this.planetsMovement,
-            visualisationData: this.visualisationData,
             speed: this.speed,
             movement: this.movement,
             updateClock: this.updateClock,
@@ -64,24 +58,21 @@ export class Timer {
     constructor(
         planetsMovement: MovePlanets,
         scene: Scene,
-        movePlanet: (arg1: VisualisationData[], arg2: number) => void,
         visualisationData: VisualisationData[],
-        updateClock: any,
+        updateClock: () => void,
     ) {
         this.speed = INIT_SPEED;
         this.movement = INIT_MOVEMENT;
         this.scene = scene;
         this.visualisationData = visualisationData;
-        this.movePlanet = movePlanet;
         this.timer = setMovementTimer({
             scene: scene,
-            movePlanet: movePlanet,
-            visualisationData: visualisationData,
             planetsMovement: planetsMovement,
             speed: this.speed,
             movement: this.movement,
-            updateClock,
+            updateClock: updateClock,
         });
         this.planetsMovement = planetsMovement;
+        this.updateClock = updateClock;
     }
 }

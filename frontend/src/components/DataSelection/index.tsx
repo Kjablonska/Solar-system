@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import { RootStateOrAny, useSelector, useDispatch } from 'react-redux';
 import UserOptions from '../../types/userOptions';
 import findFetchPeriod from '../../utils/findFetchPeriod';
@@ -9,7 +9,6 @@ import "react-datepicker/dist/react-datepicker.css";
 const DataSelection = () => {
     const { formatDate } = findFetchPeriod();
     const options = useSelector((state: RootStateOrAny) => state.selectedOptions.userOptions);
-    console.log('data sel', options);
 
     const [startValue, setStart] = useState<Date>(new Date());
     const [endValue, setEnd] = useState<Date>();

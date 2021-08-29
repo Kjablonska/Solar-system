@@ -23,31 +23,49 @@ export class UserPanel {
     private clock: TextBlock;
     private startDate: string;
     public timer: Timer;
-    private planetsMovement: MovePlanets;
 
-    // TODO
-    public updateClock(): void {
-        this.clock.text = this.startDate;
+    constructor(scene: Scene, date: string, planetsMovement: MovePlanets, visualisationData: VisualisationData[]) {
+        const userPanel = AdvancedDynamicTexture.CreateFullscreenUI('UI');
+        const stackPanel = this.initStackPanel();
+        userPanel.addControl(stackPanel);
+        const clockTime = this.initClock();
+        this.clock = clockTime;
+        stackPanel.addControl(clockTime);
+        stackPanel.addControl(this.initSpeedUpButton());
+        stackPanel.addControl(this.initSlowDownButton());
+        stackPanel.addControl(this.initResetButton());
+        this.updateClock = this.updateClock.bind(this)
+        this.timer = new Timer(planetsMovement, scene, visualisationData, this.updateClock);
+        this.startDate = date;
     }
 
-    constructor(
-        scene: Scene,
-        date: string,
-        planetsMovement: MovePlanets,
-        movePlanet: (arg1: VisualisationData[], arg2: number) => void,
-        visualisationData: VisualisationData[],
-    ) {
-        this.startDate = date;
-        this.planetsMovement = planetsMovement;
+    private initSlowDownButton = () => {
+        const slowButton = Button.CreateSimpleButton('slowdown', '<<');
+        slowButton.width = '110px';
+        slowButton.height = '30px';
+        slowButton.color = 'white';
+        slowButton.cornerRadius = 20;
+        slowButton.background = 'grey';
+        slowButton.left = '100px';
+        slowButton.onPointerUpObservable.add(() => {
+            console.log('slow');
+        });
+
+        return slowButton;
+    };
+
+    private initStackPanel = () => {
         const stackPanel = new StackPanel();
         stackPanel.width = 0.83;
-        const userPanel = AdvancedDynamicTexture.CreateFullscreenUI('UI');
         stackPanel.height = '100%';
         stackPanel.width = '100%';
         stackPanel.top = '0px';
         stackPanel.verticalAlignment = 0;
-        userPanel.addControl(stackPanel);
 
+        return stackPanel;
+    };
+
+    private initClock = () => {
         const clockTime = new TextBlock();
         clockTime.name = 'clock';
         clockTime.textHorizontalAlignment = TextBlock.HORIZONTAL_ALIGNMENT_CENTER;
@@ -57,17 +75,12 @@ export class UserPanel {
         clockTime.height = '96px';
         clockTime.width = '220px';
         clockTime.fontFamily = 'Viga';
-        stackPanel.addControl(clockTime);
-        this.clock = clockTime;
 
-        this.timer = new Timer(planetsMovement, scene, movePlanet, visualisationData, () => (this.clock.text = date));
+        return clockTime;
+    };
+
+    private initSpeedUpButton = () => {
         const speedButton = Button.CreateSimpleButton('speedup', '>>');
-        const slowButton = Button.CreateSimpleButton('slowdown', '<<');
-        const reset = Button.CreateSimpleButton('reset', 'reset');
-        stackPanel.addControl(speedButton);
-        stackPanel.addControl(slowButton);
-        stackPanel.addControl(reset);
-
         speedButton.width = '110px';
         speedButton.height = '30px';
         speedButton.color = 'white';
@@ -79,16 +92,11 @@ export class UserPanel {
             console.log('speed');
         });
 
-        slowButton.width = '110px';
-        slowButton.height = '30px';
-        slowButton.color = 'white';
-        slowButton.cornerRadius = 20;
-        slowButton.background = 'grey';
-        speedButton.left = '100px';
-        slowButton.onPointerUpObservable.add(() => {
-            console.log('slow');
-        });
+        return speedButton;
+    };
 
+    private initResetButton = () => {
+        const reset = Button.CreateSimpleButton('reset', 'reset');
         reset.width = '110px';
         reset.height = '30px';
         reset.color = 'white';
@@ -98,5 +106,11 @@ export class UserPanel {
         reset.onPointerUpObservable.add(function () {
             console.log('res');
         });
+
+        return reset;
+    };
+
+    updateClock(): void {
+        this.clock.text = 'xx';
     }
 }
