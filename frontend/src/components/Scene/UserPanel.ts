@@ -3,6 +3,7 @@ import { Scene } from '@babylonjs/core';
 import { Timer } from './Timer';
 import { VisualisationData } from '../../types/planetInterfaces';
 import { MovePlanets } from './MovePlanets';
+import { Clock } from './Clock';
 
 const formatData = (data: number): string => {
     // const dataToString = data.toString();
@@ -20,23 +21,20 @@ const getTime = (): string => {
 };
 
 export class UserPanel {
-    private clock: TextBlock;
-    private startDate: string;
     public timer: Timer;
+    public clock: Clock;
 
-    constructor(scene: Scene, date: string, planetsMovement: MovePlanets, visualisationData: VisualisationData[]) {
+    constructor(scene: Scene, clock: Clock, planetsMovement: MovePlanets, visualisationData: VisualisationData[]) {
         const userPanel = AdvancedDynamicTexture.CreateFullscreenUI('UI');
         const stackPanel = this.initStackPanel();
         userPanel.addControl(stackPanel);
-        const clockTime = this.initClock();
-        this.clock = clockTime;
-        stackPanel.addControl(clockTime);
+        this.clock = clock;
+        stackPanel.addControl(clock.getClock());
         stackPanel.addControl(this.initSpeedUpButton());
         stackPanel.addControl(this.initSlowDownButton());
         stackPanel.addControl(this.initResetButton());
         this.updateClock = this.updateClock.bind(this)
-        this.timer = new Timer(planetsMovement, scene, visualisationData, this.updateClock);
-        this.startDate = date;
+        this.timer = new Timer(planetsMovement, scene, visualisationData, this.clock.onUpdate, this.clock.updateSpeed);
     }
 
     private initSlowDownButton = () => {
@@ -63,20 +61,6 @@ export class UserPanel {
         stackPanel.verticalAlignment = 0;
 
         return stackPanel;
-    };
-
-    private initClock = () => {
-        const clockTime = new TextBlock();
-        clockTime.name = 'clock';
-        clockTime.textHorizontalAlignment = TextBlock.HORIZONTAL_ALIGNMENT_CENTER;
-        clockTime.fontSize = '20px';
-        clockTime.color = 'white';
-        clockTime.resizeToFit = true;
-        clockTime.height = '96px';
-        clockTime.width = '220px';
-        clockTime.fontFamily = 'Viga';
-
-        return clockTime;
     };
 
     private initSpeedUpButton = () => {
@@ -111,6 +95,10 @@ export class UserPanel {
     };
 
     updateClock(): void {
-        this.clock.text = 'xx';
+        this.clock.onUpdate();
+    }
+
+    updateClockSpeed(speed: number): void {
+        this.clock.updateSpeed(speed)
     }
 }

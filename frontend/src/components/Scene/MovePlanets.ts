@@ -3,6 +3,7 @@ import { PlanetData, VisualisationData } from '../../types/planetInterfaces';
 import { defineStartingPeriod, findNewPeriod } from '../../utils/findFetchPeriod';
 import getOrbiteData from '../../utils/getOrbiteData';
 
+//TODO: redo onDataEnd()
 const INIT_MOVEMENT = 1;
 
 export class MovePlanets {
@@ -33,7 +34,6 @@ export class MovePlanets {
             for (let data of this.visualisationData) {
                 data = this.setPosition(data);
                 const res = data.orbit.splice(0, this.speed);
-                console.log(res.length, data.orbit.length);
                 data.iter++;
                 if (data.iter > data.orbit.length / 3) {
                     data = await this.onDataEnd(data);

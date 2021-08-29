@@ -5,7 +5,6 @@ interface MovementTimer {
     scene: Scene;
     planetsMovement: MovePlanets;
     speed: number;
-    movement: number;
     updateClock: () => void;
 }
 
@@ -14,10 +13,9 @@ const formatData = (data: number): string => {
     return dataToString.length === 2 ? dataToString : `0${dataToString}`;
 };
 
-const setTime = () => {
-    const date = new Date();
-    return `${formatData(date.getHours())}-${formatData(date.getMinutes())}-${formatData(date.getSeconds())}`;
-};
+// const setTime = () => {
+//     return `${formatData(date.getHours())}-${formatData(date.getMinutes())}-${formatData(date.getSeconds())}`;
+// };
 
 // TODO: update clock.
 
@@ -25,7 +23,6 @@ export default function setMovementTimer({
     scene,
     planetsMovement,
     speed,
-    movement,
     updateClock,
 }: MovementTimer) {
     const advancedTimer: AdvancedTimer<Scene> = new AdvancedTimer({
