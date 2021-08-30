@@ -11,7 +11,7 @@ const App = () => {
         <>
             <Provider store={store}>
                 <DataSelection />
-                <InitSceneData />
+                {/* <InitSceneData /> */}
             </Provider>
         </>
     );
