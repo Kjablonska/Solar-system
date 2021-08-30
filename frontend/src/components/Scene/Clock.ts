@@ -9,11 +9,12 @@ export class Clock {
     private speed: number = INIT_CLOCK_SPEED;
     private clock: TextBlock;
 
-    constructor(startDate: string, isRealTime: boolean, endDate?: string) {
+    constructor(startDate: string, isRealTime: boolean, speed?: number, endDate?: string) {
         this.initClock();
         this.startDate = new Date(startDate);
         this.endDate = endDate !== undefined ? new Date(endDate) : endDate;
         this.isRealTime = isRealTime;
+        this.speed = speed || INIT_CLOCK_SPEED;
         console.log('startDate', startDate, this.startDate);
     }
 

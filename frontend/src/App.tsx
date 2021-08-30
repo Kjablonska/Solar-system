@@ -10,7 +10,7 @@ const App = () => {
     return (
         <>
             <Provider store={store}>
-                <DataSelection />
+                {/* <DataSelection /> */}
                 <InitSceneData />
             </Provider>
         </>

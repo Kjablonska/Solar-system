@@ -4,27 +4,14 @@ import { Timer } from './Timer';
 import { VisualisationData } from '../../types/planetInterfaces';
 import { MovePlanets } from './MovePlanets';
 import { Clock } from './Clock';
+import { FetchData } from '../../types/period';
 
-const formatData = (data: number): string => {
-    // const dataToString = data.toString();
-    // return dataToString.length === 2 ? dataToString : `0${dataToString}`;
-    return data.toString();
-};
-
-// `${formatData(date.getDay())}-${formatData(date.getMonth())}-${formatData(date.getFullYear())}  ${formatData(date.getHours())}:${formatData(date.getMinutes())}:${formatData(date.getSeconds())}`;
-
-const getTime = (): string => {
-    const date = new Date();
-    return `${formatData(date.getDay())}-${formatData(date.getMonth())}-${formatData(date.getFullYear())}  ${formatData(
-        date.getHours(),
-    )}:${formatData(date.getMinutes())}:${formatData(date.getSeconds())}`;
-};
 
 export class UserPanel {
     public timer: Timer;
     public clock: Clock;
 
-    constructor(scene: Scene, clock: Clock, planetsMovement: MovePlanets, visualisationData: VisualisationData[]) {
+    constructor(scene: Scene, clock: Clock, planetsMovement: MovePlanets, visualisationData: VisualisationData[], fetchData: FetchData) {
         const userPanel = AdvancedDynamicTexture.CreateFullscreenUI('UI');
         const stackPanel = this.initStackPanel();
         userPanel.addControl(stackPanel);
@@ -34,7 +21,7 @@ export class UserPanel {
         stackPanel.addControl(this.initSlowDownButton());
         stackPanel.addControl(this.initResetButton());
         this.updateClock = this.updateClock.bind(this)
-        this.timer = new Timer(planetsMovement, scene, visualisationData, this.clock.onUpdate, this.clock.updateSpeed);
+        this.timer = new Timer(planetsMovement, scene, visualisationData, this.clock.onUpdate, this.clock.updateSpeed, fetchData);
     }
 
     private initSlowDownButton = () => {

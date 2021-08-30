@@ -5,6 +5,7 @@ import findFetchPeriod from '../../utils/findFetchPeriod';
 import DatePicker from "react-datepicker";
 import { setUserSelection } from '../../redux/action';
 import "react-datepicker/dist/react-datepicker.css";
+import { SpeedModes } from '../../speedModes';
 
 const DataSelection = () => {
     const { formatDate } = findFetchPeriod();
@@ -20,6 +21,7 @@ const DataSelection = () => {
         console.log(endValue);
         const newUserOptions: UserOptions = {
             isRealTime: realTime,
+            mode: SpeedModes.Normal,
             startDate: formatDate(startValue),
             endDate: realTime === false && endValue !== undefined ? formatDate(endValue) : undefined,
         };

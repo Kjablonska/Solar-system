@@ -16,6 +16,7 @@ const SceneComponent = (props: any) => {
         startDate,
         endDate,
         isRealTime,
+        fetchData,
         ...rest
     } = props;
     const [scene, setScene] = useState<Scene>();
@@ -29,16 +30,15 @@ const SceneComponent = (props: any) => {
             const initScene = new Scene(engine, sceneOptions);
             setScene(initScene);
             if (initScene !== undefined && initScene.isReady()) {
-                const initData = new SceneData(planetsData, initScene);
+                const initData = new SceneData(planetsData, initScene, fetchData.refill);
                 setData(initData);
-                const initMovement = new MovePlanets(initData.visualisationData, isRealTime, startDate, endDate);
-                initPlanetsMovement(initMovement);
-                const initClock = new Clock(startDate, isRealTime, endDate);
-                const initUI = new UserPanel(initScene, initClock, initMovement, initData.visualisationData);
+                const initMovement = new MovePlanets(initData.visualisationData, isRealTime, fetchData, startDate, endDate);
+                const initClock = new Clock(startDate, isRealTime, fetchData.timerSpeed, endDate);
+                const initUI = new UserPanel(initScene, initClock, initMovement, initData.visualisationData, fetchData);
                 setUserPanel(initUI);
                 initUI.timer.start();
             } else if (scene !== undefined && !scene.isReady()) {
-                initScene.onReadyObservable.addOnce((scene) => new SceneData(planetsData, scene));
+                initScene.onReadyObservable.addOnce((scene) => new SceneData(planetsData, scene, fetchData.refill));
             }
             engine.runRenderLoop(() => {
                 initScene.render();

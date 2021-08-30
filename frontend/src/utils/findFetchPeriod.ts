@@ -1,30 +1,45 @@
-import DatesPeriod from '../types/period';
-const FETCH_PERIOD = 10; // days
+import { SpeedModes } from '../speedModes';
+import { DatesPeriod, FetchData } from '../types/period';
+
+const DEFAULT_FETCH_PERIOD = 10; // days
+const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
 export default function findFetchPeriod() {
     const formatDate = (date: Date) => {
         return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
     };
 
-    const findNewEnd = (currentEnd: string): string => {
+    const findNewEnd = (currentEnd: string, fetchStep: number): string => {
         const newEnd = new Date(currentEnd);
-        newEnd.setDate(newEnd.getDate() + FETCH_PERIOD);
+        newEnd.setDate(newEnd.getDate() + fetchStep);
         return formatDate(newEnd);
     };
 
-    const findNewPeriod = (currentPeriod: DatesPeriod): DatesPeriod => {
+    const findNewPeriod = (currentPeriod: DatesPeriod, fetchStep: number): DatesPeriod => {
         const newStart = currentPeriod.end;
-        const newEnd = findNewEnd(newStart);
+        const newEnd = findNewEnd(newStart, fetchStep);
         return { start: newStart, end: newEnd };
     };
 
-    const defineStartingPeriod = (startDate?: string, endDate?: string) => {
+    const defineStartingPeriod = (fetchStep: number, startDate?: string, endDate?: string) => {
         const start = startDate ? startDate : formatDate(new Date());
-        const end = endDate ? endDate : findNewEnd(formatDate(new Date()));
+        const end = findNewEnd(formatDate(new Date()), fetchStep);
         return { start, end };
     };
 
-    return { findNewPeriod, defineStartingPeriod, formatDate } as const;
+    const findFetchParameters = (speedMode: SpeedModes): FetchData => {
+        console.log(speedMode);
+        switch (speedMode) {
+            case SpeedModes.Normal:
+                return {step: '10m', period: 2, refill: 10 * 58, timerSpeed: 1000};
+            case SpeedModes.Medium:
+                return {step: '1h', period: 10, refill: 0, timerSpeed: 250};
+            case SpeedModes.Fast:
+                return {step: '24h', period: 20, refill: 24, timerSpeed: 250};
+        }
+    }
+
+    return { findNewPeriod, defineStartingPeriod, formatDate, findFetchParameters } as const;
 }
 
 
@@ -32,20 +47,21 @@ export const formatDate = (date: Date) => {
     return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 };
 
-export const findNewEnd = (currentEnd: string): string => {
+export const findNewEnd = (currentEnd: string, period: number): string => {
     const newEnd = new Date(currentEnd);
-    newEnd.setDate(newEnd.getDate() + FETCH_PERIOD);
+    newEnd.setDate(newEnd.getDate() + period);
     return formatDate(newEnd);
 };
 
-export const findNewPeriod = (currentPeriod: DatesPeriod): DatesPeriod => {
+export const findNewPeriod = (currentPeriod: DatesPeriod, period: number): DatesPeriod => {
     const newStart = currentPeriod.end;
-    const newEnd = findNewEnd(newStart);
+    const newEnd = findNewEnd(newStart, period);
+    console.log(currentPeriod, newStart, newEnd);
     return { start: newStart, end: newEnd };
 };
 
-export const defineStartingPeriod = (startDate?: string, endDate?: string) => {
+export const defineStartingPeriod = (period: number, startDate?: string, endDate?: string) => {
     const start = startDate ? startDate : formatDate(new Date());
-    const end = endDate ? endDate : findNewEnd(formatDate(new Date()));
+    const end = endDate ? endDate : findNewEnd(formatDate(new Date()), period);
     return { start, end };
 };

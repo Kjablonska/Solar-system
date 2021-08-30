@@ -1,4 +1,5 @@
 import { Scene, AdvancedTimer } from '@babylonjs/core';
+import { FetchData } from '../../types/period';
 import { VisualisationData } from '../../types/planetInterfaces';
 import setMovementTimer from '../../utils/setMovementTimer';
 import { Clock } from './Clock';
@@ -15,21 +16,22 @@ export class Timer {
     private visualisationData: VisualisationData[];
     private scene: Scene;
     private updateClock: () => void;
+    private fetchData: FetchData;
     private updateClockSpeed: (arg: number) => void;
 
     speedUp = () => {
         this.timer.stop();
-        this.timer.dispose();
+        // this.timer.dispose();
         // this.speed /= 2;
         this.movement *= 2;
         this.planetsMovement.changeSpeed(this.movement);
         this.updateClockSpeed(this.movement);
         this.setUpTimer();
-        this.timer.start(this.speed);
+        this.timer.start(this.fetchData.timerSpeed);
     };
 
     start = () => {
-        this.timer.start(INIT_SPEED);
+        this.timer.start(this.fetchData.timerSpeed);
     };
 
     stop = () => {
@@ -38,7 +40,7 @@ export class Timer {
         this.updateTimer(this.visualisationData);
     };
 
-    updateTimer = (data: VisualisationData[], startDate?: Date) => {
+    updateTimer = (data: VisualisationData[]) => {
         this.timer.stop();
         this.timer.dispose();
         this.visualisationData = data;
@@ -52,10 +54,15 @@ export class Timer {
         this.timer = setMovementTimer({
             scene: this.scene,
             planetsMovement: this.planetsMovement,
-            speed: this.speed,
+            speed: this.fetchData.timerSpeed,
             updateClock: this.updateClock,
         });
     };
+
+    onEndDateReached = () => {
+        this.timer.stop();
+        this.timer.dispose();
+    }
 
     constructor(
         planetsMovement: MovePlanets,
@@ -63,12 +70,15 @@ export class Timer {
         visualisationData: VisualisationData[],
         updateClock: () => void,
         updateClockSpeed: (arg: number) => void,
+        fetchData: FetchData,
     ) {
         this.speed = INIT_SPEED;
         this.movement = INIT_MOVEMENT;
+        this.fetchData = fetchData;
         this.scene = scene;
         this.visualisationData = visualisationData;
         this.planetsMovement = planetsMovement;
+        this.planetsMovement.onEndDateReached = this.onEndDateReached;
         this.updateClock = updateClock;
         this.updateClockSpeed = updateClockSpeed;
         this.setUpTimer();
