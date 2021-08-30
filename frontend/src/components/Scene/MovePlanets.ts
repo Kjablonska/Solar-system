@@ -47,7 +47,7 @@ export class MovePlanets {
                     this.fetchAll = true;
                     await this.onDataEnd()
                     .then(() => {
-                        this.fetchAll = true;
+                        this.fetchAll = false;
                     });
                 }
             }
@@ -84,8 +84,8 @@ export class MovePlanets {
 
         for (const el of this.visualisationData) {
             const toModify = newData.get(el.planet.name);
+            el.length = el.orbit.length + toModify!.length;
             el.orbit = toModify!;
-            el.length = el.length + toModify!.length;
             el.iter = 0;
         }
     };
