@@ -43,13 +43,14 @@ def get_JPL_data():
     name = request.args.get('name')
     start = request.args.get('start')
     end = request.args.get('end')
+    end = request.args.get('step')
     print(name)
     planet = get_planet(name)
     print(planet)
     print(planet["_id"])
 
     # 1 MO
-    obj = Horizons(id = str(planet["_id"]), location='@Sun', epochs = {"start": start, "stop": end, "step": "1m"}, id_type='majorbody')
+    obj = Horizons(id = str(planet["_id"]), location='@Sun', epochs = {"start": start, "stop": end, "step": step}, id_type='majorbody')
 
     vec = obj.vectors()
     possitons_data = {}

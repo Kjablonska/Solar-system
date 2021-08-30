@@ -58,7 +58,7 @@ export class SceneData {
             const planet = MeshBuilder.CreateSphere(planetName, { diameter: 0.5 }, scene);
 
             this.meshes.set(planetName, planet);
-            const newPlanetData: VisualisationData = { planet: planet, orbit: planetCurve.getPoints(), iter: 0 };
+            const newPlanetData: VisualisationData = { planet: planet, orbit: planetCurve.getPoints(), iter: 0, length: planetCurve.getPoints().length };
             this.visualisationData.push(newPlanetData);
         }
     };
@@ -66,7 +66,7 @@ export class SceneData {
     generateVisualisationData = (planetsData: PlanetData[]) => {
         for (const el of planetsData) {
             const planetCurve = Curve3.CreateCatmullRomSpline(el.position, 58, false);
-            const newPlanetData: VisualisationData = { planet: this.meshes.get(el.planet) || MeshBuilder.CreateSphere(el.planet, { diameter: 0.5 }, this.scene), orbit: planetCurve.getPoints(), iter: 0 };
+            const newPlanetData: VisualisationData = { planet: this.meshes.get(el.planet) || MeshBuilder.CreateSphere(el.planet, { diameter: 0.5 }, this.scene), orbit: planetCurve.getPoints(), iter: 0, length: planetCurve.getPoints().length };
             this.visualisationData.push(newPlanetData);
         }
     }

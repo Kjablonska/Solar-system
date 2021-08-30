@@ -52,7 +52,6 @@ const SceneComponent = (props: any) => {
 
             return () => {
                 initScene.getEngine().dispose();
-
                 if (window) window.removeEventListener('resize', resize);
             };
         }

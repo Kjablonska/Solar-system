@@ -8,7 +8,7 @@ import findFetchPeriod from "../../utils/findFetchPeriod";
 export const InitSceneData = () => {
     const { defineStartingPeriod } = findFetchPeriod();
     const [planetsData, setPlanetsData] = useState<PlanetData[]>([]);
-    const planets = ['Venus', 'Earth'];
+    const planets = ['Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus'];
     const options = useSelector((state: RootStateOrAny) => state.selectedOptions.userOptions);
 
     const isRealTime: boolean = options.isRealTime;
@@ -28,15 +28,15 @@ export const InitSceneData = () => {
     }
 
     useEffect(() => {
-        getPlanetOrbite(planets, '1m');
+        getPlanetOrbite(planets, '10m');
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // TODO: It forces another 2 renders at first reload.
-    useEffect(() => {
-        console.log(options);
-        getPlanetOrbite(planets, '1m');
-    }, [options])
+    // useEffect(() => {
+    //     console.log(options);
+    //     getPlanetOrbite(planets, '1m');
+    // }, [options])
 
     return (
         <>

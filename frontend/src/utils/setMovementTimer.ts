@@ -30,13 +30,14 @@ export default function setMovementTimer({
         contextObservable: scene.onBeforeRenderObservable,
     });
     advancedTimer.onEachCountObservable.add(() => {
-        planetsMovement.movePlanet();
-        updateClock();
     });
 
     advancedTimer.onTimerAbortedObservable.add(() => {});
 
     advancedTimer.onTimerEndedObservable.add(() => {
+        console.log("here", speed);
+        planetsMovement.movePlanet();
+        updateClock();
         advancedTimer.start(speed);
     });
 

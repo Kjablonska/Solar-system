@@ -1,3 +1,4 @@
+import { Curve3 } from '@babylonjs/core';
 import DatesPeriod from '../../types/period';
 import { PlanetData, VisualisationData } from '../../types/planetInterfaces';
 import { defineStartingPeriod, findNewPeriod } from '../../utils/findFetchPeriod';
@@ -10,16 +11,18 @@ export class MovePlanets {
     isRealTime: boolean;
     currentPeriod: DatesPeriod;
     visualisationData: VisualisationData[];
-    speed?: number;
+    speed: number = 1;
     startDate?: string;
     endDate?: string;
+    fetchMarker: Map<string, boolean> = new Map();
+    fetchAll: boolean = false;
 
     constructor(
         visualisationData: VisualisationData[],
         isRealTime: boolean,
-        speed?: number,
         startDate?: string,
         endDate?: string,
+        speed: number = INIT_MOVEMENT,
     ) {
         this.startDate = startDate;
         this.endDate = endDate;
@@ -27,16 +30,28 @@ export class MovePlanets {
         this.isRealTime = isRealTime;
         this.visualisationData = visualisationData;
         this.speed = speed || INIT_MOVEMENT;
+
+        visualisationData.forEach((data) => {
+            this.fetchMarker.set(data.planet.name, false);
+        });
     }
 
     movePlanet = async () => {
         if (this.visualisationData !== undefined) {
             for (let data of this.visualisationData) {
                 data = this.setPosition(data);
-                const res = data.orbit.splice(0, this.speed);
-                data.iter++;
-                if (data.iter > data.orbit.length / 3) {
-                    data = await this.onDataEnd(data);
+                data.orbit.splice(0, this.speed);
+                data.iter += this.speed;
+                console.log('len', this.speed, data.iter, data.length, data.iter > data.length / 4, this.fetchMarker.get(data.planet.name) === false);
+
+                if (this.fetchAll === false && data.iter > data.length / 4) {
+                    // TODO: refill all data instead.
+                    console.log('DATA ENDED');
+                    this.fetchAll = true;
+                    await this.onDataEnd()
+                    .then(() => {
+                        this.fetchAll = true;
+                    });
                 }
             }
         }
@@ -44,8 +59,7 @@ export class MovePlanets {
 
     changeSpeed = (speed: number) => {
         this.speed = speed;
-        console.log("speed changed" ,this.speed);
-    }
+    };
 
     setPosition = (data: VisualisationData): VisualisationData => {
         data.planet.position.x = data.orbit[0].x;
@@ -54,17 +68,22 @@ export class MovePlanets {
         return data;
     };
 
-    onDataEnd = async (data: VisualisationData) => {
+    onDataEnd = async () => {
+        console.log('DATA ENDED');
         this.currentPeriod = findNewPeriod(this.currentPeriod);
 
-        const newData: PlanetData = await getOrbiteData({
-            planet: data.planet.name,
+        const newData = await getOrbiteData({
+            planet: ['Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus'],
             startDate: this.currentPeriod.start,
             endDate: this.currentPeriod.end,
+            speed: this.speed,
         });
 
-        data.orbit.concat(newData.position);
-        data.iter = 0;
-        return data;
+        for (const el of this.visualisationData) {
+            const toModify = newData.get(el.planet.name);
+            el.orbit = toModify!;
+            el.length = el.length + toModify!.length;
+            el.iter = 0
+        }
     };
 }

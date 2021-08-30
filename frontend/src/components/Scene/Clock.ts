@@ -50,23 +50,14 @@ export class Clock {
     };
 
     public findNextValue = () => {
-        console.log(typeof this.startDate);
-        if (!this.isRealTime && this.endDate !== undefined && this.startDate < this.endDate) {
-            const update = this.startDate.getSeconds() + this.speed;
-            this.startDate.setSeconds(update);
-        }
+        const update = this.startDate.getSeconds() + this.speed;
+        this.startDate.setSeconds(update);
     };
 
     public onUpdate = () => {
         this.findNextValue();
-        console.log(
-            'on update',
-            this.startDate,
-            `${this.startDate.getDate()} - ${this.startDate.getMonth() + 1} - ${this.startDate
-                .getFullYear()}`,
-        );
-        this.clock.text = `${this.startDate.getDate()} - ${this.startDate
-            .getMonth() + 1} - ${this.startDate.getFullYear()}   ${this.startDate
-            .getHours()}:${this.startDate.getMinutes()}`;
+        this.clock.text = `${this.startDate.getDate()} - ${
+            this.startDate.getMonth() + 1
+        } - ${this.startDate.getFullYear()}   ${this.startDate.getHours()}:${this.startDate.getMinutes()}:${this.startDate.getSeconds()}`;
     };
 }
