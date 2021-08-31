@@ -1,31 +1,28 @@
 import { Scene, AdvancedTimer } from '@babylonjs/core';
-import { FetchData } from '../../types/period';
+import { FetchData, VisualisationOptions } from '../../types/period';
 import { VisualisationData } from '../../types/planetInterfaces';
 import setMovementTimer from '../../utils/setMovementTimer';
-import { Clock } from './Clock';
 import { MovePlanets } from './MovePlanets';
 
 const INIT_SPEED = 1000;
 const INIT_MOVEMENT = 1;
 
 export class Timer {
+    private scene: Scene;
+    private visualisationData: VisualisationData[];
+    private fetchData: FetchData;
+
     public timer: AdvancedTimer;
     private planetsMovement: MovePlanets;
-    private speed: number;
-    private movement: number;
-    private visualisationData: VisualisationData[];
-    private scene: Scene;
+    private visualisationSpeed = INIT_MOVEMENT;
     private updateClock: () => void;
-    private fetchData: FetchData;
     private updateClockSpeed: (arg: number) => void;
 
     speedUp = () => {
         this.timer.stop();
-        // this.timer.dispose();
-        // this.speed /= 2;
-        this.movement *= 2;
-        this.planetsMovement.changeSpeed(this.movement);
-        this.updateClockSpeed(this.movement);
+        this.visualisationSpeed *= 2;
+        this.planetsMovement.changeSpeed(this.visualisationSpeed);
+        this.updateClockSpeed(this.visualisationSpeed);
         this.setUpTimer();
         this.timer.start(this.fetchData.timerSpeed);
     };
@@ -40,12 +37,14 @@ export class Timer {
         this.updateTimer(this.visualisationData);
     };
 
-    updateTimer = (data: VisualisationData[]) => {
+    updateTimer = (data: VisualisationData[], fetchData?: FetchData) => {
         this.timer.stop();
         this.timer.dispose();
         this.visualisationData = data;
-        this.speed = INIT_SPEED;
-        this.movement = INIT_MOVEMENT;
+        if (fetchData !== undefined) {
+            this.fetchData = fetchData;
+        }
+        this.visualisationSpeed = INIT_MOVEMENT;
         this.setUpTimer();
         this.timer.start(INIT_SPEED);
     };
@@ -65,19 +64,17 @@ export class Timer {
     }
 
     constructor(
-        planetsMovement: MovePlanets,
         scene: Scene,
         visualisationData: VisualisationData[],
+        fetchData: FetchData,
+        visualisationOptions: VisualisationOptions,
         updateClock: () => void,
         updateClockSpeed: (arg: number) => void,
-        fetchData: FetchData,
     ) {
-        this.speed = INIT_SPEED;
-        this.movement = INIT_MOVEMENT;
         this.fetchData = fetchData;
         this.scene = scene;
         this.visualisationData = visualisationData;
-        this.planetsMovement = planetsMovement;
+        this.planetsMovement = new MovePlanets(visualisationData, visualisationOptions, fetchData, this.visualisationSpeed);
         this.planetsMovement.onEndDateReached = this.onEndDateReached;
         this.updateClock = updateClock;
         this.updateClockSpeed = updateClockSpeed;

@@ -1,37 +1,37 @@
 import { TextBlock } from '@babylonjs/gui';
+import { VisualisationOptions } from '../../types/period';
 
-const INIT_CLOCK_SPEED = 1;
+const INIT_TIMER_SPEED = 1000; // in ms
 
 export class Clock {
     private startDate: Date;
     private isRealTime: boolean;
     private endDate?: Date;
-    private speed: number = INIT_CLOCK_SPEED;
+    private timerSpeed: number = INIT_TIMER_SPEED;
     private clock: TextBlock;
 
-    constructor(startDate: string, isRealTime: boolean, speed?: number, endDate?: string) {
+    constructor(visualisationOptions: VisualisationOptions, speed?: number) {
         this.initClock();
-        this.startDate = new Date(startDate);
-        this.endDate = endDate !== undefined ? new Date(endDate) : endDate;
-        this.isRealTime = isRealTime;
-        this.speed = speed || INIT_CLOCK_SPEED;
-        console.log('startDate', startDate, this.startDate);
+        this.startDate = new Date(visualisationOptions.start);
+        this.endDate = visualisationOptions.end !== undefined ? new Date(visualisationOptions.end) : undefined;
+        this.isRealTime = visualisationOptions.isRealTime;
+        this.timerSpeed = speed || INIT_TIMER_SPEED;
     }
 
     public initSpeed = (speed: number) => {
-        this.speed = speed;
+        this.timerSpeed = speed;
     };
 
-    public updateClock = (startDate: string, isRealTime: boolean, endDate?: string, speed?: number) => {
-        this.startDate = new Date(startDate);
-        this.endDate = endDate !== undefined ? new Date(endDate) : endDate;
-        this.isRealTime = isRealTime;
-        this.speed = speed !== undefined ? speed : INIT_CLOCK_SPEED;
+    public updateClock = (visualisationOptions: VisualisationOptions, speed?: number) => {
+        this.startDate = new Date(visualisationOptions.start);
+        this.endDate = visualisationOptions.end !== undefined ? new Date(visualisationOptions.end) : visualisationOptions.end;
+        this.isRealTime = visualisationOptions.isRealTime;
+        this.timerSpeed = speed !== undefined ? speed : this.timerSpeed;
         console.log('update', this.startDate);
     };
 
     public updateSpeed = (speed: number) => {
-        this.speed = speed;
+        this.timerSpeed *= 2;
     };
 
     private initClock = () => {
@@ -51,7 +51,7 @@ export class Clock {
     };
 
     public findNextValue = () => {
-        const update = this.startDate.getSeconds() + this.speed;
+        const update = this.startDate.getMilliseconds() + this.timerSpeed;
         this.startDate.setSeconds(update);
     };
 

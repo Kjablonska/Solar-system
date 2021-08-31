@@ -2,7 +2,6 @@ import { SpeedModes } from '../speedModes';
 import { DatesPeriod, FetchData } from '../types/period';
 
 const DEFAULT_FETCH_PERIOD = 10; // days
-const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
 export default function findFetchPeriod() {
     const formatDate = (date: Date) => {
@@ -21,7 +20,7 @@ export default function findFetchPeriod() {
         return { start: newStart, end: newEnd };
     };
 
-    const defineStartingPeriod = (fetchStep: number, startDate?: string, endDate?: string) => {
+    const defineStartingPeriod = (fetchStep: number, startDate?: string) => {
         const start = startDate ? startDate : formatDate(new Date());
         const end = findNewEnd(formatDate(new Date()), fetchStep);
         return { start, end };
