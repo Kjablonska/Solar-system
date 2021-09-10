@@ -3,6 +3,7 @@ import './App.css';
 import DataSelection from './components/DataSelection';
 import configureStore from './redux/store';
 import { Provider } from 'react-redux';
+import LandingPage from './components/LandingPage';
 
 const App = () => {
     const { store } = configureStore();
@@ -10,7 +11,7 @@ const App = () => {
     return (
         <>
             <Provider store={store}>
-                <DataSelection />
+                <LandingPage />
                 {/* <InitSceneData /> */}
             </Provider>
         </>
