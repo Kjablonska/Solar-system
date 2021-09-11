@@ -1,9 +1,13 @@
+import { useState } from 'react';
+import { RootStateOrAny, useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import dataSelectionBackground from '../../assets/data_selection_background.png';
-import DatePicker from "react-datepicker";
+import DatePicker from 'react-datepicker';
+import UserOptions from '../../types/userOptions';
+import findFetchPeriod from '../../utils/findFetchPeriod';
 
 const DataSelectionContainer = styled.div`
-position: absolute;
+    position: absolute;
     display: flex;
     flex-direction: column;
     background-size: contain;
@@ -57,45 +61,65 @@ const SelectionText = styled.div`
 
 const DropDown = styled.select`
     width: 100px;
-    background: #A6808C;
+    background: #a6808c;
 `;
 
 const Option = styled.option`
     color: #2a0e58;
-    background: #A6808C;
+    background: #a6808c;
 `;
 
 const DataSelection = () => {
+    const { formatDate } = findFetchPeriod();
+    const dispatch = useDispatch();
+    const options = useSelector((state: RootStateOrAny) => state.selectedOptions.userOptions);
+
+    const [startValue, setStart] = useState<Date>(new Date());
+    const [endValue, setEnd] = useState<Date>();
+
+    const handleUserOptionsChange = () => {
+        console.log(endValue);
+        const newUserOptions: UserOptions = {
+            isRealTime: realTime,
+            startDate: formatDate(startValue),
+            endDate: realTime === false && endValue !== undefined ? formatDate(endValue) : undefined,
+        };
+        dispatch(setUserSelection(newUserOptions));
+    };
+
     return (
-        <DataSelectionContainer>
-            <ModalTitle />
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <ModeSelectionContainer>
-                    <ModeCheckBox />
-                    <ModalText>Real time</ModalText>
-                </ModeSelectionContainer>
-                <ModeSelectionContainer>
-                    <ModeCheckBox />
-                    <ModalText>Select visualisation data</ModalText>
-                </ModeSelectionContainer>
-                <ModeSelectionContainer>
-                    <SelectionText>start date</SelectionText>
-                </ModeSelectionContainer>
-                <ModeSelectionContainer>
-                    <SelectionText>end date</SelectionText>
-                </ModeSelectionContainer>
-                <ModeSelectionContainer>
-                    <SelectionText>speed date</SelectionText>
-                    <DropDown>
-                        <Option id='real-time'>Real-time</Option>
-                        <Option id='normal'>Normal</Option>
-                        <Option id='medium'>Medium</Option>
-                        <Option id='fast'>Fast</Option>
-                        <Option id='very-fast'>Very fast</Option>
-                    </DropDown>
-                </ModeSelectionContainer>
-            </div>
-        </DataSelectionContainer>
+        <div>
+            <DataSelectionContainer>
+                <ModalTitle />
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <ModeSelectionContainer>
+                        <ModeCheckBox />
+                        <ModalText>Real time</ModalText>
+                    </ModeSelectionContainer>
+                    <ModeSelectionContainer>
+                        <ModeCheckBox />
+                        <ModalText>Select visualisation data</ModalText>
+                    </ModeSelectionContainer>
+                    <ModeSelectionContainer>
+                        <SelectionText>start date</SelectionText>
+                        <DatePicker selected={startValue} onChange={(date: Date) => setStart(date)} />
+                    </ModeSelectionContainer>
+                    <ModeSelectionContainer>
+                        <SelectionText>end date</SelectionText>
+                    </ModeSelectionContainer>
+                    <ModeSelectionContainer>
+                        <SelectionText>speed date</SelectionText>
+                        <DatePicker selected={startValue} onChange={(date: Date) => setStart(date)} />
+                        <DropDown>
+                            <Option id='real-time'>Real-time</Option>
+                            <Option id='medium'>Medium</Option>
+                            <Option id='fast'>Fast</Option>
+                            <Option id='very-fast'>Very fast</Option>
+                        </DropDown>
+                    </ModeSelectionContainer>
+                </div>
+            </DataSelectionContainer>
+        </div>
     );
 };
 
