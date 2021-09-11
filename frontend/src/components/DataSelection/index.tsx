@@ -1,10 +1,17 @@
 import { useState } from 'react';
 import { RootStateOrAny, useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import { useHistory } from 'react-router-dom'
 import dataSelectionBackground from '../../assets/data_selection_background.png';
+import startButton from '../../assets/start_button.png';
 import DatePicker from 'react-datepicker';
 import UserOptions from '../../types/userOptions';
 import findFetchPeriod from '../../utils/findFetchPeriod';
+import { setUserSelection } from '../../redux/action';
+import { SpeedModes } from '../../speedModes';
+
+import 'react-datepicker/dist/react-datepicker.css';
+import './datepicker.css';
 
 const DataSelectionContainer = styled.div`
     position: absolute;
@@ -55,13 +62,13 @@ const SelectionText = styled.div`
     color: #2a0e58;
     height: 30px;
     width: 100px;
-    display: flex;
-    align-items: center;
 `;
 
 const DropDown = styled.select`
-    width: 100px;
+    width: 122px;
+    height: 22px;
     background: #a6808c;
+    border: 0.1px solid black;
 `;
 
 const Option = styled.option`
@@ -69,24 +76,40 @@ const Option = styled.option`
     background: #a6808c;
 `;
 
+const StartButton = styled.button`
+    border: none;
+    position: absolute;
+    width: 175px;
+    height: 67px;
+    top: 85%;
+    left: 35%;
+    background: url(${startButton});
+`;
+
 const DataSelection = () => {
     const { formatDate } = findFetchPeriod();
     const dispatch = useDispatch();
-    const options = useSelector((state: RootStateOrAny) => state.selectedOptions.userOptions);
+    const history = useHistory();
 
-    const [startValue, setStart] = useState<Date>(new Date());
-    const [endValue, setEnd] = useState<Date>();
+    const [startValue, setStart] = useState<Date | null>(null);
+    const [endValue, setEnd] = useState<Date | null>(null);
+    const [mode, setMode] = useState<SpeedModes>(SpeedModes.RealTime);
 
-    const handleUserOptionsChange = () => {
-        console.log(endValue);
+    const handleSpeedModeSelection = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        event.preventDefault();
+        setMode(event.target.value as SpeedModes);
+    };
+
+    const startVisualisation = () => {
         const newUserOptions: UserOptions = {
-            isRealTime: realTime,
-            mode: SpeedModes.Normal,
-            startDate: formatDate(startValue),
-            endDate: realTime === false && endValue !== undefined ? formatDate(endValue) : undefined,
+            mode: mode,
+            startDate: startValue !== null ? formatDate(startValue) : formatDate(new Date()),
+            endDate: mode !== SpeedModes.RealTime && endValue !== null ? formatDate(endValue) : undefined,
         };
         dispatch(setUserSelection(newUserOptions));
-    };
+        history.push('/visualisation')
+    }
+
 
     return (
         <div>
@@ -103,23 +126,48 @@ const DataSelection = () => {
                     </ModeSelectionContainer>
                     <ModeSelectionContainer>
                         <SelectionText>start date</SelectionText>
-                        <DatePicker selected={startValue} onChange={(date: Date) => setStart(date)} />
+                        <DatePicker
+                            isClearable
+                            placeholderText='Select start date'
+                            selected={startValue}
+                            onChange={(date: Date) => setStart(date)}
+                            wrapperClassName='date-picker-wrapper'
+                            className='date-picker'
+                            clearButtonClassName='date-picker-clear-button'
+                        />
                     </ModeSelectionContainer>
                     <ModeSelectionContainer>
                         <SelectionText>end date</SelectionText>
+                        <DatePicker
+                            isClearable
+                            placeholderText='Select end date'
+                            selected={endValue}
+                            onChange={(date: Date) => setEnd(date)}
+                            wrapperClassName='date-picker-wrapper'
+                            className='date-picker'
+                            clearButtonClassName='date-picker-clear-button'
+                        />
                     </ModeSelectionContainer>
                     <ModeSelectionContainer>
                         <SelectionText>speed date</SelectionText>
-                        <DatePicker selected={startValue} onChange={(date: Date) => setStart(date)} />
-                        <DropDown>
-                            <Option id='real-time'>Real-time</Option>
-                            <Option id='medium'>Medium</Option>
-                            <Option id='fast'>Fast</Option>
-                            <Option id='very-fast'>Very fast</Option>
+                        <DropDown onChange={handleSpeedModeSelection}>
+                            <Option id='real-time' value={SpeedModes.RealTime}>
+                                Real-time
+                            </Option>
+                            <Option id='medium' value={SpeedModes.Medium}>
+                                Medium
+                            </Option>
+                            <Option id='fast' value={SpeedModes.Fast}>
+                                Fast
+                            </Option>
+                            <Option id='very-fast' value={SpeedModes.VeryFast}>
+                                Very fast
+                            </Option>
                         </DropDown>
                     </ModeSelectionContainer>
                 </div>
             </DataSelectionContainer>
+            <StartButton onClick={startVisualisation} />
         </div>
     );
 };

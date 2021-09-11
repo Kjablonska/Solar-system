@@ -1,0 +1,25 @@
+.date-picker-wrapper {
+    width: 120px;
+    height: 22px;
+    padding: 0;
+}
+
+.date-picker {
+    width: 120px;
+    height: 22px;
+    background-color: #a6808c;
+    border: 0.1px solid black;
+    padding: 0;
+}
+
+.date-picker-clear-button::after {
+    background-color: #a6808c;
+    color: #2a0e58;
+    font-size: 12px;
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+    content: "×";
+    right: -10px;
+}
+

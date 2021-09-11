@@ -37,7 +37,6 @@ export const InitSceneData = () => {
             start: start,
             end: options.endDate,
             currentEnd: end,
-            isRealTime: options.isRealTime,
             mode: options.mode
         }
         getPlanetOrbite(planets, fetchData.step);
@@ -50,7 +49,6 @@ export const InitSceneData = () => {
     //     console.log(options);
     //     getPlanetOrbite(planets, '1m');
     // }, [options])
-
 
     return (
         <>

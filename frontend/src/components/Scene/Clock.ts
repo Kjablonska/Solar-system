@@ -5,7 +5,6 @@ const INIT_TIMER_SPEED = 1000; // in ms
 
 export class Clock {
     private startDate: Date;
-    private isRealTime: boolean;
     private endDate?: Date;
     private timerSpeed: number = INIT_TIMER_SPEED;
     private clock: TextBlock;
@@ -14,7 +13,6 @@ export class Clock {
         this.initClock();
         this.startDate = new Date(visualisationOptions.start);
         this.endDate = visualisationOptions.end !== undefined ? new Date(visualisationOptions.end) : undefined;
-        this.isRealTime = visualisationOptions.isRealTime;
         this.timerSpeed = speed || INIT_TIMER_SPEED;
     }
 
@@ -25,7 +23,6 @@ export class Clock {
     public updateClock = (visualisationOptions: VisualisationOptions, speed?: number) => {
         this.startDate = new Date(visualisationOptions.start);
         this.endDate = visualisationOptions.end !== undefined ? new Date(visualisationOptions.end) : visualisationOptions.end;
-        this.isRealTime = visualisationOptions.isRealTime;
         this.timerSpeed = speed !== undefined ? speed : this.timerSpeed;
         console.log('update', this.startDate);
     };

@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import DataSelection from '../DataSelection';
-import startButton from '../../assets/start_button.png';
 import infoButton from '../../assets/info_button.png';
 
 const BackgroundContainer = styled.div`
@@ -76,17 +75,6 @@ const Planet = styled.div`
     overflow: hidden;
 `;
 
-const StartButton = styled.button`
-    border: none;
-    position: absolute;
-    width: 175px;
-    height: 67px;
-    top: 85%;
-    left: 35%;
-    background: url(${startButton});
-`;
-
-
 const InfoButton = styled.button`
     border: none;
     position: absolute;
@@ -109,7 +97,6 @@ const LandingPage = () => {
             <Star4 />
             <Star5 />
             <DataSelection />
-            <StartButton />
             <InfoButton />
         </BackgroundContainer>
     );

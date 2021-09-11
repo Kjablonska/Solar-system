@@ -29,12 +29,14 @@ export default function findFetchPeriod() {
     const findFetchParameters = (speedMode: SpeedModes): FetchData => {
         console.log(speedMode);
         switch (speedMode) {
-            case SpeedModes.Normal:
-                return {step: '10m', period: 2, refill: 10 * 58, timerSpeed: 1000};
             case SpeedModes.Medium:
-                return {step: '1h', period: 10, refill: 0, timerSpeed: 250};
+                return {step: '10m', period: 2, refill: 10 * 58, timerSpeed: 1000};
             case SpeedModes.Fast:
+                return {step: '1h', period: 10, refill: 0, timerSpeed: 250};
+            case SpeedModes.VeryFast:
                 return {step: '24h', period: 20, refill: 24, timerSpeed: 250};
+            default:
+                return {step: '10m', period: 2, refill: 10 * 58, timerSpeed: 1000};
         }
     }
 

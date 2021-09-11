@@ -1,5 +1,6 @@
 export enum SpeedModes {
-    Normal,
-    Medium,
-    Fast,
+    RealTime = 'realime',
+    Medium = 'medium',
+    Fast = 'fast',
+    VeryFast = 'veryFast',
 }

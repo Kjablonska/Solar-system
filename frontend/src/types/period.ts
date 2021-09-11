@@ -9,7 +9,6 @@ export interface VisualisationOptions {
     start: string;
     end?: string;
     currentEnd: string;
-    isRealTime: boolean;
     mode: SpeedModes;
 }
 
