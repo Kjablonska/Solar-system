@@ -1,3 +1,4 @@
+import { SpeedModes } from '../speedModes';
 import UserOptions from '../types/userOptions';
 import findFetchPeriod from '../utils/findFetchPeriod';
 
@@ -10,6 +11,7 @@ export const userOptionsReducer = (
     state: UserOptionsReducer = {
         userOptions: {
             isRealTime: true,
+            mode: SpeedModes.Fast,
             startDate: formatDate(new Date()),
             endDate: undefined,
         },

@@ -1,48 +1,38 @@
-import { Curve3 } from '@babylonjs/core';
-import DatesPeriod from '../../types/period';
-import { PlanetData, VisualisationData } from '../../types/planetInterfaces';
-import { defineStartingPeriod, findNewPeriod } from '../../utils/findFetchPeriod';
+import { DatesPeriod, FetchData, VisualisationOptions } from '../../types/period';
+import { VisualisationData } from '../../types/planetInterfaces';
+import { findNewPeriod } from '../../utils/findFetchPeriod';
 import getOrbiteData from '../../utils/getOrbiteData';
 
-//TODO: redo onDataEnd()
-const INIT_MOVEMENT = 1;
+const INIT_MOVEMENT = 1; // defines number of points to jump over.
 
 export class MovePlanets {
-    isRealTime: boolean;
-    currentPeriod: DatesPeriod;
     visualisationData: VisualisationData[];
-    speed: number = 1;
-    startDate?: string;
-    endDate?: string;
-    fetchMarker: Map<string, boolean> = new Map();
+    visualisationSpeed: number = INIT_MOVEMENT;
+    visualisationOptions: VisualisationOptions;
     fetchAll: boolean = false;
+    fetchData: FetchData;
+    currentPeriod: DatesPeriod;
+    onEndDateReached: () => void;
 
     constructor(
         visualisationData: VisualisationData[],
-        isRealTime: boolean,
-        startDate?: string,
-        endDate?: string,
+        visualisationOptions: VisualisationOptions,
+        fetchData: FetchData,
         speed: number = INIT_MOVEMENT,
     ) {
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.currentPeriod = defineStartingPeriod(startDate, endDate);
-        this.isRealTime = isRealTime;
+        this.visualisationOptions = visualisationOptions;
+        this.currentPeriod = {start: visualisationOptions.start, end: visualisationOptions.currentEnd};
         this.visualisationData = visualisationData;
-        this.speed = speed || INIT_MOVEMENT;
-
-        visualisationData.forEach((data) => {
-            this.fetchMarker.set(data.planet.name, false);
-        });
+        this.visualisationSpeed = speed || INIT_MOVEMENT;
+        this.fetchData = fetchData;
     }
 
     movePlanet = async () => {
         if (this.visualisationData !== undefined) {
             for (let data of this.visualisationData) {
                 data = this.setPosition(data);
-                data.orbit.splice(0, this.speed);
-                data.iter += this.speed;
-                console.log('len', this.speed, data.iter, data.length, data.iter > data.length / 4, this.fetchMarker.get(data.planet.name) === false);
+                data.orbit.splice(0, this.visualisationSpeed);
+                data.iter += this.visualisationSpeed;
 
                 if (this.fetchAll === false && data.iter > data.length / 4) {
                     // TODO: refill all data instead.
@@ -50,7 +40,7 @@ export class MovePlanets {
                     this.fetchAll = true;
                     await this.onDataEnd()
                     .then(() => {
-                        this.fetchAll = true;
+                        this.fetchAll = false;
                     });
                 }
             }
@@ -58,7 +48,7 @@ export class MovePlanets {
     };
 
     changeSpeed = (speed: number) => {
-        this.speed = speed;
+        this.visualisationSpeed = speed;
     };
 
     setPosition = (data: VisualisationData): VisualisationData => {
@@ -70,20 +60,26 @@ export class MovePlanets {
 
     onDataEnd = async () => {
         console.log('DATA ENDED');
-        this.currentPeriod = findNewPeriod(this.currentPeriod);
+        this.currentPeriod = findNewPeriod(this.currentPeriod, this.fetchData.period);
+
+        // if (this.endDate !== undefined && new Date(this.currentPeriod.end) >= new Date(this.endDate)) {
+        //     this.onEndDateReached();
+        //     return;
+        // }
 
         const newData = await getOrbiteData({
             planet: ['Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus'],
             startDate: this.currentPeriod.start,
             endDate: this.currentPeriod.end,
-            speed: this.speed,
+            fill: this.fetchData.refill,
+            step: this.fetchData.step,
         });
 
         for (const el of this.visualisationData) {
             const toModify = newData.get(el.planet.name);
+            el.length = el.orbit.length + toModify!.length;
             el.orbit = toModify!;
-            el.length = el.length + toModify!.length;
-            el.iter = 0
+            el.iter = 0;
         }
     };
 }

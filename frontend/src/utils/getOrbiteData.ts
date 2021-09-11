@@ -9,20 +9,21 @@ interface OribtDataProps {
     planet: string[];
     startDate: string;
     endDate: string;
-    speed: number;
+    fill: number;
+    step: string;
 }
 
-export default async function getData({ planet, startDate, endDate, speed }: OribtDataProps) {
+export default async function getData({ planet, startDate, endDate, fill, step }: OribtDataProps) {
 
     async function getPlanetOrbiteData(planetNames: string[]) {
         const response = await fetch(
-            `http://localhost:5000/getObjectsJPLData?name=${planetNames}&start=${startDate}&end=${endDate}&step=${DEFAULT_STEP}`,
+            `http://localhost:5000/getObjectsJPLData?name=${planetNames}&start=${startDate}&end=${endDate}&step=${step}`,
         );
         const orbite = await response.json();
         const readyData: Map<string, Vector3[]> = new Map();
         for (const key in orbite) {
             const newData = rescaleData(orbite[key])
-            const planetCurve = Curve3.CreateCatmullRomSpline(newData, 580, false);
+            const planetCurve = Curve3.CreateCatmullRomSpline(newData, fill, false);
             readyData.set(key, planetCurve.getPoints());
         }
 

@@ -81,6 +81,7 @@ const DataSelection = () => {
         console.log(endValue);
         const newUserOptions: UserOptions = {
             isRealTime: realTime,
+            mode: SpeedModes.Normal,
             startDate: formatDate(startValue),
             endDate: realTime === false && endValue !== undefined ? formatDate(endValue) : undefined,
         };
