@@ -101,10 +101,11 @@ const DataSelection = () => {
     };
 
     const startVisualisation = () => {
+        console.log(startValue, endValue)
         const newUserOptions: UserOptions = {
             mode: mode,
             startDate: startValue !== null ? formatDate(startValue) : formatDate(new Date()),
-            endDate: mode !== SpeedModes.RealTime && endValue !== null ? formatDate(endValue) : undefined,
+            endDate: endValue !== null ? formatDate(endValue) : undefined,
         };
         dispatch(setUserSelection(newUserOptions));
         history.push('/visualisation')

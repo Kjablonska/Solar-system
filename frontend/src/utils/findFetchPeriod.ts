@@ -11,6 +11,7 @@ export default function findFetchPeriod() {
     const findNewEnd = (currentEnd: string, fetchStep: number): string => {
         const newEnd = new Date(currentEnd);
         newEnd.setDate(newEnd.getDate() + fetchStep);
+        console.log("new End", newEnd);
         return formatDate(newEnd);
     };
 

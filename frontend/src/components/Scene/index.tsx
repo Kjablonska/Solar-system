@@ -7,7 +7,7 @@ import findFetchPeriod from '../../utils/findFetchPeriod';
 import { FetchData, VisualisationOptions } from '../../types/period';
 import UserOptions from '../../types/userOptions';
 
-const planets = ['Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus'];
+const planets = ['Venus', 'Earth', 'Mars', 'Jupiter'];
 
 export const InitSceneData = () => {
     const { defineStartingPeriod, findFetchParameters } = findFetchPeriod();
@@ -30,9 +30,13 @@ export const InitSceneData = () => {
             readyData.push(newPlanetData);
         }
         setPlanetsData(readyData);
+        console.log(data);
     }
 
     useEffect(() => {
+        console.log("------------------")
+        console.log(options);
+        console.log(start, end);
         const visualisation: VisualisationOptions = {
             start: start,
             end: options.endDate,
@@ -50,6 +54,7 @@ export const InitSceneData = () => {
     //     getPlanetOrbite(planets, '1m');
     // }, [options])
 
+    console.log(planetsData !== undefined && planetsData.length === planets.length && visualisationOptions !== undefined);
     return (
         <>
             {planetsData !== undefined && planetsData.length === planets.length && visualisationOptions !== undefined? (
