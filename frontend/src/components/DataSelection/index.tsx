@@ -110,7 +110,6 @@ const DataSelection = () => {
         history.push('/visualisation')
     }
 
-
     return (
         <div>
             <DataSelectionContainer>

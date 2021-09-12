@@ -1,5 +1,4 @@
-import React from 'react';
-import { Route, BrowserRouter, Switch } from 'react-router-dom';
+import { Route, BrowserRouter, Switch, withRouter } from 'react-router-dom';
 import './App.css';
 import configureStore from './redux/store';
 import { Provider } from 'react-redux';
@@ -12,8 +11,8 @@ const App = () => {
         <Provider store={store}>
             <BrowserRouter>
                 <Switch>
-                    <Route exact path='/' component={LandingPage} />
-                    <Route exact path='/visualisation' component={InitSceneData} />
+                    <Route exact path='/' component={withRouter(LandingPage)} />
+                    <Route path='/visualisation' component={InitSceneData} />
                 </Switch>
             </BrowserRouter>
         </Provider>
