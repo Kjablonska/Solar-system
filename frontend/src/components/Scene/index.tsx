@@ -2,17 +2,22 @@ import { useEffect, useState } from 'react';
 import { RootStateOrAny, useSelector } from 'react-redux';
 import { PlanetData } from '../../types/planetInterfaces';
 import CreateScene from './CreateScene';
-import rescaleData from "../../utils/rescaleData";
-import findFetchPeriod from "../../utils/findFetchPeriod";
+import rescaleData from '../../utils/rescaleData';
+import findFetchPeriod from '../../utils/findFetchPeriod';
+import { FetchData, VisualisationOptions } from '../../types/period';
+import UserOptions from '../../types/userOptions';
+
+const planets = ['Venus', 'Earth', 'Mars', 'Jupiter'];
 
 export const InitSceneData = () => {
-    const { defineStartingPeriod } = findFetchPeriod();
+    const { defineStartingPeriod, findFetchParameters } = findFetchPeriod();
     const [planetsData, setPlanetsData] = useState<PlanetData[]>([]);
-    const planets = ['Venus', 'Earth'];
-    const options = useSelector((state: RootStateOrAny) => state.selectedOptions.userOptions);
+    const [visualisationOptions, setVisualisationOptions] = useState<VisualisationOptions>();
+    const options: UserOptions = useSelector((state: RootStateOrAny) => state.selectedOptions.userOptions);
 
-    const isRealTime: boolean = options.isRealTime;
-    const {start, end} = defineStartingPeriod(options.startDate, options.endDate);
+    // TODO: remove it from state, fix redux.
+    const [fetchData] = useState<FetchData>(findFetchParameters(options.mode));
+    const { start, end } = defineStartingPeriod(fetchData.period, options.startDate);
 
     async function getPlanetOrbite(planets: string[], step: string) {
         const response = await fetch(
@@ -25,23 +30,39 @@ export const InitSceneData = () => {
             readyData.push(newPlanetData);
         }
         setPlanetsData(readyData);
+        console.log(data);
     }
 
     useEffect(() => {
-        getPlanetOrbite(planets, '1m');
+        console.log("------------------")
+        console.log(options);
+        console.log(start, end);
+        const visualisation: VisualisationOptions = {
+            start: start,
+            end: options.endDate,
+            currentEnd: end,
+            mode: options.mode
+        }
+        getPlanetOrbite(planets, fetchData.step);
+        setVisualisationOptions(visualisation);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // TODO: It forces another 2 renders at first reload.
-    useEffect(() => {
-        console.log(options);
-        getPlanetOrbite(planets, '1m');
-    }, [options])
+    // useEffect(() => {
+    //     console.log(options);
+    //     getPlanetOrbite(planets, '1m');
+    // }, [options])
 
+    console.log(planetsData !== undefined && planetsData.length === planets.length && visualisationOptions !== undefined);
     return (
         <>
-            {planetsData !== undefined && planetsData.length === planets.length ? (
-                <CreateScene isRealTime={isRealTime} planetsData={planetsData} startDate={start} endDate={end}/>
+            {planetsData !== undefined && planetsData.length === planets.length && visualisationOptions !== undefined? (
+                <CreateScene
+                    planetsData={planetsData}
+                    visualisationOptions={visualisationOptions}
+                    fetchData={fetchData}
+                />
             ) : (
                 <>
                     <div>Loading</div>

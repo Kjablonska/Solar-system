@@ -17,12 +17,14 @@ export class SceneData {
     private meshes: Map<string, Mesh> = new Map();
     public visualisationData: VisualisationData[] = [];
     private scene: Scene;
+    private fill: number = 58;
 
-    constructor(planetsData: PlanetData[], scene: Scene) {
+    constructor(planetsData: PlanetData[], scene: Scene, fill: number) {
         this.scene = scene;
         this.attacheCamera(scene);
         this.attacheLight(scene);
         this.addPlanets(planetsData, scene);
+        this.fill = fill;
     }
 
     attacheLight = (scene: Scene) => {
@@ -52,21 +54,21 @@ export class SceneData {
             const planetName = el.planet;
 
             // Data is fetched in the period of one minute. Fill each two points with 58 points to make the period of 1second.
-            const planetCurve = Curve3.CreateCatmullRomSpline(el.position, 58, false);
+            const planetCurve = Curve3.CreateCatmullRomSpline(el.position, this.fill, false);
 
             Mesh.CreateLines(`${planetName} orbite`, planetCurve.getPoints(), scene);
             const planet = MeshBuilder.CreateSphere(planetName, { diameter: 0.5 }, scene);
 
             this.meshes.set(planetName, planet);
-            const newPlanetData: VisualisationData = { planet: planet, orbit: planetCurve.getPoints(), iter: 0 };
+            const newPlanetData: VisualisationData = { planet: planet, orbit: planetCurve.getPoints(), iter: 0, length: planetCurve.getPoints().length };
             this.visualisationData.push(newPlanetData);
         }
     };
 
     generateVisualisationData = (planetsData: PlanetData[]) => {
         for (const el of planetsData) {
-            const planetCurve = Curve3.CreateCatmullRomSpline(el.position, 58, false);
-            const newPlanetData: VisualisationData = { planet: this.meshes.get(el.planet) || MeshBuilder.CreateSphere(el.planet, { diameter: 0.5 }, this.scene), orbit: planetCurve.getPoints(), iter: 0 };
+            const planetCurve = Curve3.CreateCatmullRomSpline(el.position, this.fill, false);
+            const newPlanetData: VisualisationData = { planet: this.meshes.get(el.planet) || MeshBuilder.CreateSphere(el.planet, { diameter: 0.5 }, this.scene), orbit: planetCurve.getPoints(), iter: 0, length: planetCurve.getPoints().length };
             this.visualisationData.push(newPlanetData);
         }
     }

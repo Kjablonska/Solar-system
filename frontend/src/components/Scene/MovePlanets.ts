@@ -1,51 +1,55 @@
-import DatesPeriod from '../../types/period';
-import { PlanetData, VisualisationData } from '../../types/planetInterfaces';
-import { defineStartingPeriod, findNewPeriod } from '../../utils/findFetchPeriod';
+import { DatesPeriod, FetchData, VisualisationOptions } from '../../types/period';
+import { VisualisationData } from '../../types/planetInterfaces';
+import { findNewPeriod } from '../../utils/findFetchPeriod';
 import getOrbiteData from '../../utils/getOrbiteData';
 
-//TODO: redo onDataEnd()
-const INIT_MOVEMENT = 1;
+const INIT_MOVEMENT = 1; // defines number of points to jump over.
 
 export class MovePlanets {
-    isRealTime: boolean;
-    currentPeriod: DatesPeriod;
     visualisationData: VisualisationData[];
-    speed?: number;
-    startDate?: string;
-    endDate?: string;
+    visualisationSpeed: number = INIT_MOVEMENT;
+    visualisationOptions: VisualisationOptions;
+    fetchAll: boolean = false;
+    fetchData: FetchData;
+    currentPeriod: DatesPeriod;
+    onEndDateReached: () => void;
 
     constructor(
         visualisationData: VisualisationData[],
-        isRealTime: boolean,
-        speed?: number,
-        startDate?: string,
-        endDate?: string,
+        visualisationOptions: VisualisationOptions,
+        fetchData: FetchData,
+        speed: number = INIT_MOVEMENT,
     ) {
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.currentPeriod = defineStartingPeriod(startDate, endDate);
-        this.isRealTime = isRealTime;
+        this.visualisationOptions = visualisationOptions;
+        this.currentPeriod = {start: visualisationOptions.start, end: visualisationOptions.currentEnd};
         this.visualisationData = visualisationData;
-        this.speed = speed || INIT_MOVEMENT;
+        this.visualisationSpeed = speed || INIT_MOVEMENT;
+        this.fetchData = fetchData;
     }
 
     movePlanet = async () => {
         if (this.visualisationData !== undefined) {
             for (let data of this.visualisationData) {
                 data = this.setPosition(data);
-                const res = data.orbit.splice(0, this.speed);
-                data.iter++;
-                if (data.iter > data.orbit.length / 3) {
-                    data = await this.onDataEnd(data);
+                data.orbit.splice(0, this.visualisationSpeed);
+                data.iter += this.visualisationSpeed;
+
+                if (this.fetchAll === false && data.iter > data.length / 4) {
+                    // TODO: refill all data instead.
+                    console.log('DATA ENDED');
+                    this.fetchAll = true;
+                    await this.onDataEnd()
+                    .then(() => {
+                        this.fetchAll = false;
+                    });
                 }
             }
         }
     };
 
     changeSpeed = (speed: number) => {
-        this.speed = speed;
-        console.log("speed changed" ,this.speed);
-    }
+        this.visualisationSpeed = speed;
+    };
 
     setPosition = (data: VisualisationData): VisualisationData => {
         data.planet.position.x = data.orbit[0].x;
@@ -54,17 +58,28 @@ export class MovePlanets {
         return data;
     };
 
-    onDataEnd = async (data: VisualisationData) => {
-        this.currentPeriod = findNewPeriod(this.currentPeriod);
+    onDataEnd = async () => {
+        console.log('DATA ENDED');
+        this.currentPeriod = findNewPeriod(this.currentPeriod, this.fetchData.period);
 
-        const newData: PlanetData = await getOrbiteData({
-            planet: data.planet.name,
+        // if (this.endDate !== undefined && new Date(this.currentPeriod.end) >= new Date(this.endDate)) {
+        //     this.onEndDateReached();
+        //     return;
+        // }
+
+        const newData = await getOrbiteData({
+            planet: ['Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus'],
             startDate: this.currentPeriod.start,
             endDate: this.currentPeriod.end,
+            fill: this.fetchData.refill,
+            step: this.fetchData.step,
         });
 
-        data.orbit.concat(newData.position);
-        data.iter = 0;
-        return data;
+        for (const el of this.visualisationData) {
+            const toModify = newData.get(el.planet.name);
+            el.length = el.orbit.length + toModify!.length;
+            el.orbit = toModify!;
+            el.iter = 0;
+        }
     };
 }

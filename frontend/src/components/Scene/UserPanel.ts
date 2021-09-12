@@ -2,39 +2,25 @@ import { AdvancedDynamicTexture, StackPanel, TextBlock, Button } from '@babylonj
 import { Scene } from '@babylonjs/core';
 import { Timer } from './Timer';
 import { VisualisationData } from '../../types/planetInterfaces';
-import { MovePlanets } from './MovePlanets';
 import { Clock } from './Clock';
+import { FetchData, VisualisationOptions } from '../../types/period';
 
-const formatData = (data: number): string => {
-    // const dataToString = data.toString();
-    // return dataToString.length === 2 ? dataToString : `0${dataToString}`;
-    return data.toString();
-};
-
-// `${formatData(date.getDay())}-${formatData(date.getMonth())}-${formatData(date.getFullYear())}  ${formatData(date.getHours())}:${formatData(date.getMinutes())}:${formatData(date.getSeconds())}`;
-
-const getTime = (): string => {
-    const date = new Date();
-    return `${formatData(date.getDay())}-${formatData(date.getMonth())}-${formatData(date.getFullYear())}  ${formatData(
-        date.getHours(),
-    )}:${formatData(date.getMinutes())}:${formatData(date.getSeconds())}`;
-};
 
 export class UserPanel {
     public timer: Timer;
     public clock: Clock;
 
-    constructor(scene: Scene, clock: Clock, planetsMovement: MovePlanets, visualisationData: VisualisationData[]) {
+    constructor(scene: Scene, visualisationData: VisualisationData[], visualisationOptions: VisualisationOptions, fetchData: FetchData) {
         const userPanel = AdvancedDynamicTexture.CreateFullscreenUI('UI');
         const stackPanel = this.initStackPanel();
         userPanel.addControl(stackPanel);
-        this.clock = clock;
-        stackPanel.addControl(clock.getClock());
+        this.clock = new Clock(visualisationOptions, fetchData.timerSpeed);
+        stackPanel.addControl(this.clock.getClock());
         stackPanel.addControl(this.initSpeedUpButton());
         stackPanel.addControl(this.initSlowDownButton());
         stackPanel.addControl(this.initResetButton());
         this.updateClock = this.updateClock.bind(this)
-        this.timer = new Timer(planetsMovement, scene, visualisationData, this.clock.onUpdate, this.clock.updateSpeed);
+        this.timer = new Timer(scene, visualisationData, fetchData, visualisationOptions, this.clock.onUpdate, this.clock.updateSpeed);
     }
 
     private initSlowDownButton = () => {

@@ -1,4 +1,5 @@
 import { Scene, AdvancedTimer } from '@babylonjs/core';
+import { isConstructorDeclaration } from 'typescript';
 import { MovePlanets } from '../components/Scene/MovePlanets';
 
 interface MovementTimer {
@@ -7,17 +8,6 @@ interface MovementTimer {
     speed: number;
     updateClock: () => void;
 }
-
-const formatData = (data: number): string => {
-    const dataToString = data.toString();
-    return dataToString.length === 2 ? dataToString : `0${dataToString}`;
-};
-
-// const setTime = () => {
-//     return `${formatData(date.getHours())}-${formatData(date.getMinutes())}-${formatData(date.getSeconds())}`;
-// };
-
-// TODO: update clock.
 
 export default function setMovementTimer({
     scene,
@@ -30,13 +20,14 @@ export default function setMovementTimer({
         contextObservable: scene.onBeforeRenderObservable,
     });
     advancedTimer.onEachCountObservable.add(() => {
-        planetsMovement.movePlanet();
-        updateClock();
     });
 
     advancedTimer.onTimerAbortedObservable.add(() => {});
 
     advancedTimer.onTimerEndedObservable.add(() => {
+        console.log(speed)
+        planetsMovement.movePlanet();
+        updateClock();
         advancedTimer.start(speed);
     });
 
