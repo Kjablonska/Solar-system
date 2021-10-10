@@ -75,7 +75,6 @@ def get_JPL_planets_data():
         res = Horizons(id = str(planet["_id"]), location='@Sun', epochs = {"start": str(start), "stop": str(end), "step": str(step)}, id_type='majorbody')
         vec = res.vectors()
         print(planet)
-        print(vec)
         possitons_data = {}
         for name in vec.colnames:
             if name in ['x', 'y', 'z']:

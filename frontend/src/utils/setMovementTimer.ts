@@ -1,5 +1,4 @@
 import { Scene, AdvancedTimer } from '@babylonjs/core';
-import { isConstructorDeclaration } from 'typescript';
 import { MovePlanets } from '../components/Scene/MovePlanets';
 
 interface MovementTimer {

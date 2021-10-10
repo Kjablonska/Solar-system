@@ -7,7 +7,7 @@ import findFetchPeriod from '../../utils/findFetchPeriod';
 import { FetchData, VisualisationOptions } from '../../types/period';
 import UserOptions from '../../types/userOptions';
 
-const planets = ['Venus', 'Earth', 'Mars', 'Jupiter'];
+const planets = ['Mercury', 'Venus', 'Earth', 'Mars', "Jupiter", "Saturn", "Uranus", "Naptune"];
 
 export const InitSceneData = () => {
     const { defineStartingPeriod, findFetchParameters } = findFetchPeriod();
@@ -26,7 +26,7 @@ export const InitSceneData = () => {
         const data = await response.json();
         const readyData = [];
         for (const key in data) {
-            const newPlanetData: PlanetData = { planet: key, position: rescaleData(data[key]) };
+            const newPlanetData: PlanetData = { planet: key, position: rescaleData(data[key], key)};
             readyData.push(newPlanetData);
         }
         setPlanetsData(readyData);
@@ -37,13 +37,13 @@ export const InitSceneData = () => {
         console.log("------------------")
         console.log(options);
         console.log(start, end);
+        getPlanetOrbite(planets, fetchData.step);
         const visualisation: VisualisationOptions = {
             start: start,
             end: options.endDate,
             currentEnd: end,
             mode: options.mode
         }
-        getPlanetOrbite(planets, fetchData.step);
         setVisualisationOptions(visualisation);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

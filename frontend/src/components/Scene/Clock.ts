@@ -24,7 +24,7 @@ export class Clock {
         this.startDate = new Date(visualisationOptions.start);
         this.endDate = visualisationOptions.end !== undefined ? new Date(visualisationOptions.end) : visualisationOptions.end;
         this.timerSpeed = speed !== undefined ? speed : this.timerSpeed;
-        console.log('update', this.startDate);
+        // console.log('update', this.startDate);
     };
 
     public updateSpeed = (speed: number) => {
@@ -48,8 +48,9 @@ export class Clock {
     };
 
     public findNextValue = () => {
-        const update = this.startDate.getMilliseconds() + this.timerSpeed;
+        const update = this.startDate.getSeconds() + this.timerSpeed / 1000;
         this.startDate.setSeconds(update);
+        // console.log("clock update", update, this.startDate.getMinutes())
     };
 
     public onUpdate = () => {
