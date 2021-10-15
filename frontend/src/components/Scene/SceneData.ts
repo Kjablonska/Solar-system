@@ -8,6 +8,8 @@ import {
     Scene,
     MeshBuilder,
     Mesh,
+    CubeTexture,
+    Texture
 } from '@babylonjs/core';
 import { PlanetData, VisualisationData } from '../../types/planetInterfaces';
 
@@ -21,11 +23,11 @@ import { PlanetData, VisualisationData } from '../../types/planetInterfaces';
 // ['Uranus', 4.007369081],
 // ['Neptun', 3.882721856],
 const diameterMap = new Map<string, number>([
-    ["Sun", 3.037737488],
-    ["Mercury", 0.582616308],
-    ["Venus", 0.977214404],
-    ["Earth", 1],
-    ["Mars", 0.726283167],
+    ['Sun', 3.037737488],
+    ['Mercury', 0.582616308],
+    ['Venus', 0.977214404],
+    ['Earth', 1],
+    ['Mars', 0.726283167],
     ['Jupiter', 2.049572932],
     ['Saturn', 1.975402265],
     ['Uranus', 1.602859343],
@@ -52,10 +54,11 @@ export class SceneData {
         this.light = new PointLight('light', new Vector3(0, 0, 0), scene);
         this.light.intensity = 2;
 
-        this.sun = MeshBuilder.CreateSphere('sun', { diameter: diameterMap.get("Sun") }, scene);
+        this.sun = MeshBuilder.CreateSphere('sun', { diameter: diameterMap.get('Sun') }, scene);
         // this.sun = MeshBuilder.CreateSphere('sun', { diameter:0.2  }, scene);
         this.sun.position.copyFrom(this.light.position);
         const material = new StandardMaterial('mat', scene);
+        material.diffuseTexture = new Texture(`http://localhost:5000/assets/planets/Sun`, scene);
         material.emissiveColor = this.light.diffuse;
         this.sun.material = material;
     };
@@ -85,12 +88,9 @@ export class SceneData {
             // const planet = MeshBuilder.CreateSphere(planetName, { diameter: 0.2 }, scene);
 
             var material = new StandardMaterial(planetName, scene);
-            console.log(planetName)
-            if (planetName === 'Mercury') material.diffuseColor = new Color3(0.05, 0.34, 0.72); // blue
-            else if (planetName === 'Venus') material.diffuseColor = new Color3(0.72, 0.05, 0.69); // pink
-            else if (planetName === 'Earth') material.diffuseColor = new Color3(0.18, 0.72, 0.05); // green
-            else if (planetName === 'Mars') material.diffuseColor = new Color3(0.95, 0.94, 0.02); // yellow
-            else if (planetName === 'Jupiter') material.diffuseColor = new Color3(0.82, 0.24, 0.24); //red
+            material.diffuseTexture = new Texture(`http://localhost:5000/assets/planets/${planetName}`, scene);
+            // material.diffuseTexture.vScale = -1;
+            // material.diffuseTexture.uScale = -1;
             planet.material = material;
 
             this.meshes.set(planetName, planet);
@@ -102,14 +102,30 @@ export class SceneData {
             };
             this.visualisationData.push(newPlanetData);
         }
+
+        this.generateSkyBox(scene);
     };
+
+    generateSkyBox = (scene: Scene) => {
+        const skybox = MeshBuilder.CreateBox('skyBox', { size: 1000.0 }, scene);
+        const skyboxMaterial = new StandardMaterial('skyBox', scene);
+        skyboxMaterial.backFaceCulling = false;
+        skyboxMaterial.reflectionTexture = new CubeTexture('http://localhost:5000/assets/stars', scene);
+        skyboxMaterial.reflectionTexture.coordinatesMode = Texture.SKYBOX_MODE;
+        skyboxMaterial.diffuseColor = new Color3(0, 0, 0);
+        skyboxMaterial.specularColor = new Color3(0, 0, 0);
+        skybox.material = skyboxMaterial;
+
+        console.log("skybox");
+    }
 
     generateVisualisationData = (planetsData: PlanetData[]) => {
         for (const el of planetsData) {
             const planetCurve = Curve3.CreateCatmullRomSpline(el.position, this.fill, false);
             const newPlanetData: VisualisationData = {
                 planet:
-                    this.meshes.get(el.planet) || MeshBuilder.CreateSphere(el.planet, { diameter: diameterMap.get(el.planet) }, this.scene),
+                    this.meshes.get(el.planet) ||
+                    MeshBuilder.CreateSphere(el.planet, { diameter: diameterMap.get(el.planet) }, this.scene),
                 orbit: planetCurve.getPoints(),
                 iter: 0,
                 length: planetCurve.getPoints().length,

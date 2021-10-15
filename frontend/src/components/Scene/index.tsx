@@ -6,6 +6,7 @@ import rescaleData from '../../utils/rescaleData';
 import findFetchPeriod from '../../utils/findFetchPeriod';
 import { FetchData, VisualisationOptions } from '../../types/period';
 import UserOptions from '../../types/userOptions';
+import Spinner from '../LandingPage/Spinner';
 
 const planets = ['Mercury', 'Venus', 'Earth', 'Mars', "Jupiter", "Saturn", "Uranus", "Naptune"];
 
@@ -65,7 +66,7 @@ export const InitSceneData = () => {
                 />
             ) : (
                 <>
-                    <div>Loading</div>
+                    <Spinner />
                 </>
             )}
         </>
