@@ -35,10 +35,9 @@ const ModeSelectionContainer = styled.div`
     align-items: left;
 `;
 
-const ModeCheckBox = styled.label`
+const ModeCheckBox = styled.input`
     height: 20px;
     width: 20px;
-    background: #a6808c;
     background: #a6808c;
     border: 1px solid #000000;
     box-sizing: border-box;
@@ -117,11 +116,11 @@ const DataSelection = () => {
                 <ModalTitle />
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <ModeSelectionContainer>
-                        <ModeCheckBox />
+                        <ModeCheckBox type="radio"/>
                         <ModalText>Real time</ModalText>
                     </ModeSelectionContainer>
                     <ModeSelectionContainer>
-                        <ModeCheckBox />
+                        <ModeCheckBox type="radio" />
                         <ModalText>Select visualisation data</ModalText>
                     </ModeSelectionContainer>
                     <ModeSelectionContainer>

@@ -67,8 +67,9 @@ export class MovePlanets {
         //     return;
         // }
 
+
         const newData = await getOrbiteData({
-            planet: ['Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus'],
+            planet: ['Mercury', 'Venus', 'Earth', 'Mars', "Jupiter", "Saturn", "Uranus", "Naptune"],
             startDate: this.currentPeriod.start,
             endDate: this.currentPeriod.end,
             fill: this.fetchData.refill,
