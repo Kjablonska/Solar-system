@@ -24,7 +24,7 @@ export default function setMovementTimer({
     advancedTimer.onTimerAbortedObservable.add(() => {});
 
     advancedTimer.onTimerEndedObservable.add(() => {
-        console.log(speed)
+        // console.log(speed)
         planetsMovement.movePlanet();
         updateClock();
         advancedTimer.start(speed);

@@ -40,14 +40,15 @@ export class SceneData {
     private meshes: Map<string, Mesh> = new Map();
     public visualisationData: VisualisationData[] = [];
     private scene: Scene;
-    private fill: number = 58;
+    private fill: number;
 
-    constructor(planetsData: PlanetData[], scene: Scene, fill: number) {
+    constructor(planetsData: PlanetData[], scene: Scene, refill: number) {
         this.scene = scene;
         this.attacheCamera(scene);
         this.attacheLight(scene);
+        this.fill = refill;
         this.addPlanets(planetsData, scene);
-        this.fill = fill;
+        console.log("SCENE DATA CLASS", refill, this.fill)
     }
 
     attacheLight = (scene: Scene) => {
@@ -80,13 +81,14 @@ export class SceneData {
             const planetName = el.planet;
 
             // TODO: draw oribtes.
-            // Data is fetched in the period of one minute. Fill each two points with 58 points to make the period of 1second.
+            console.log("fillito", this.fill);
+
+            // TODO: Fix fill parameter żelcia żelcia
             const planetCurve = Curve3.CreateCatmullRomSpline(el.position, this.fill, false);
+            const b = planetCurve.getPoints();
+            Mesh.CreateLines(`${planetName} orbite`, b, scene);
 
-            Mesh.CreateLines(`${planetName} orbite`, planetCurve.getPoints(), scene);
             const planet = MeshBuilder.CreateSphere(planetName, { diameter: diameterMap.get(planetName) }, scene);
-            // const planet = MeshBuilder.CreateSphere(planetName, { diameter: 0.2 }, scene);
-
             var material = new StandardMaterial(planetName, scene);
             material.diffuseTexture = new Texture(`http://localhost:5000/assets/planets/${planetName}`, scene);
             // material.diffuseTexture.vScale = -1;

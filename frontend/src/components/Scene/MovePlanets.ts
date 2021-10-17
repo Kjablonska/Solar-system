@@ -52,16 +52,16 @@ export class MovePlanets {
     };
 
     setPosition = (data: VisualisationData): VisualisationData => {
-        data.planet.position.x = data.orbit[0].x;
-        data.planet.position.y = data.orbit[0].y;
-        data.planet.position.z = data.orbit[0].z;
+        data.planet.position.x = data.orbit[0]._x;
+        data.planet.position.y = data.orbit[0]._y;
+        data.planet.position.z = data.orbit[0]._z;
         return data;
     };
 
     onDataEnd = async () => {
         console.log('DATA ENDED');
         this.currentPeriod = findNewPeriod(this.currentPeriod, this.fetchData.period);
-
+        // TODO: end date
         // if (this.endDate !== undefined && new Date(this.currentPeriod.end) >= new Date(this.endDate)) {
         //     this.onEndDateReached();
         //     return;
@@ -79,7 +79,7 @@ export class MovePlanets {
         for (const el of this.visualisationData) {
             const toModify = newData.get(el.planet.name);
             el.length = el.orbit.length + toModify!.length;
-            el.orbit = toModify!;
+            el.orbit.push(...toModify!);
             el.iter = 0;
         }
     };

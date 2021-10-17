@@ -25,6 +25,7 @@ const SceneComponent = (props: any) => {
             const initScene = new Scene(engine, sceneOptions);
             setScene(initScene);
             if (initScene !== undefined && initScene.isReady()) {
+                console.log("SCENE COMPONENT", fetchData, fetchData.refill);
                 const initData = new SceneData(planetsData, initScene, fetchData.refill);
                 setData(initData);
                 const initUI = new UserPanel(initScene, initData.visualisationData, visualisationOptions, fetchData);

@@ -18,6 +18,7 @@ export const InitSceneData = () => {
 
     // TODO: remove it from state, fix redux.
     const [fetchData] = useState<FetchData>(findFetchParameters(options.mode));
+    console.log("period", fetchData.period, options.startDate);
     const { start, end } = defineStartingPeriod(fetchData.period, options.startDate);
 
     async function getPlanetOrbite(planets: string[], step: string) {
@@ -55,7 +56,7 @@ export const InitSceneData = () => {
     //     getPlanetOrbite(planets, '1m');
     // }, [options])
 
-    console.log(planetsData !== undefined && planetsData.length === planets.length && visualisationOptions !== undefined);
+    console.log("INDEX SCENE", planetsData !== undefined && planetsData.length === planets.length && visualisationOptions !== undefined);
     return (
         <>
             {planetsData !== undefined && planetsData.length === planets.length && visualisationOptions !== undefined? (

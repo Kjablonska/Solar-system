@@ -159,9 +159,6 @@ const DataSelection = () => {
                             <Option id='fast' value={SpeedModes.Fast}>
                                 Fast
                             </Option>
-                            <Option id='very-fast' value={SpeedModes.VeryFast}>
-                                Very fast
-                            </Option>
                         </DropDown>
                     </ModeSelectionContainer>
                 </div>

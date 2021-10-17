@@ -56,7 +56,7 @@ const SpinnerContainer = styled.div`
     flex-direction: column;
 `;
 
-const SpinnerTitle = styled.div.attrs({ children: 'Wait for the data to be loaded' })`
+const SpinnerTitle = styled.div.attrs({ children: 'Please wait for the data to be loaded' })`
     color: #d6cfcb;
     height: 100px;
     flex: 1;
