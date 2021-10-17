@@ -11,31 +11,33 @@ export default function findFetchPeriod() {
     const findNewEnd = (currentEnd: string, fetchStep: number): string => {
         const newEnd = new Date(currentEnd);
         newEnd.setDate(newEnd.getDate() + fetchStep);
-        console.log("new End", newEnd);
         return formatDate(newEnd);
     };
 
     const findNewPeriod = (currentPeriod: DatesPeriod, fetchStep: number): DatesPeriod => {
         const newStart = currentPeriod.end;
         const newEnd = findNewEnd(newStart, fetchStep);
+        console.log("new fetch", newStart, newEnd);
         return { start: newStart, end: newEnd };
     };
 
     const defineStartingPeriod = (fetchStep: number, startDate?: string) => {
         const start = startDate ? startDate : formatDate(new Date());
-        const end = findNewEnd(formatDate(new Date()), fetchStep);
+        const end = findNewEnd(start, fetchStep);
+        console.log("define staring period", fetchStep, startDate, end);
         return { start, end };
     };
 
+    // TODO: recalculate values.
     const findFetchParameters = (speedMode: SpeedModes): FetchData => {
-        console.log(speedMode);
+        console.log("SPEED MODE", speedMode);
         switch (speedMode) {
-            case SpeedModes.Medium:
+            case SpeedModes.RealTime:
                 return {step: '10m', period: 2, refill: 10 * 58, timerSpeed: 1000};
+            case SpeedModes.Medium:
+                return {step: '24h', period: 120, refill: 100, timerSpeed: 10};
             case SpeedModes.Fast:
-                return {step: '1h', period: 10, refill: 0, timerSpeed: 250};
-            case SpeedModes.VeryFast:
-                return {step: '24h', period: 20, refill: 24, timerSpeed: 250};
+                return {step: '48h', period: 360, refill: 10, timerSpeed: 10};
             default:
                 return {step: '10m', period: 2, refill: 10 * 58, timerSpeed: 1000};
         }

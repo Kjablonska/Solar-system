@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 
 from astroquery.jplhorizons import Horizons
@@ -20,6 +20,7 @@ import numpy as np
 
 app = Flask(__name__)
 CORS(app)
+
 
 @app.route("/getPlanet")
 def get_planetId_by_name():
@@ -50,7 +51,8 @@ def get_JPL_data():
     print(planet["_id"])
 
     # 1 MO
-    obj = Horizons(id = str(planet["_id"]), location='@Sun', epochs = {"start": start, "stop": end, "step": step}, id_type='majorbody')
+    obj = Horizons(id=str(planet["_id"]), location='@Sun', epochs={
+                   "start": start, "stop": end, "step": step}, id_type='majorbody')
 
     vec = obj.vectors()
     possitons_data = {}
@@ -58,6 +60,7 @@ def get_JPL_data():
         if name in ['x', 'y', 'z']:
             possitons_data[name] = vec[name].to(u.km).value.tolist()
     return possitons_data
+
 
 @app.route("/getObjectsJPLData")
 def get_JPL_planets_data():
@@ -72,10 +75,10 @@ def get_JPL_planets_data():
     data = {}
     for planet in planets:
         print("here")
-        res = Horizons(id = str(planet["_id"]), location='@Sun', epochs = {"start": str(start), "stop": str(end), "step": str(step)}, id_type='majorbody')
+        res = Horizons(id=str(planet["_id"]), location='@Sun', epochs={"start": str(
+            start), "stop": str(end), "step": str(step)}, id_type='majorbody')
         vec = res.vectors()
         print(planet)
-        print(vec)
         possitons_data = {}
         for name in vec.colnames:
             if name in ['x', 'y', 'z']:
@@ -83,6 +86,7 @@ def get_JPL_planets_data():
         data[planet["name"]] = possitons_data
 
     return json.dumps(data)
+
 
 def parsePlanetsNames(names):
     names = names.replace("[", "")
@@ -115,9 +119,11 @@ def get_starts():
 # @app.route("/connect")
 # TODO: put db credentials in config file.
 def connectToDatabase():
-    client = pymongo.MongoClient("mongodb://solar-system:solar-system@mongo:27017")
+    client = pymongo.MongoClient(
+        "mongodb://solar-system:solar-system@mongo:27017")
     mydb = client["celestial-bodies"]
     return mydb
+
 
 @app.route("/conn")
 def conn():
@@ -127,10 +133,12 @@ def conn():
     data = planet_collection.find_one({'_id': '399'})
     return data
 
+
 def get_planet(name):
     mydb = connectToDatabase()
     planet_collection = mydb["planets"]
     return planet_collection.find_one({'name': name})
+
 
 @app.route("/sth")
 def sth():
@@ -140,12 +148,13 @@ def sth():
     data = planet_collection.find({'_id': {"$in": ids}})
     return data
 
+
 def get_planets(names):
     mydb = connectToDatabase()
     planet_collection = mydb["planets"]
     print(type(names))
     print(names)
-    res = planet_collection.find({'name': {"$in":names}})
+    res = planet_collection.find({'name': {"$in": names}})
     data = []
     for doc in res:
         data.append(doc)
@@ -161,18 +170,41 @@ def dbConnect():
 
     collection = db['planets']
 
-    collection.insert_one({'_id': '199', 'name': 'Mercury', "revolution": "56"})
+    collection.insert_one(
+        {'_id': '199', 'name': 'Mercury', "revolution": "56"})
     collection.insert_one({'_id': '299', 'name': 'Venus', "revolution": "225"})
     collection.insert_one({'_id': '399', 'name': 'Earth', "revolution": "356"})
     collection.insert_one({'_id': '499', 'name': 'Mars', "revolution": "687"})
-    collection.insert_one({'_id': '599', 'name': 'Jupiter', "revolution": "4328"})
-    collection.insert_one({'_id': '699', 'name': 'Saturn', "revolution": "10752"})
-    collection.insert_one({'_id': '799', 'name': 'Uranus', "revolution": "30660"})
-    collection.insert_one({'_id': '899', 'name': 'Neptune', "revolution": "60148.35"})
+    collection.insert_one(
+        {'_id': '599', 'name': 'Jupiter', "revolution": "4328"})
+    collection.insert_one(
+        {'_id': '699', 'name': 'Saturn', "revolution": "10752"})
+    collection.insert_one(
+        {'_id': '799', 'name': 'Uranus', "revolution": "30660"})
+    collection.insert_one(
+        {'_id': '899', 'name': 'Neptune', "revolution": "60148.35"})
 
     return str(db.list_collection_names())
 
 
+
+@app.route('/assets/<name>')
+def get_skybox(name):
+    return send_file(
+        "./assets/skybox/{}".format(name),
+        as_attachment=True,
+        attachment_filename='test.jpg',
+        mimetype='image/jpeg'
+    )
+
+@app.route('/assets/planets/<planet>')
+def get_planet_texture(planet):
+    return send_file(
+        "./assets/planets/{}.jpg".format(planet),
+        as_attachment=True,
+        attachment_filename="{}.jpg".format(planet),
+        mimetype='image/jpeg'
+    )
 
 # Local db commands:
 # sudo service mongod start

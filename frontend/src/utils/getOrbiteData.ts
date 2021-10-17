@@ -22,7 +22,7 @@ export default async function getData({ planet, startDate, endDate, fill, step }
         const orbite = await response.json();
         const readyData: Map<string, Vector3[]> = new Map();
         for (const key in orbite) {
-            const newData = rescaleData(orbite[key])
+            const newData = rescaleData(orbite[key], key)
             const planetCurve = Curve3.CreateCatmullRomSpline(newData, fill, false);
             readyData.set(key, planetCurve.getPoints());
         }

@@ -1,5 +1,4 @@
 import { Scene, AdvancedTimer } from '@babylonjs/core';
-import { isConstructorDeclaration } from 'typescript';
 import { MovePlanets } from '../components/Scene/MovePlanets';
 
 interface MovementTimer {
@@ -25,7 +24,7 @@ export default function setMovementTimer({
     advancedTimer.onTimerAbortedObservable.add(() => {});
 
     advancedTimer.onTimerEndedObservable.add(() => {
-        console.log(speed)
+        // console.log(speed)
         planetsMovement.movePlanet();
         updateClock();
         advancedTimer.start(speed);

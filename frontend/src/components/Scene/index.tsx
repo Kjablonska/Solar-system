@@ -6,8 +6,9 @@ import rescaleData from '../../utils/rescaleData';
 import findFetchPeriod from '../../utils/findFetchPeriod';
 import { FetchData, VisualisationOptions } from '../../types/period';
 import UserOptions from '../../types/userOptions';
+import Spinner from '../LandingPage/Spinner';
 
-const planets = ['Venus', 'Earth', 'Mars', 'Jupiter'];
+const planets = ['Mercury', 'Venus', 'Earth', 'Mars', "Jupiter", "Saturn", "Uranus", "Naptune"];
 
 export const InitSceneData = () => {
     const { defineStartingPeriod, findFetchParameters } = findFetchPeriod();
@@ -17,6 +18,7 @@ export const InitSceneData = () => {
 
     // TODO: remove it from state, fix redux.
     const [fetchData] = useState<FetchData>(findFetchParameters(options.mode));
+    console.log("period", fetchData.period, options.startDate);
     const { start, end } = defineStartingPeriod(fetchData.period, options.startDate);
 
     async function getPlanetOrbite(planets: string[], step: string) {
@@ -26,7 +28,7 @@ export const InitSceneData = () => {
         const data = await response.json();
         const readyData = [];
         for (const key in data) {
-            const newPlanetData: PlanetData = { planet: key, position: rescaleData(data[key]) };
+            const newPlanetData: PlanetData = { planet: key, position: rescaleData(data[key], key)};
             readyData.push(newPlanetData);
         }
         setPlanetsData(readyData);
@@ -37,13 +39,13 @@ export const InitSceneData = () => {
         console.log("------------------")
         console.log(options);
         console.log(start, end);
+        getPlanetOrbite(planets, fetchData.step);
         const visualisation: VisualisationOptions = {
             start: start,
             end: options.endDate,
             currentEnd: end,
             mode: options.mode
         }
-        getPlanetOrbite(planets, fetchData.step);
         setVisualisationOptions(visualisation);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -54,7 +56,7 @@ export const InitSceneData = () => {
     //     getPlanetOrbite(planets, '1m');
     // }, [options])
 
-    console.log(planetsData !== undefined && planetsData.length === planets.length && visualisationOptions !== undefined);
+    console.log("INDEX SCENE", planetsData !== undefined && planetsData.length === planets.length && visualisationOptions !== undefined);
     return (
         <>
             {planetsData !== undefined && planetsData.length === planets.length && visualisationOptions !== undefined? (
@@ -65,7 +67,7 @@ export const InitSceneData = () => {
                 />
             ) : (
                 <>
-                    <div>Loading</div>
+                    <Spinner />
                 </>
             )}
         </>
