@@ -148,7 +148,7 @@ db.planets.insert(
         },
         {
             "_id": "899",
-            "name": "Naptune",
+            "name": "Neptune",
             "satellites": []
         }
     ]

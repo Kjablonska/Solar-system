@@ -22,7 +22,7 @@ export default async function getData({ planet, startDate, endDate, fill, step }
         const orbite = await response.json();
         const readyData: Map<string, Vector3[]> = new Map();
         for (const key in orbite) {
-            const newData = rescaleData(orbite[key], key)
+            const newData = rescaleData(orbite[key], key);
             const planetCurve = Curve3.CreateCatmullRomSpline(newData, fill, false);
             readyData.set(key, planetCurve.getPoints());
         }
@@ -33,19 +33,19 @@ export default async function getData({ planet, startDate, endDate, fill, step }
     return getPlanetOrbiteData(planet);
 }
 
-/**
- * if I;m jumping more than 60 points at once - fetch 1minute.
- * if I'm jumping more than 60*5 at once - fetch 5minutes.
- * If I;m jumping more than 60*10 at once - fetch 10minutes.
- */
 
-/**
- *     const getStepSize = () => {
-        if (speed > 60 && speed < 300) {
-            return '1m';
-        } else if (speed > 300 && speed < 600) {
-            return '5m';
-        }
-        return '10m';
-    };
- */
+async function getPlanetOrbiteData({ planet, startDate, endDate, fill, step }: OribtDataProps) {
+    const response = await fetch(
+        `http://localhost:5000/getObjectsJPLData?name=${planet}&start=${startDate}&end=${endDate}&step=${step}`,
+    );
+    const orbite = await response.json();
+    const readyData: Map<string, Vector3[]> = new Map();
+    for (const key in orbite) {
+        const newData = rescaleData(orbite[key], key);
+        const planetCurve = Curve3.CreateCatmullRomSpline(newData, fill, false);
+        readyData.set(key, planetCurve.getPoints());
+    }
+
+    return readyData;
+}
+

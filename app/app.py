@@ -75,8 +75,8 @@ def get_JPL_planets_data():
     data = {}
     for planet in planets:
         print("here")
-        res = Horizons(id=str(planet["_id"]), location='@Sun', epochs={"start": str(
-            start), "stop": str(end), "step": str(step)}, id_type='majorbody')
+        Horizons.TIMEOUT = 60
+        res = Horizons(id=str(planet["_id"]), location='@Sun', epochs={"start": str(start), "stop": str(end), "step": str(step)}, id_type='majorbody')
         vec = res.vectors()
         print(planet)
         possitons_data = {}

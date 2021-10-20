@@ -1,8 +1,6 @@
 import { SpeedModes } from '../speedModes';
 import { DatesPeriod, FetchData } from '../types/period';
 
-const DEFAULT_FETCH_PERIOD = 10; // days
-
 export default function findFetchPeriod() {
     const formatDate = (date: Date) => {
         return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
@@ -28,16 +26,15 @@ export default function findFetchPeriod() {
         return { start, end };
     };
 
-    // TODO: recalculate values.
     const findFetchParameters = (speedMode: SpeedModes): FetchData => {
         console.log("SPEED MODE", speedMode);
         switch (speedMode) {
             case SpeedModes.RealTime:
-                return {step: '10m', period: 2, refill: 10 * 58, timerSpeed: 1000};
+                return {step: '1h', period: 2, refill: 60 * 58, timerSpeed: 1000};
             case SpeedModes.Medium:
                 return {step: '24h', period: 120, refill: 100, timerSpeed: 10};
             case SpeedModes.Fast:
-                return {step: '48h', period: 360, refill: 10, timerSpeed: 10};
+                return {step: '48h', period: 300, refill: 10, timerSpeed: 10};
             default:
                 return {step: '10m', period: 2, refill: 10 * 58, timerSpeed: 1000};
         }

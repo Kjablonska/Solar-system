@@ -16,9 +16,9 @@ export class UserPanel {
         userPanel.addControl(stackPanel);
         this.clock = new Clock(visualisationOptions, fetchData.timerSpeed);
         stackPanel.addControl(this.clock.getClock());
-        stackPanel.addControl(this.initSpeedUpButton());
-        stackPanel.addControl(this.initSlowDownButton());
-        stackPanel.addControl(this.initResetButton());
+        // stackPanel.addControl(this.initSpeedUpButton());
+        // stackPanel.addControl(this.initSlowDownButton());
+        // stackPanel.addControl(this.initResetButton());
         this.updateClock = this.updateClock.bind(this)
         this.timer = new Timer(scene, visualisationData, fetchData, visualisationOptions, this.clock.onUpdate, this.clock.updateSpeed);
     }

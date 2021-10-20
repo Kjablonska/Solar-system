@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import DataSelection from '../DataSelection';
 import infoButton from '../../assets/info_button.png';
+import { Star1, Star2, Star3, Star4, Star5 } from '../../styles/Stars';
 
 const BackgroundContainer = styled.div`
     position: relative;
@@ -17,51 +18,6 @@ const Header = styled.span.attrs({ children: 'Solar system visualisation' })`
     color: #a6808c;
     font-size: 50px;
     line-height: 35px;
-`;
-
-const TopStar = styled.div`
-    position: absolute;
-    left: 5%;
-    top: 15%;
-    width: 30px;
-    height: 30px;
-    background: radial-gradient(50% 50% at 50% 50%, #d6cfcb 0%, rgba(196, 196, 196, 0) 100%);
-`;
-
-const RightStar = styled.div`
-    position: absolute;
-    left: 45%;
-    top: 40%;
-    width: 20px;
-    height: 20px;
-    background: radial-gradient(50% 50% at 50% 50%, #ede5a6 0%, rgba(252, 210, 129, 0) 100%);
-`;
-
-const Star3 = styled.div`
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    left: 60%;
-    top: 75%;
-    background: radial-gradient(50% 50% at 50% 50%, #a6808c 0%, rgba(196, 196, 196, 0) 100%);
-`;
-
-const Star4 = styled.div`
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    left: 10%;
-    top: 40%;
-    background: radial-gradient(50% 50% at 50% 50%, #d6cfcb 0%, rgba(252, 210, 129, 0) 100%);
-`;
-
-const Star5 = styled.div`
-    position: absolute;
-    width: 25px;
-    height: 25px;
-    left: 50%;
-    top: 90%;
-    background: radial-gradient(50% 50% at 50% 50%, #ede5a6 0%, rgba(196, 196, 196, 0) 100%);
 `;
 
 const Planet = styled.div`
@@ -85,13 +41,12 @@ const InfoButton = styled.button`
     background: url(${infoButton});
 `;
 
-
 const LandingPage = () => {
     return (
         <BackgroundContainer>
             <Header />
-            <TopStar />
-            <RightStar />
+            <Star1 />
+            <Star2 />
             <Planet />
             <Star3 />
             <Star4 />

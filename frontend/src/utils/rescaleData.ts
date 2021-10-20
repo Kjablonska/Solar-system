@@ -1,12 +1,7 @@
 import { Vector3 } from '@babylonjs/core';
 import { PositionData } from '../types/planetInterfaces';
 
-// TODO
-interface ScaleDistance {
-    diameter: number;
-    distance: number;
-}
-
+// TODO: move to const
 const diameterMap = new Map<string, number>([
     ['Mercury', 453904.0452],
     ['Venus', 848228.2847],
@@ -15,7 +10,8 @@ const diameterMap = new Map<string, number>([
     ['Jupiter', 6103794.293],
     ['Saturn', 11237848.86],
     ['Uranus', 22518814.68],
-    ['Naptune', 35239103.17],
+    ['Neptune', 35239103.17],
+    ["Luna", 11759172.15]
 ]);
 
 export default function rescaleData(position: PositionData, planet: string): Vector3[] {
@@ -26,9 +22,9 @@ export default function rescaleData(position: PositionData, planet: string): Vec
         console.log('undewfi', planet);
     }
 
+    // TODO: not sure if division by 12756 is okay here
     for (let i = 0; i < position.x.length; i++) {
         points.push(new Vector3(position.x[i] / (12756000 * 2), position.y[i] / (12756000 * 2), position.z[i] / (12756000 * 2)));
-        // points.push(new Vector3(position.x[i] / (127560000), position.y[i] / (127560000), position.z[i] / (127560000)));
     }
     return points;
 }

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { RootStateOrAny, useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom'
 import dataSelectionBackground from '../../assets/data_selection_background.png';

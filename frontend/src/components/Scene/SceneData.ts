@@ -31,7 +31,8 @@ const diameterMap = new Map<string, number>([
     ['Jupiter', 2.049572932],
     ['Saturn', 1.975402265],
     ['Uranus', 1.602859343],
-    ['Neptun', 1.58913628],
+    ['Neptune', 1.58913628],
+    ['Luna', 0.435240298]
 ]);
 export class SceneData {
     private camera: ArcRotateCamera;
@@ -91,8 +92,10 @@ export class SceneData {
             const planet = MeshBuilder.CreateSphere(planetName, { diameter: diameterMap.get(planetName) }, scene);
             var material = new StandardMaterial(planetName, scene);
             material.diffuseTexture = new Texture(`http://localhost:5000/assets/planets/${planetName}`, scene);
-            // material.diffuseTexture.vScale = -1;
-            // material.diffuseTexture.uScale = -1;
+
+            // TODO: rotate images and delete u v scale.
+            (material.diffuseTexture as Texture).vScale = -1;
+            (material.diffuseTexture as Texture).uScale = -1;
             planet.material = material;
 
             this.meshes.set(planetName, planet);
