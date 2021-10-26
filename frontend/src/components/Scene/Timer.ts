@@ -74,7 +74,7 @@ export class Timer {
         this.fetchData = fetchData;
         this.scene = scene;
         this.visualisationData = visualisationData;
-        this.planetsMovement = new MovePlanets(visualisationData, visualisationOptions, fetchData, this.visualisationSpeed);
+        this.planetsMovement = new MovePlanets(visualisationData, visualisationOptions, fetchData, this.visualisationSpeed, scene);
         this.planetsMovement.onEndDateReached = this.onEndDateReached;
         this.updateClock = updateClock;
         this.updateClockSpeed = updateClockSpeed;

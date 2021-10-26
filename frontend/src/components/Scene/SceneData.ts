@@ -86,8 +86,8 @@ export class SceneData {
 
             // TODO: Fix fill parameter żelcia żelcia
             const planetCurve = Curve3.CreateCatmullRomSpline(el.position, this.fill, false);
-            const b = planetCurve.getPoints();
-            Mesh.CreateLines(`${planetName} orbite`, b, scene);
+            // const p = planetCurve.getPoints();
+            // Mesh.CreateLines(`${planetName} orbite`, p, scene);
 
             const planet = MeshBuilder.CreateSphere(planetName, { diameter: diameterMap.get(planetName) }, scene);
             var material = new StandardMaterial(planetName, scene);
