@@ -1,6 +1,4 @@
-import { Mesh, Scene, LinesMesh, Vector3, Curve3 } from '@babylonjs/core';
-import { DeepImmutableArray } from 'babylonjs';
-import _ from 'lodash';
+import { Scene, LinesMesh, Vector3, Curve3, MeshBuilder, VertexBuffer } from '@babylonjs/core';
 import { DatesPeriod, FetchData, VisualisationOptions } from '../../types/period';
 import { VisualisationData } from '../../types/planetInterfaces';
 import { findNewPeriod } from '../../utils/findFetchPeriod';
@@ -12,6 +10,7 @@ const INIT_MOVEMENT = 1; // defines number of points to jump over.
 interface OribteDrawer {
     linesMesh: LinesMesh;
     initPosition: Vector3;
+    buffer: Vector3[];
 }
 
 export class MovePlanets {
@@ -47,15 +46,27 @@ export class MovePlanets {
         this.linesMeshes = new Map<string, OribteDrawer>();
         for (let el of visualisationData) {
             console.log('init drawer', el.planet.name);
-            const lineMesh = new LinesMesh(`${el.planet.name} orbite`, scene);
-            // const lineMesh = Mesh.CreateLines(`${el.planet.name} orbite`, [], scene, true);
-            this.linesMeshes.set(el.planet.name, { linesMesh: lineMesh, initPosition: el.orbit[0] });
+            // const lineMesh = new LinesMesh(`${el.planet.name} orbite`, scene);
+            const initPoints = [];
+
+            for (let i = 0; i < 10; i++) {
+                initPoints.push(el.orbit[i]);
+            }
+
+            const lineMesh = MeshBuilder.CreateLines(`${el.planet.name} orbit`, {
+                points: initPoints,
+                updatable: true,
+            });
+            this.linesMeshes.set(el.planet.name, { linesMesh: lineMesh, initPosition: el.orbit[10], buffer: initPoints });
+            console.log("lines", initPoints, lineMesh);
         }
+
+        console.log(this.linesMeshes)
     }
 
     movePlanet = async () => {
         this.oribteDrawerCounter++;
-        if (this.oribteDrawerCounter >= 100) {
+        if (this.oribteDrawerCounter = 10) {
             this.draw = true;
             this.oribteDrawerCounter = 0;
         }
@@ -98,25 +109,30 @@ export class MovePlanets {
             data.planet.position.y = data.orbit[0]._y;
             data.planet.position.z = data.orbit[0]._z;
             if (draw) {
-                // console.log(data.planet.name);
-                this.drawOrbit(data.orbit, data.planet.name)
+                this.drawOrbit(data.orbit[0], data.planet.name);
             }
         }
         return data;
     };
 
-    drawOrbit = (position: Vector3[], planetName: string) => {
-        const initialPos = this.linesMeshes.get(planetName)!.initPosition;
-        const pointsArray = [];
-        pointsArray.push(position[0]);
-        pointsArray.push(position[100]);
-        // const planetCurve = Curve3.CreateCatmullRomSpline(pointsArray, 100, false);
-        // console.log("draw", planetName, pointsArray, planetCurve, planetCurve.getPoints())
-        const lineMeshInstance = this.linesMeshes.get(planetName)!.linesMesh;
-        Mesh.CreateLines(`${planetName}`, pointsArray, this.scene);
-        // console.log(initialPos, position)
+    drawOrbit = (position: Vector3, planetName: string) => {
+        const orbi = this.linesMeshes.get(planetName)
+        if (!orbi) {
+            console.log("no such planet")
+            return
+        }
 
-        this.linesMeshes.set(planetName, { linesMesh: lineMeshInstance, initPosition: position[100] });
+        const {linesMesh, buffer, initPosition} = orbi
+
+        linesMesh.dispose()
+
+        const orbitPoints = Curve3.CreateCatmullRomSpline([initPosition, position], 10, false).getPoints();
+        const newBuffer = [...buffer, ...orbitPoints.slice(-1)]
+        const linesMeshInstance = MeshBuilder.CreateLines(`${planetName}`, {
+            points: newBuffer,
+        })
+
+        this.linesMeshes.set(planetName, { linesMesh: linesMeshInstance, initPosition: position, buffer: newBuffer })
     };
 
     onDataEnd = async () => {
