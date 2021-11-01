@@ -6,7 +6,7 @@ const INIT_TIMER_SPEED = 1000; // in ms
 export class Clock {
     private startDate: Date;
     private endDate?: Date;
-    private timerSpeed: number = INIT_TIMER_SPEED;
+    private timerSpeed: number;
     private clock: TextBlock;
 
     constructor(visualisationOptions: VisualisationOptions, speed?: number) {
@@ -24,11 +24,6 @@ export class Clock {
         this.startDate = new Date(visualisationOptions.start);
         this.endDate = visualisationOptions.end !== undefined ? new Date(visualisationOptions.end) : visualisationOptions.end;
         this.timerSpeed = speed !== undefined ? speed : this.timerSpeed;
-        // console.log('update', this.startDate);
-    };
-
-    public updateSpeed = (speed: number) => {
-        this.timerSpeed *= 2;
     };
 
     private initClock = () => {
@@ -47,12 +42,13 @@ export class Clock {
         return this.clock;
     };
 
+    // TODO: fix for medium and fast speed modes.
     public findNextValue = () => {
-        const update = this.startDate.getSeconds() + this.timerSpeed / 1000;
-        this.startDate.setSeconds(update);
-        // console.log("clock update", update, this.startDate.getMinutes())
+        const update = this.startDate.getMilliseconds() + this.timerSpeed;
+        this.startDate.setMilliseconds(update);
     };
 
+    // TODO: stop clock on endDate reached.
     public onUpdate = () => {
         this.findNextValue();
         this.clock.text = `${this.startDate.getDate()} - ${

@@ -13,15 +13,6 @@ import {
 } from '@babylonjs/core';
 import { PlanetData, VisualisationData } from '../../types/planetInterfaces';
 
-// linear scale
-// ["Mercury", 0.382486673],
-// ["Venus", 0.948886798],
-// ["Earth", 1],
-// ["Mars", 0.532455315],
-// ['Jupiter', 11.20915648],
-// ['Saturn', 9.449357165],
-// ['Uranus', 4.007369081],
-// ['Neptun', 3.882721856],
 const diameterMap = new Map<string, number>([
     ['Sun', 3.037737488],
     ['Mercury', 0.582616308],
@@ -49,7 +40,6 @@ export class SceneData {
         this.attacheLight(scene);
         this.fill = refill;
         this.addPlanets(planetsData, scene);
-        console.log("SCENE DATA CLASS", refill, this.fill)
     }
 
     attacheLight = (scene: Scene) => {
@@ -57,9 +47,8 @@ export class SceneData {
         this.light.intensity = 2;
 
         this.sun = MeshBuilder.CreateSphere('sun', { diameter: diameterMap.get('Sun') }, scene);
-        // this.sun = MeshBuilder.CreateSphere('sun', { diameter:0.2  }, scene);
         this.sun.position.copyFrom(this.light.position);
-        const material = new StandardMaterial('mat', scene);
+        const material = new StandardMaterial('sunMaterial', scene);
         material.diffuseTexture = new Texture(`http://localhost:5000/assets/planets/Sun`, scene);
         material.emissiveColor = this.light.diffuse;
         this.sun.material = material;
@@ -67,7 +56,6 @@ export class SceneData {
 
     attacheCamera = (scene: Scene) => {
         this.camera = new ArcRotateCamera('camera1', 0, 0, 0, new Vector3(0, 0, 0), scene);
-        // this.camera.fov = 1000;
         this.camera.setTarget(Vector3.Zero());
         const canvas = scene.getEngine().getRenderingCanvas();
         this.camera.attachControl(canvas, true);
@@ -80,20 +68,13 @@ export class SceneData {
 
         for (const el of planetsData) {
             const planetName = el.planet;
+            console.log("add planets", el)
 
-            // TODO: draw oribtes.
-            console.log("fillito", this.fill);
-
-            // TODO: Fix fill parameter żelcia żelcia
             const planetCurve = Curve3.CreateCatmullRomSpline(el.position, this.fill, false);
-            // const p = planetCurve.getPoints();
-            // Mesh.CreateLines(`${planetName} orbite`, p, scene);
-
             const planet = MeshBuilder.CreateSphere(planetName, { diameter: diameterMap.get(planetName) }, scene);
             var material = new StandardMaterial(planetName, scene);
             material.diffuseTexture = new Texture(`http://localhost:5000/assets/planets/${planetName}`, scene);
 
-            // TODO: rotate images and delete u v scale.
             (material.diffuseTexture as Texture).vScale = -1;
             (material.diffuseTexture as Texture).uScale = -1;
             planet.material = material;
@@ -120,11 +101,10 @@ export class SceneData {
         skyboxMaterial.diffuseColor = new Color3(0, 0, 0);
         skyboxMaterial.specularColor = new Color3(0, 0, 0);
         skybox.material = skyboxMaterial;
-
-        console.log("skybox");
     }
 
     generateVisualisationData = (planetsData: PlanetData[]) => {
+        console.log("geb")
         for (const el of planetsData) {
             const planetCurve = Curve3.CreateCatmullRomSpline(el.position, this.fill, false);
             const newPlanetData: VisualisationData = {
@@ -142,6 +122,5 @@ export class SceneData {
     public updateScene = (planetsData: PlanetData[]) => {
         this.visualisationData = [];
         this.generateVisualisationData(planetsData);
-        // this.addPlantes(planetsData, this.scene)
     };
 }

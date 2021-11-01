@@ -31,7 +31,7 @@ db.planets.insert(
             "satellites": [
                 {
                     "_id": "301",
-                    "name": "Moon"
+                    "name": "Luna"
                 }
             ]
         },

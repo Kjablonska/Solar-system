@@ -11,14 +11,13 @@ const diameterMap = new Map<string, number>([
     ['Saturn', 11237848.86],
     ['Uranus', 22518814.68],
     ['Neptune', 35239103.17],
-    ["Luna", 11759172.15]
 ]);
 
 export default function rescaleData(position: PositionData, planet: string): Vector3[] {
     const points: Vector3[] = [];
     let factor = diameterMap.get(planet);
     if (factor === undefined) {
-        factor = 100000;
+        factor = 1000;
         console.log('undewfi', planet);
     }
 

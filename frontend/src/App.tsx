@@ -3,7 +3,8 @@ import './App.css';
 import configureStore from './redux/store';
 import { Provider } from 'react-redux';
 import LandingPage from './components/LandingPage';
-import { InitSceneData } from './components/Scene';
+import { InitSceneData } from './components/SolarSystem';
+import { PlanetSystemScene } from './components/PlanetSystem';
 
 const App = () => {
     const { store } = configureStore();
@@ -12,6 +13,7 @@ const App = () => {
             <BrowserRouter>
                 <Switch>
                     <Route exact path='/' component={withRouter(LandingPage)} />
+                    <Route exact path='/planet' component={PlanetSystemScene} />
                     <Route path='/visualisation' component={InitSceneData} />
                 </Switch>
             </BrowserRouter>
