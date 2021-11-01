@@ -3,4 +3,5 @@ export enum SpeedModes {
     Medium = 'medium',
     Fast = 'fast',
     VeryFast = 'veryFast',
+    Satellite = 'satellite'
 }

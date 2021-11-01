@@ -5,7 +5,6 @@ import setMovementTimer from '../../utils/setMovementTimer';
 import { MovePlanets } from './MovePlanets';
 
 const INIT_SPEED = 1000;
-const INIT_MOVEMENT = 1;
 
 export class Timer {
     private scene: Scene;
@@ -14,20 +13,10 @@ export class Timer {
 
     public timer: AdvancedTimer;
     private planetsMovement: MovePlanets;
-    private visualisationSpeed = INIT_MOVEMENT;
     private updateClock: () => void;
-    private updateClockSpeed: (arg: number) => void;
-
-    speedUp = () => {
-        this.timer.stop();
-        this.visualisationSpeed *= 2;
-        this.planetsMovement.changeSpeed(this.visualisationSpeed);
-        this.updateClockSpeed(this.visualisationSpeed);
-        this.setUpTimer();
-        this.timer.start(this.fetchData.timerSpeed);
-    };
 
     start = () => {
+        console.log("start", this.fetchData.timerSpeed)
         this.timer.start(this.fetchData.timerSpeed);
     };
 
@@ -44,9 +33,8 @@ export class Timer {
         if (fetchData !== undefined) {
             this.fetchData = fetchData;
         }
-        this.visualisationSpeed = INIT_MOVEMENT;
         this.setUpTimer();
-        this.timer.start(INIT_SPEED);
+        this.timer.start(this.fetchData.timerSpeed);
     };
 
     setUpTimer = () => {
@@ -61,7 +49,7 @@ export class Timer {
     onEndDateReached = () => {
         this.timer.stop();
         this.timer.dispose();
-    }
+    };
 
     constructor(
         scene: Scene,
@@ -69,15 +57,18 @@ export class Timer {
         fetchData: FetchData,
         visualisationOptions: VisualisationOptions,
         updateClock: () => void,
-        updateClockSpeed: (arg: number) => void,
     ) {
         this.fetchData = fetchData;
         this.scene = scene;
         this.visualisationData = visualisationData;
-        this.planetsMovement = new MovePlanets(visualisationData, visualisationOptions, fetchData, this.visualisationSpeed, scene);
+        this.planetsMovement = new MovePlanets(
+            visualisationData,
+            visualisationOptions,
+            fetchData,
+            scene,
+        );
         this.planetsMovement.onEndDateReached = this.onEndDateReached;
         this.updateClock = updateClock;
-        this.updateClockSpeed = updateClockSpeed;
         this.setUpTimer();
     }
 }
