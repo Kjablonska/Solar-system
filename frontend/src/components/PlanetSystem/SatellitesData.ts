@@ -1,8 +1,6 @@
 import {
-    ArcRotateCamera,
     Vector3,
     Curve3,
-    PointLight,
     HemisphericLight,
     StandardMaterial,
     Color3,
@@ -14,7 +12,8 @@ import {
     Space
 } from '@babylonjs/core';
 import { PlanetData, VisualisationData } from '../../types/planetInterfaces';
-import { attacheCamera, createLight } from '../SceneInitData';
+import Planet from '../Planet/Planet';
+import { attacheCamera } from '../SceneInitData';
 
 export class SceneData {
     private meshes: Map<string, Mesh> = new Map();
@@ -34,27 +33,30 @@ export class SceneData {
     }
 
     addPlanet = () => {
-        const planet = MeshBuilder.CreateSphere(this.planet, { diameter: 1 }, this.scene);
-        var material = new StandardMaterial(this.planet, this.scene);
-        material.diffuseTexture = new Texture(`http://localhost:5000/assets/planets/${this.planet}`, this.scene);
 
-        (material.diffuseTexture as Texture).vScale = -1;
-        (material.diffuseTexture as Texture).uScale = -1;
-        planet.material = material;
+        const planetS = new Planet(this.scene);
+    
+        // const planet = MeshBuilder.CreateSphere(this.planet, { diameter: 1 }, this.scene);
+        // var material = new StandardMaterial(this.planet, this.scene);
+        // material.diffuseTexture = new Texture(`http://localhost:5000/assets/planets/${this.planet}`, this.scene);
 
-        var earthAxis = new Vector3(Math.sin((23 * Math.PI) / 180), Math.cos((23 * Math.PI) / 180), 0);
-        var axisLine = MeshBuilder.CreateLines(
-            'axis',
-            { points: [earthAxis.scale(-5), earthAxis.scale(5)] },
-            this.scene,
-        );
+        // (material.diffuseTexture as Texture).vScale = -1;
+        // (material.diffuseTexture as Texture).uScale = -1;
+        // planet.material = material;
 
-        // TODO: create roatation logic somewhere.
-        // var angle = 7.2921159*0.00005; // per second.
-        var angle = 0.05
-        this.scene.registerBeforeRender(function () {
-            planet.rotate(earthAxis, angle, Space.WORLD);
-        });
+        // var earthAxis = new Vector3(Math.sin((23 * Math.PI) / 180), Math.cos((23 * Math.PI) / 180), 0);
+        // var axisLine = MeshBuilder.CreateLines(
+        //     'axis',
+        //     { points: [earthAxis.scale(-5), earthAxis.scale(5)] },
+        //     this.scene,
+        // );
+
+        // // TODO: create roatation logic somewhere.
+        // // var angle = 7.2921159*0.00005; // per second.
+        // var angle = 0.05
+        // this.scene.registerBeforeRender(function () {
+        //     planet.rotate(earthAxis, angle, Space.WORLD);
+        // });
     };
 
     addSatellites = (planetsData: PlanetData[]) => {
