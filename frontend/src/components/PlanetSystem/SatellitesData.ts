@@ -29,7 +29,7 @@ export class SceneData {
         this.fill = refill;
         this.planet = planet;
         this.addPlanet();
-        this.addSatellites(planetsData)
+        // this.addSatellites(planetsData)
     }
 
     addPlanet = () => {

@@ -23,8 +23,8 @@ const PlanetSystemComponent = (props: any) => {
             // setScene(initScene);
             if (initScene !== undefined && initScene.isReady()) {
                 const initData = new SceneData(planetsData, initScene, 100, 'Earth');
-                const initUI = new UserPanel(initScene, initData.visualisationData, visualisationOptions, fetchData);
-                initUI.timer.start();
+                // const initUI = new UserPanel(initScene, initData.visualisationData, visualisationOptions, fetchData);
+                // initUI.timer.start();
 
                 // initUI.timer.updateTimer(initData.visualisationData, fetchData);
                 // initUI!.clock.updateClock(visualisationOptions, fetchData.speed)

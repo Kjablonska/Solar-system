@@ -4,12 +4,14 @@ import Surface from './Surface';
 
 export class Planet {
     position: Vector3 = new Vector3(0, 0, 0);
-    radius: number = 20;
+    radius: number = 400;
     sphere: Surface[] = [];
     scene: Scene;
 
     constructor(scene: Scene) {
         this.scene = scene;
+        this.scene.fogMode = Scene.FOGMODE_EXP;
+        this.scene.fogDensity = 0.008;
         this.createSides();
     }
 
