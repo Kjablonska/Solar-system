@@ -25,22 +25,23 @@ export const InitSceneData = () => {
     const setupData = () => {
         if (isError) openError(false);
         openSpinner(true);
-        getPlanetOrbit(fetchData.step);
+        getPlanetOrbit();
         const visualisation: VisualisationOptions = {
             start: start,
             end: options.endDate,
             currentEnd: end,
             mode: options.mode,
+            objects: {planets: planets}
         };
         setVisualisationOptions(visualisation);
     };
 
-    async function getPlanetOrbit( step: string) {
+    async function getPlanetOrbit() {
         try {
             const response = await fetch(
-                `http://localhost:5000/getObjectsJPLData?name=${planets.join(
+                `http://localhost:5000/getSolarSystemJPLData?name=${planets.join(
                     ',',
-                )}&start=${start}&end=${end}&step=${step}`,
+                )}&start=${start}&end=${end}&step=${fetchData.step}`,
             );
             const data = await response.json();
             console.log(data);
@@ -49,7 +50,7 @@ export const InitSceneData = () => {
                 const newPlanetData: PlanetData = { planet: key, position: rescaleData(data[key], key) };
                 readyData.push(newPlanetData);
             }
-            setPlanetsData(readyData);
+            setPlanetsData([...readyData]);
         } catch (e: any) {
             openError(true);
         } finally {
@@ -67,7 +68,7 @@ export const InitSceneData = () => {
             {isLoading && <Spinner />}
             {isError && <ErrorMessage onRetry={setupData} />}
             {planetsData !== undefined &&
-                planetsData.length === planets.length &&
+                planetsData.length === 26 &&
                 visualisationOptions !== undefined &&
                 !isError && (
                     <div id='my-canvas'>

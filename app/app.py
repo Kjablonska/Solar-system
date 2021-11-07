@@ -24,7 +24,7 @@ CORS(app)
 #   planet    -   name of the planet for which the satellites data is fetched.
 #
 # -----------------------------------------------------------
-@app.route("/getSatellites")
+@app.route("/getSatellitesJPLData")
 def get_satellites():
     planet = request.args.get('planet')
     start = request.args.get('start')
@@ -61,13 +61,32 @@ def get_satellites():
 #
 # -----------------------------------------------------------
 
-@app.route("/getObjectsJPLData")
+@app.route("/getSolarSystemJPLData")
+def get_JPL_solar_system_data():
+    names = request.args.get('name')
+    names = parse_names(names)
+    start = request.args.get('start')
+    end = request.args.get('end')
+    step = request.args.get('step')
+    planets = get_planets_data(start, end, step, names)
+    asteroids = get_asteroids_data(start, end, step)
+
+    data = dict(planets)
+    data.update(asteroids)
+    return json.dumps(data)
+
+@app.route("/getPlanetsJPLData")
 def get_JPL_planets_data():
     names = request.args.get('name')
     names = parse_names(names)
     start = request.args.get('start')
     end = request.args.get('end')
     step = request.args.get('step')
+
+    data = get_planets_data(start, end, step, names)
+    return json.dumps(data)
+
+def get_planets_data(start, end, step, names):
     planets = get_planets(names)
     print(planets)
     objects = {}
@@ -85,7 +104,36 @@ def get_JPL_planets_data():
                 possitons_data[name] = vec[name].to(u.km).value.tolist()
         data[planet["name"]] = possitons_data
 
+    return data
+
+
+@app.route("/getAsteroidsJPLData")
+def get_JPL_asteroid_belt():
+    start = request.args.get('start')
+    end = request.args.get('end')
+    step = request.args.get('step')
+    data = get_asteroids_data(start, end, step)
+
     return json.dumps(data)
+
+def get_asteroids_data(start, end, step):
+    asteroids = get_asteroids()
+    print(asteroids)
+    objects = {}
+    data = {}
+
+    for asteroid in asteroids:
+        # print("here")
+        res = Horizons(id=str(asteroid["_id"]), location='@Sun', epochs={"start": str(start), "stop": str(end), "step": str(step)}, id_type='smallbody')
+        vec = res.vectors()
+        print(asteroid)
+        possitons_data = {}
+        for name in vec.colnames:
+            if name in ['x', 'y', 'z']:
+                possitons_data[name] = vec[name].to(u.km).value.tolist()
+        data[asteroid["name"]] = possitons_data
+
+    return data
 
 
 def parse_names(names):
@@ -117,11 +165,16 @@ def get_planets(names):
         data.append(doc)
     return data
 
-def get_planets_satellites(planet):
+@app.route("/asteroid")
+def get_asteroids():
     mydb = connectToDatabase()
-    planet_collection = mydb["planets"]
-    res = planet_collection.find({'name': {"$in": planet}})
-    res.satellites
+    asteroids_collection = mydb["asteroids"]
+    res = asteroids_collection.find()
+    data = []
+    for doc in res:
+        print(doc)
+        data.append(doc)
+    return data
 
 # -----------------------------------------------------------
 #
@@ -152,6 +205,15 @@ def get_planet_texture(planet):
 def get_satellite_texture(planet):
     return send_file(
         "./assets/satellites/{}.jpg".format(planet),
+        as_attachment=True,
+        attachment_filename="{}.jpg".format(planet),
+        mimetype='image/jpeg'
+    )
+
+@app.route('/assets/heightmaps/<planet>')
+def get_heightmap(planet):
+    return send_file(
+        "./assets/heightmaps/{}.jpg".format(planet),
         as_attachment=True,
         attachment_filename="{}.jpg".format(planet),
         mimetype='image/jpeg'

@@ -1,22 +1,33 @@
-import { Vector3 } from '@babylonjs/core';
+import { Vector3, Scene } from '@babylonjs/core';
+import { Side } from './const';
+import Surface from './Surface';
 
 export class Planet {
     position: Vector3 = new Vector3(0, 0, 0);
-    radius: number = 10;
-    nodes: any;
+    radius: number = 400;
+    sphere: Surface[] = [];
+    scene: Scene;
+
+    constructor(scene: Scene) {
+        this.scene = scene;
+        this.scene.fogMode = Scene.FOGMODE_EXP;
+        this.scene.fogDensity = 0.008;
+        this.createSides();
+    }
 
     createSides() {
-        const sides = [
-            ['Up', this.position.add(new Vector3(0, this.radius, 0))],
-            ['Down', this.position.add(new Vector3(0, -this.radius, 0))],
-            ['Front', this.position.add(new Vector3(0, 0, -this.radius))],
-            ['Back', this.position.add(new Vector3(0, 0, this.radius))],
-            ['Right', this.position.add(new Vector3(this.radius, 0, 0))],
-            ['Left', this.position.add(new Vector3(-this.radius, 0, 0))],
+        const sides: Side[] = [
+            { name: 'Front', direction: new Vector3(0, 0, -1.0), rotateX: -Math.PI / 2, rotateY: 0 },
+            { name: 'Back', direction: new Vector3(0, 0, 1.0), rotateX: -Math.PI / 2, rotateY: Math.PI },
+            { name: 'Up', direction: new Vector3(0, 1.0, 0), rotateX: 0, rotateY: 0 },
+            { name: 'Down', direction: new Vector3(0, -1.0, 0), rotateX: -Math.PI, rotateY: 0 },
+            { name: 'Right', direction: new Vector3(1.0, 0, 0), rotateX: -Math.PI / 2, rotateY: 1.5 * Math.PI },
+            { name: 'Left', direction: new Vector3(-1.0, 0, 0), rotateX: -Math.PI / 2, rotateY: Math.PI / 2 },
         ];
-        sides.forEach((side) => {
-            // const node = new Node(side[0], side[1], this.radius * 2, this);
-            // this.nodes.push(node);
+
+        sides.forEach((side: Side) => {
+            const surface = new Surface(side, this.scene, this.radius);
+            this.sphere.push(surface);
         });
     }
 }

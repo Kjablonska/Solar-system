@@ -4,7 +4,6 @@ import { VisualisationData } from '../../types/planetInterfaces';
 import setMovementTimer from '../../utils/setMovementTimer';
 import { MovePlanets } from './MovePlanets';
 
-const INIT_SPEED = 1000;
 
 export class Timer {
     private scene: Scene;

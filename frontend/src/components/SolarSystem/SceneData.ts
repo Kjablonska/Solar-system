@@ -71,13 +71,19 @@ export class SceneData {
             console.log("add planets", el)
 
             const planetCurve = Curve3.CreateCatmullRomSpline(el.position, this.fill, false);
-            const planet = MeshBuilder.CreateSphere(planetName, { diameter: diameterMap.get(planetName) }, scene);
+            let diameter = diameterMap.get(planetName);
+            console.log(planetName, diameter)
+            if (diameter === undefined)
+                diameter = 0.2;
+            const planet = MeshBuilder.CreateSphere(planetName, { diameter: diameter }, scene);
             var material = new StandardMaterial(planetName, scene);
             material.diffuseTexture = new Texture(`http://localhost:5000/assets/planets/${planetName}`, scene);
 
             (material.diffuseTexture as Texture).vScale = -1;
             (material.diffuseTexture as Texture).uScale = -1;
             planet.material = material;
+
+            // TODO: add text following the planet with planet name.
 
             this.meshes.set(planetName, planet);
             const newPlanetData: VisualisationData = {
@@ -104,7 +110,6 @@ export class SceneData {
     }
 
     generateVisualisationData = (planetsData: PlanetData[]) => {
-        console.log("geb")
         for (const el of planetsData) {
             const planetCurve = Curve3.CreateCatmullRomSpline(el.position, this.fill, false);
             const newPlanetData: VisualisationData = {
