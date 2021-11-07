@@ -5,6 +5,8 @@ import { findNewPeriod } from '../../utils/findFetchPeriod';
 import getPlanetOrbitData from '../../utils/getOrbiteData';
 import ErrorHandler from '../../utils/handlers/ErrorHandler';
 
+const planets = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune'];
+
 interface OribteDrawer {
     linesMesh: LinesMesh;
     initPosition: Vector3;
@@ -40,21 +42,23 @@ export class MovePlanets {
         this.scene = scene;
         this.linesMeshes = new Map<string, OribteDrawer>();
         for (let el of visualisationData) {
-            const initPoints = [];
+            if (planets.includes(el.planet.name)) {
+                const initPoints = [];
 
-            for (let i = 0; i < 10; i++) {
-                initPoints.push(el.orbit[i]);
+                for (let i = 0; i < 10; i++) {
+                    initPoints.push(el.orbit[i]);
+                }
+
+                const lineMesh = MeshBuilder.CreateLines(`${el.planet.name} orbit`, {
+                    points: initPoints,
+                    updatable: true,
+                });
+                this.linesMeshes.set(el.planet.name, {
+                    linesMesh: lineMesh,
+                    initPosition: el.orbit[10],
+                    buffer: initPoints,
+                });
             }
-
-            const lineMesh = MeshBuilder.CreateLines(`${el.planet.name} orbit`, {
-                points: initPoints,
-                updatable: true,
-            });
-            this.linesMeshes.set(el.planet.name, {
-                linesMesh: lineMesh,
-                initPosition: el.orbit[10],
-                buffer: initPoints,
-            });
         }
 
         console.log(this.linesMeshes);
@@ -66,7 +70,7 @@ export class MovePlanets {
             this.draw = true;
             this.oribteDrawerCounter = 0;
         }
-        console.log(this.visualisationData !== undefined && !this.stop &&  !this.checkIfEndDateReached())
+        console.log(this.visualisationData !== undefined && !this.stop && !this.checkIfEndDateReached());
         if (this.visualisationData !== undefined && !this.stop && !this.checkIfEndDateReached()) {
             for (let data of this.visualisationData) {
                 data = this.setPosition(data, this.draw);
@@ -90,7 +94,7 @@ export class MovePlanets {
     };
 
     startVisualisation = () => {
-        console.log("stopeed")
+        console.log('stopeed');
         this.stop = false;
     };
 
@@ -100,7 +104,7 @@ export class MovePlanets {
             data.planet.position.x = data.orbit[0]._x;
             data.planet.position.y = data.orbit[0]._y;
             data.planet.position.z = data.orbit[0]._z;
-            if (draw) {
+            if (draw && planets.includes(data.planet.name)) {
                 this.drawOrbit(data.orbit[0], data.planet.name);
             }
         }
@@ -131,11 +135,10 @@ export class MovePlanets {
         try {
             console.log('DATA ENDED');
             this.currentPeriod = findNewPeriod(this.currentPeriod, this.fetchData.period);
-            if (this.checkIfEndDateReached())
-                return;
+            if (this.checkIfEndDateReached()) return;
 
             const newData = await getPlanetOrbitData({
-                planet: ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Luna'],
+                objects: this.visualisationOptions.objects,
                 startDate: this.currentPeriod.start,
                 endDate: this.currentPeriod.end,
                 fill: this.fetchData.refill,
@@ -163,12 +166,11 @@ export class MovePlanets {
             this.visualisationOptions.end !== undefined &&
             new Date(this.currentPeriod.end) >= new Date(this.visualisationOptions.end)
         ) {
-            console.log("end")
+            console.log('end');
             this.onEndDateReached();
-            return  true;
+            return true;
         }
 
         return false;
     };
 }
-

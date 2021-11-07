@@ -10,6 +10,12 @@ export interface VisualisationOptions {
     end?: string;
     currentEnd: string;
     mode: SpeedModes;
+    objects: FetchObjects;
+}
+
+export interface FetchObjects {
+    planets: string[];
+    satellites?: boolean;
 }
 
 export interface FetchData {

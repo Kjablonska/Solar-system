@@ -7,6 +7,7 @@ import rescaleData from '../../utils/rescaleData';
 import ErrorMessage from '../LandingPage/ErrorMessage';
 import Spinner from '../LandingPage/Spinner';
 import PlanetSystemComponent from './PlanetSystemComponent';
+import { VisualisationOptions } from '../../types/period';
 
 interface PlanetSystemSceneInterface {
     planet: string;
@@ -17,27 +18,28 @@ const endDate = '2021-11-26';
 const step = '1h';
 
 export const PlanetSystemScene: React.FC<PlanetSystemSceneInterface> = ({ planet }) => {
-    planet = 'Earth';
-
+    planet = 'Mars';
     const [isError, openError] = useState<boolean>(false);
     const { defineStartingPeriod, findFetchParameters } = findFetchPeriod();
     const [isLoading, openSpinner] = useState<boolean>(false);
     const [planetsData, setPlanetsData] = useState<PlanetData[]>([]);
     const fetchData = findFetchParameters(SpeedModes.Satellite);
-    console.log(fetchData)
     const { start, end } = defineStartingPeriod(fetchData.period, startDate);
 
-    const visualisationOptions = {
+    const visualisationOptions: VisualisationOptions = {
         start: startDate,
-        end: endDate,
+        end: undefined,
         currentEnd: end,
         mode: SpeedModes.Satellite,
+        objects: {planets: ['Mars'], satellites: true}
     };
 
     async function getSatellitesData() {
+        console.log()
         try {
+            openSpinner(true);
             const response = await fetch(
-                `http://localhost:5000/getSatellites?planet=${planet}&start=${start}&end=${end}&step=${step}`,
+                `http://localhost:5000/getSatellitesJPLData?planet=${planet}&start=${start}&end=${end}&step=${fetchData.step}`,
             );
             const data = await response.json();
             console.log(data);
@@ -60,9 +62,9 @@ export const PlanetSystemScene: React.FC<PlanetSystemSceneInterface> = ({ planet
         for (let i = 0; i < position.x.length; i++) {
             points.push(
                 new Vector3(
-                    position.x[i] / 100000,
-                    position.y[i]/ 100000,
-                    position.z[i] / 100000,
+                    position.x[i] / 1000,
+                    position.y[i]/ 1000,
+                    position.z[i] / 1000,
                 ),
             );
         }
@@ -74,11 +76,12 @@ export const PlanetSystemScene: React.FC<PlanetSystemSceneInterface> = ({ planet
         getSatellitesData();
     }, []);
 
+    console.log("start?", planetsData !== undefined && planetsData.length === 2 && visualisationOptions !== undefined && !isError)
     return (
         <>
             {isLoading && <Spinner />}
             {isError && <ErrorMessage onRetry={getSatellitesData} />}
-            {planetsData !== undefined && planetsData.length === 1 && visualisationOptions !== undefined && !isError && (
+            {planetsData !== undefined && planetsData.length === 2 && visualisationOptions !== undefined && !isError && (
                 <div id='my-canvas'>
                     <PlanetSystemComponent
                         antialias

@@ -29,30 +29,36 @@ export class SceneData {
         this.fill = refill;
         this.planet = planet;
         this.addPlanet();
-        // this.addSatellites(planetsData)
+
+        // this.scene.fogMode = Scene.FOGMODE_EXP;
+        // this.scene.fogEnd = 30;
+        // this.scene.fogDensity = 0.01;
+        this.addSatellites(planetsData)
     }
 
     addPlanet = () => {
 
-        const planetS = new Planet(this.scene);
-    
-        // const planet = MeshBuilder.CreateSphere(this.planet, { diameter: 1 }, this.scene);
-        // var material = new StandardMaterial(this.planet, this.scene);
-        // material.diffuseTexture = new Texture(`http://localhost:5000/assets/planets/${this.planet}`, this.scene);
+        // const planetS = new Planet(this.scene);
+        const heightMap = `http://localhost:5000/assets/heightmaps/${this.planet}`
+        const planet = MeshBuilder.CreateSphere(this.planet, { segments: 256, diameter: 20, updatable: true }, this.scene);
+        var material = new StandardMaterial(this.planet, this.scene);
+        material.diffuseTexture = new Texture(`http://localhost:5000/assets/planets/${this.planet}`, this.scene);
 
-        // (material.diffuseTexture as Texture).vScale = -1;
+        planet.applyDisplacementMap(heightMap, 0, 0.5);
+
+        (material.diffuseTexture as Texture).vScale = -1;
         // (material.diffuseTexture as Texture).uScale = -1;
-        // planet.material = material;
+        planet.material = material;
 
-        // var earthAxis = new Vector3(Math.sin((23 * Math.PI) / 180), Math.cos((23 * Math.PI) / 180), 0);
-        // var axisLine = MeshBuilder.CreateLines(
-        //     'axis',
-        //     { points: [earthAxis.scale(-5), earthAxis.scale(5)] },
-        //     this.scene,
-        // );
+        var earthAxis = new Vector3(Math.sin((23 * Math.PI) / 180), Math.cos((23 * Math.PI) / 180), 0);
+        var axisLine = MeshBuilder.CreateLines(
+            'axis',
+            { points: [earthAxis.scale(-5), earthAxis.scale(5)] },
+            this.scene,
+        );
 
-        // // TODO: create roatation logic somewhere.
-        // // var angle = 7.2921159*0.00005; // per second.
+        // TODO: create roatation logic somewhere.
+        // var angle = 7.2921159*0.00005; // per second.
         // var angle = 0.05
         // this.scene.registerBeforeRender(function () {
         //     planet.rotate(earthAxis, angle, Space.WORLD);
@@ -64,12 +70,12 @@ export class SceneData {
 
         for (const el of planetsData) {
             const planetName = el.planet;
-            const planet = MeshBuilder.CreateSphere(planetName, { diameter: 0.5 }, this.scene);
+            const planet = MeshBuilder.CreateSphere(planetName, { diameter: 5 }, this.scene);
             var material = new StandardMaterial(planetName, this.scene);
             material.diffuseTexture = new Texture(`http://localhost:5000/assets/satellites/${planetName}`, this.scene);
 
             (material.diffuseTexture as Texture).vScale = -1;
-            (material.diffuseTexture as Texture).uScale = -1;
+            // (material.diffuseTexture as Texture).uScale = -1;
             planet.material = material;
 
             this.meshes.set(planetName, planet);
@@ -94,19 +100,6 @@ export class SceneData {
         skyboxMaterial.diffuseColor = new Color3(0, 0, 0);
         skyboxMaterial.specularColor = new Color3(0, 0, 0);
         skybox.material = skyboxMaterial;
-    };
-
-    generateVisualisationData = (planetsData: PlanetData[]) => {
-        for (const el of planetsData) {
-            const planetCurve = Curve3.CreateCatmullRomSpline(el.position, this.fill, false);
-            const newPlanetData: VisualisationData = {
-                planet: this.meshes.get(el.planet) || MeshBuilder.CreateSphere(el.planet, { diameter: 3 }, this.scene),
-                orbit: planetCurve.getPoints(),
-                iter: 0,
-                length: planetCurve.getPoints().length,
-            };
-            this.visualisationData.push(newPlanetData);
-        }
     };
 
 }

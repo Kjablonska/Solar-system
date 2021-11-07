@@ -22,12 +22,12 @@ const PlanetSystemComponent = (props: any) => {
             const initScene = new Scene(engine, sceneOptions);
             // setScene(initScene);
             if (initScene !== undefined && initScene.isReady()) {
-                const initData = new SceneData(planetsData, initScene, 100, 'Earth');
-                // const initUI = new UserPanel(initScene, initData.visualisationData, visualisationOptions, fetchData);
-                // initUI.timer.start();
+                const initData = new SceneData(planetsData, initScene, 100, 'Mars');
+                const initUI = new UserPanel(initScene, initData.visualisationData, visualisationOptions, fetchData);
+                initUI.timer.start();
 
-                // initUI.timer.updateTimer(initData.visualisationData, fetchData);
-                // initUI!.clock.updateClock(visualisationOptions, fetchData.speed)
+                initUI.timer.updateTimer(initData.visualisationData, fetchData);
+                initUI!.clock.updateClock(visualisationOptions, fetchData.speed)
             }
             engine.runRenderLoop(() => {
                 initScene.render();

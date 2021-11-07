@@ -27,11 +27,14 @@ class Surface {
 
         var materialCol = new StandardMaterial("mat", scene);
         let textureCol = new Texture(`http://localhost:5000/assets/planets/Earth_old`, scene);
-        materialCol.diffuseTexture = textureCol;
-        this.ground.material = materialCol;
+        // materialCol.diffuseTexture = textureCol;
+        // this.ground.material = materialCol;
         // this.ground.material.wireframe = true;
 
         const texture = new Texture(`http://localhost:5000/assets/planets/Earth`, scene);
+
+        materialCol.diffuseTexture = texture;
+        this.ground.material = materialCol;
         if (texture) {
             (<Texture>texture).onLoadObservable.add( () => {
                 this.pixels = texture.readPixels();

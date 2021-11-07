@@ -11,6 +11,24 @@ const diameterMap = new Map<string, number>([
     ['Saturn', 11237848.86],
     ['Uranus', 22518814.68],
     ['Neptune', 35239103.17],
+    ['Gaspra', 2591799.937],
+    ['Ida', 3356451.866],
+    ['Dactyl', 3283944.81],
+    ['Ceres', 2591799.937],
+    ['Pallas', 3248588.899],
+    ['Vesta', 2767717.153],
+    ['Psyche', 3870335.528],
+    ['Eros', 2814361.869],
+    ['Davida', 3518344.309],
+    ['Mathilde', 1712213.86],
+    ['Steins', 2697554.092],
+    ['Braille', 2743806.836],
+    ['WilsonHarringtonnnu', 5019441.831],
+    ['Toutatis', 4843516.776],
+    ['Itokawa', 3292568.203],
+    ['Bennu', 3093132.643],
+    ["Kleopatra", 3400752.587],
+    ["Lutetia", 2814361.869]
 ]);
 
 export default function rescaleData(position: PositionData, planet: string): Vector3[] {
