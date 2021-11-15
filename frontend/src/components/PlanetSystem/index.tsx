@@ -18,7 +18,7 @@ const endDate = '2021-11-26';
 const step = '1h';
 
 export const PlanetSystemScene: React.FC<PlanetSystemSceneInterface> = ({ planet }) => {
-    planet = 'Mars';
+    planet = 'Earth';
     const [isError, openError] = useState<boolean>(false);
     const { defineStartingPeriod, findFetchParameters } = findFetchPeriod();
     const [isLoading, openSpinner] = useState<boolean>(false);
@@ -31,7 +31,7 @@ export const PlanetSystemScene: React.FC<PlanetSystemSceneInterface> = ({ planet
         end: undefined,
         currentEnd: end,
         mode: SpeedModes.Satellite,
-        objects: {planets: ['Mars'], satellites: true}
+        objects: {planets: ['Earth'], satellites: true}
     };
 
     async function getSatellitesData() {
@@ -62,9 +62,9 @@ export const PlanetSystemScene: React.FC<PlanetSystemSceneInterface> = ({ planet
         for (let i = 0; i < position.x.length; i++) {
             points.push(
                 new Vector3(
-                    position.x[i] / 1000,
-                    position.y[i]/ 1000,
-                    position.z[i] / 1000,
+                    position.x[i] / 10000,
+                    position.y[i]/ 10000,
+                    position.z[i] / 10000,
                 ),
             );
         }
@@ -81,7 +81,7 @@ export const PlanetSystemScene: React.FC<PlanetSystemSceneInterface> = ({ planet
         <>
             {isLoading && <Spinner />}
             {isError && <ErrorMessage onRetry={getSatellitesData} />}
-            {planetsData !== undefined && planetsData.length === 2 && visualisationOptions !== undefined && !isError && (
+            {planetsData !== undefined && planetsData.length === 1 && visualisationOptions !== undefined && !isError && (
                 <div id='my-canvas'>
                     <PlanetSystemComponent
                         antialias

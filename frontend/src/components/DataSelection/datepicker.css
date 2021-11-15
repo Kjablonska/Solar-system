@@ -1,19 +1,19 @@
 .date-picker-wrapper {
-    width: 120px;
+    width: 110px;
     height: 22px;
     padding: 0;
 }
 
 .date-picker {
-    width: 120px;
-    height: 22px;
-    background-color: #a6808c;
+    width: 110px;
+    height: 25px;
+    background-color: #D6CFCB;
     border: 0.1px solid black;
     padding: 0;
 }
 
 .date-picker-clear-button::after {
-    background-color: #a6808c;
+    background-color: #D6CFCB;
     color: #2a0e58;
     font-size: 12px;
     text-align: center;

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Star1 = styled.div`
     position: absolute;
     left: 5%;
-    top: 15%;
+    top: 25%;
     width: 30px;
     height: 30px;
     background: radial-gradient(50% 50% at 50% 50%, #d6cfcb 0%, rgba(196, 196, 196, 0) 100%);
@@ -32,7 +32,7 @@ export const Star4 = styled.div`
     width: 30px;
     height: 30px;
     left: 10%;
-    top: 40%;
+    top: 70%;
     background: radial-gradient(50% 50% at 50% 50%, #d6cfcb 0%, rgba(252, 210, 129, 0) 100%);
 `;
 

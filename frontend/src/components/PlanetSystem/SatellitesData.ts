@@ -9,10 +9,9 @@ import {
     Mesh,
     CubeTexture,
     Texture,
-    Space
+    Space,
 } from '@babylonjs/core';
 import { PlanetData, VisualisationData } from '../../types/planetInterfaces';
-import Planet from '../Planet/Planet';
 import { attacheCamera } from '../SceneInitData';
 
 export class SceneData {
@@ -31,35 +30,41 @@ export class SceneData {
         this.addPlanet();
 
         // this.scene.fogMode = Scene.FOGMODE_EXP;
-        // this.scene.fogEnd = 30;
-        // this.scene.fogDensity = 0.01;
-        this.addSatellites(planetsData)
+        // // this.scene.fogEnd = 30;
+        // this.scene.fogDensity = 0.008;
+        this.addSatellites(planetsData);
     }
 
     addPlanet = () => {
+        const heightMap = `http://localhost:5000/assets/heightmaps/${this.planet}`;
+        const planet = MeshBuilder.CreateSphere(
+            this.planet,
+            { segments: 256, diameter: 20, updatable: true },
+            this.scene,
+        );
 
-        // const planetS = new Planet(this.scene);
-        const heightMap = `http://localhost:5000/assets/heightmaps/${this.planet}`
-        const planet = MeshBuilder.CreateSphere(this.planet, { segments: 256, diameter: 20, updatable: true }, this.scene);
+        // TODO: create more instances and add lod.
+        // planet.addLODLevel()
         var material = new StandardMaterial(this.planet, this.scene);
         material.diffuseTexture = new Texture(`http://localhost:5000/assets/planets/${this.planet}`, this.scene);
 
-        planet.applyDisplacementMap(heightMap, 0, 0.5);
+        planet.applyDisplacementMap(heightMap, 0, 1.5);
 
         (material.diffuseTexture as Texture).vScale = -1;
         // (material.diffuseTexture as Texture).uScale = -1;
         planet.material = material;
+    };
 
-        var earthAxis = new Vector3(Math.sin((23 * Math.PI) / 180), Math.cos((23 * Math.PI) / 180), 0);
-        var axisLine = MeshBuilder.CreateLines(
-            'axis',
-            { points: [earthAxis.scale(-5), earthAxis.scale(5)] },
-            this.scene,
-        );
-
+    addRotatation = () => {
+        // var earthAxis = new Vector3(Math.sin((23 * Math.PI) / 180), Math.cos((23 * Math.PI) / 180), 0);
+        // var axisLine = MeshBuilder.CreateLines(
+        //     'axis',
+        //     { points: [earthAxis.scale(-5), earthAxis.scale(5)] },
+        //     this.scene,
+        // );
         // TODO: create roatation logic somewhere.
         // var angle = 7.2921159*0.00005; // per second.
-        // var angle = 0.05
+        // var angle = 0.0007
         // this.scene.registerBeforeRender(function () {
         //     planet.rotate(earthAxis, angle, Space.WORLD);
         // });
@@ -101,5 +106,4 @@ export class SceneData {
         skyboxMaterial.specularColor = new Color3(0, 0, 0);
         skybox.material = skyboxMaterial;
     };
-
 }

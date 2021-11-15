@@ -1,17 +1,9 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { useHistory } from 'react-router-dom'
 import dataSelectionBackground from '../../assets/data_selection_background.png';
-import startButton from '../../assets/start_button.png';
-import DatePicker from 'react-datepicker';
-import UserOptions from '../../types/userOptions';
-import findFetchPeriod from '../../utils/findFetchPeriod';
-import { setUserSelection } from '../../redux/action';
-import { SpeedModes } from '../../speedModes';
-
 import 'react-datepicker/dist/react-datepicker.css';
 import './datepicker.css';
+import ParamsPicker from './ParamsPicker';
 
 const DataSelectionContainer = styled.div`
     position: absolute;
@@ -22,10 +14,10 @@ const DataSelectionContainer = styled.div`
     justify-content: center;
     align-items: center;
     background-repeat: no-repeat;
-    width: 500px;
-    height: 500px;
-    top: 45%;
-    left: 10%;
+    width: 650px;
+    height: 360px;
+    top: 30%;
+    margin-left: 130px;
     background-image: url(${dataSelectionBackground});
 `;
 
@@ -35,80 +27,41 @@ const ModeSelectionContainer = styled.div`
     align-items: left;
 `;
 
-const ModeCheckBox = styled.input`
-    height: 20px;
-    width: 20px;
-    background: #a6808c;
+const ModeCheckBox = styled.button`
+    outline: none;
+    height: 25px;
+    width: 25px;
+    background: #d6cfcb;
     border: 1px solid #000000;
     box-sizing: border-box;
+    margin-top: 5px;
 `;
 
-const ModalText = styled.label`
-    color: #2a0e58;
+const ModalText = styled.span`
+    color: #d6cfcb;
     height: 40px;
-    margin-left: 40px;
+    margin-left: 30px;
+    font-size: 30px;
+    -webkit-text-stroke: 0.7px black;
 `;
 
 const ModalTitle = styled.div.attrs({ children: 'Please select mode' })`
-    font-size: 30px;
+    font-size: 36px;
     line-height: 35px;
     color: #d6cfcb;
     -webkit-text-stroke: 0.7px black;
     height: 60px;
 `;
 
-const SelectionText = styled.div`
-    color: #2a0e58;
-    height: 30px;
-    width: 100px;
-`;
-
-const DropDown = styled.select`
-    width: 122px;
-    height: 22px;
-    background: #a6808c;
-    border: 0.1px solid black;
-`;
-
-const Option = styled.option`
-    color: #2a0e58;
-    background: #a6808c;
-`;
-
-const StartButton = styled.button`
-    border: none;
-    position: absolute;
-    width: 175px;
-    height: 67px;
-    top: 85%;
-    left: 35%;
-    background: url(${startButton});
-`;
-
 const DataSelection = () => {
-    const { formatDate } = findFetchPeriod();
-    const dispatch = useDispatch();
-    const history = useHistory();
-
-    const [startValue, setStart] = useState<Date | null>(null);
-    const [endValue, setEnd] = useState<Date | null>(null);
-    const [mode, setMode] = useState<SpeedModes>(SpeedModes.RealTime);
-
-    const handleSpeedModeSelection = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        event.preventDefault();
-        setMode(event.target.value as SpeedModes);
+    const [mode, setMode] = useState<string>('');
+    const handleModeSelection = (selectedMode: string) => {
+        setMode(selectedMode);
+        const selected = document.getElementById(selectedMode);
+        selected!.style.backgroundColor = '#a6808c';
+        const unselected = document.getElementById(selectedMode === 'planet' ? 'solarSystem' : 'planet');
+        unselected!.style.backgroundColor = '#d6cfcb';
     };
-
-    const startVisualisation = () => {
-        console.log(startValue, endValue)
-        const newUserOptions: UserOptions = {
-            mode: mode,
-            startDate: startValue !== null ? formatDate(startValue) : formatDate(new Date()),
-            endDate: endValue !== null ? formatDate(endValue) : undefined,
-        };
-        dispatch(setUserSelection(newUserOptions));
-        history.push('/visualisation')
-    }
 
     return (
         <div>
@@ -116,54 +69,16 @@ const DataSelection = () => {
                 <ModalTitle />
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <ModeSelectionContainer>
-                        <ModeCheckBox type="radio"/>
-                        <ModalText>Real time</ModalText>
+                        <ModeCheckBox id='solarSystem' onClick={() => handleModeSelection('solarSystem')} />
+                        <ModalText>Solar System</ModalText>
                     </ModeSelectionContainer>
                     <ModeSelectionContainer>
-                        <ModeCheckBox type="radio" />
-                        <ModalText>Select visualisation data</ModalText>
-                    </ModeSelectionContainer>
-                    <ModeSelectionContainer>
-                        <SelectionText>start date</SelectionText>
-                        <DatePicker
-                            isClearable
-                            placeholderText='Select start date'
-                            selected={startValue}
-                            onChange={(date: Date) => setStart(date)}
-                            wrapperClassName='date-picker-wrapper'
-                            className='date-picker'
-                            clearButtonClassName='date-picker-clear-button'
-                        />
-                    </ModeSelectionContainer>
-                    <ModeSelectionContainer>
-                        <SelectionText>end date</SelectionText>
-                        <DatePicker
-                            isClearable
-                            placeholderText='Select end date'
-                            selected={endValue}
-                            onChange={(date: Date) => setEnd(date)}
-                            wrapperClassName='date-picker-wrapper'
-                            className='date-picker'
-                            clearButtonClassName='date-picker-clear-button'
-                        />
-                    </ModeSelectionContainer>
-                    <ModeSelectionContainer>
-                        <SelectionText>speed date</SelectionText>
-                        <DropDown onChange={handleSpeedModeSelection}>
-                            <Option id='real-time' value={SpeedModes.RealTime}>
-                                Real-time
-                            </Option>
-                            <Option id='medium' value={SpeedModes.Medium}>
-                                Medium
-                            </Option>
-                            <Option id='fast' value={SpeedModes.Fast}>
-                                Fast
-                            </Option>
-                        </DropDown>
+                        <ModeCheckBox id='planet' onClick={() => handleModeSelection('planet')} />
+                        <ModalText>Planet & it's satellite</ModalText>
                     </ModeSelectionContainer>
                 </div>
             </DataSelectionContainer>
-            <StartButton onClick={startVisualisation} />
+            {mode !== '' && <ParamsPicker visualisationMode={mode} />}
         </div>
     );
 };

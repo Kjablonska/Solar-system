@@ -14,10 +14,12 @@ const BackgroundContainer = styled.div`
 const Header = styled.span.attrs({ children: 'Solar system visualisation' })`
     position: absolute;
     top: 15%;
-    left: 10%;
+    margin-left: 130px;
     color: #a6808c;
-    font-size: 50px;
+    font-size: 64px;
     line-height: 35px;
+    -webkit-text-stroke: 0.7px black;
+    text-shadow: 2px 2px 0px #889a9f;
 `;
 
 const Planet = styled.div`

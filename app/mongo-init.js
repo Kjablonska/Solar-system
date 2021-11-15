@@ -132,16 +132,6 @@ db.planets.insert(
                 {
                     "_id": "301",
                     "name": "Luna",
-                    "info": [
-                        {
-                            "radius": "1738.0 km",
-                            "mass": "7.349 x10^22 kg",
-                            "gravity": "0.92 m/s^2",
-                            "density": "3.3437 g/cm^3",
-                            "mean_solar_day": "29.5306 d",
-                            "orbit_period": "27.321582 d"
-                        }
-                    ]
                 }
             ]
         },

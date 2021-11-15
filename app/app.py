@@ -68,7 +68,7 @@ def get_JPL_solar_system_data():
     start = request.args.get('start')
     end = request.args.get('end')
     step = request.args.get('step')
-    planets = get_planets_data(start, end, step, names)
+    # planets = get_planets_data(start, end, step, names)
     asteroids = get_asteroids_data(start, end, step)
 
     data = dict(planets)
@@ -94,7 +94,6 @@ def get_planets_data(start, end, step, names):
 
     for planet in planets:
         print("here")
-        Horizons.TIMEOUT = 60
         res = Horizons(id=str(planet["_id"]), location='@Sun', epochs={"start": str(start), "stop": str(end), "step": str(step)}, id_type='majorbody')
         vec = res.vectors()
         print(planet)

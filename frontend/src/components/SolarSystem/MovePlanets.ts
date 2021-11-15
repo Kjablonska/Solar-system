@@ -42,7 +42,7 @@ export class MovePlanets {
         this.scene = scene;
         this.linesMeshes = new Map<string, OribteDrawer>();
         for (let el of visualisationData) {
-            if (planets.includes(el.planet.name)) {
+            // if (planets.includes(el.planet.name)) {
                 const initPoints = [];
 
                 for (let i = 0; i < 10; i++) {
@@ -58,7 +58,7 @@ export class MovePlanets {
                     initPosition: el.orbit[10],
                     buffer: initPoints,
                 });
-            }
+            // }
         }
 
         console.log(this.linesMeshes);
@@ -104,7 +104,7 @@ export class MovePlanets {
             data.planet.position.x = data.orbit[0]._x;
             data.planet.position.y = data.orbit[0]._y;
             data.planet.position.z = data.orbit[0]._z;
-            if (draw && planets.includes(data.planet.name)) {
+            if (draw) {
                 this.drawOrbit(data.orbit[0], data.planet.name);
             }
         }
