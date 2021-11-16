@@ -10,6 +10,7 @@ from astropy.coordinates import SkyCoord
 
 from astropy.table import Table
 import pymongo
+import datetime
 import urllib.parse
 import json
 import numpy as np
@@ -68,11 +69,11 @@ def get_JPL_solar_system_data():
     start = request.args.get('start')
     end = request.args.get('end')
     step = request.args.get('step')
-    # planets = get_planets_data(start, end, step, names)
-    asteroids = get_asteroids_data(start, end, step)
+    planets = get_planets_data(start, end, step, names)
+    # asteroids = get_asteroids_data(start, end, step)
 
     data = dict(planets)
-    data.update(asteroids)
+    # data.update(asteroids)
     return json.dumps(data)
 
 @app.route("/getPlanetsJPLData")
@@ -91,20 +92,39 @@ def get_planets_data(start, end, step, names):
     print(planets)
     objects = {}
     data = {}
+    possitons_data = {}
 
     for planet in planets:
-        print("here")
+        if (step == '1h'):
+            cache_res = search_cache(planet["name"], start)
+            if cache_res != None:
+                data[planet["name"]] = cache_res['points']
+                continue
+
         res = Horizons(id=str(planet["_id"]), location='@Sun', epochs={"start": str(start), "stop": str(end), "step": str(step)}, id_type='majorbody')
         vec = res.vectors()
         print(planet)
-        possitons_data = {}
+
         for name in vec.colnames:
             if name in ['x', 'y', 'z']:
                 possitons_data[name] = vec[name].to(u.km).value.tolist()
         data[planet["name"]] = possitons_data
+        if step == '1h': add_to_cache(planet["name"], start, possitons_data)
 
     return data
 
+def search_cache(planet, date):
+    mydb = connectToDatabase()
+    planets_cache = mydb["planetsCache"]
+    data = planets_cache.find_one({"$and": [{'planet': planet}, {'date': date}]})
+    if data == None:
+        return data
+    return data['points']
+
+def add_to_cache(planet, start, data):
+    mydb = connectToDatabase()
+    planets_cache = mydb["planetsCache"]
+    planets_cache.insert({'planet': planet, 'date': start, 'points': data})
 
 @app.route("/getAsteroidsJPLData")
 def get_JPL_asteroid_belt():

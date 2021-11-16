@@ -74,7 +74,7 @@ const DataSelection = () => {
                     </ModeSelectionContainer>
                     <ModeSelectionContainer>
                         <ModeCheckBox id='planet' onClick={() => handleModeSelection('planet')} />
-                        <ModalText>Planet & it's satellite</ModalText>
+                        <ModalText>Planet & its satellite</ModalText>
                     </ModeSelectionContainer>
                 </div>
             </DataSelectionContainer>

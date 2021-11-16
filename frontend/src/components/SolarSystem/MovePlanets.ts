@@ -99,7 +99,8 @@ export class MovePlanets {
     };
 
     setPosition = (data: VisualisationData, draw: boolean): VisualisationData => {
-        if (data.orbit.length < 1) this.stopVisualisation();
+        if (data.orbit.length < 1) {console.log("here");
+        this.stopVisualisation();}
         else {
             data.planet.position.x = data.orbit[0]._x;
             data.planet.position.y = data.orbit[0]._y;
@@ -147,8 +148,10 @@ export class MovePlanets {
 
             for (const el of this.visualisationData) {
                 const toModify = newData.get(el.planet.name);
+                console.log('1')
                 el.length = el.orbit.length + toModify!.length;
                 el.orbit.push(...toModify!);
+                console.log('2')
                 el.iter = 0;
             }
             this.startVisualisation();

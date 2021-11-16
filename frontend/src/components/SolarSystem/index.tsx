@@ -47,7 +47,7 @@ export const InitSceneData = () => {
             console.log(data);
             const readyData = [];
             for (const key in data) {
-                const newPlanetData: PlanetData = { planet: key, position: rescaleData(data[key], key) };
+                const newPlanetData: PlanetData = { planet: key, position: rescaleData(data[key], key, false) };
                 readyData.push(newPlanetData);
             }
             setPlanetsData([...readyData]);
@@ -68,7 +68,7 @@ export const InitSceneData = () => {
             {isLoading && <Spinner />}
             {isError && <ErrorMessage onRetry={setupData} />}
             {planetsData !== undefined &&
-                planetsData.length === 26 &&
+                planetsData.length === 8 &&
                 visualisationOptions !== undefined &&
                 !isError && (
                     <div id='my-canvas'>

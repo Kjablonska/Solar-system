@@ -13,6 +13,11 @@ db.createUser(
 
 db.createCollection('planets');
 db.createCollection('asteroids');
+db.createCollection('planetsCache')
+
+db.planetsCache.insert(
+    []
+)
 
 db.asteroids.insert(
     [
