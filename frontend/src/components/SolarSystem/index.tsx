@@ -39,9 +39,7 @@ export const InitSceneData = () => {
     async function getPlanetOrbit() {
         try {
             const response = await fetch(
-                `http://localhost:5000/getSolarSystemJPLData?name=${planets.join(
-                    ',',
-                )}&start=${start}&end=${end}&step=${fetchData.step}`,
+                `http://localhost:5000/getPlanetsJPLData?name=${planets}&start=${start}&end=${end}&step=${fetchData.step}`,
             );
             const data = await response.json();
             console.log(data);
@@ -68,7 +66,7 @@ export const InitSceneData = () => {
             {isLoading && <Spinner />}
             {isError && <ErrorMessage onRetry={setupData} />}
             {planetsData !== undefined &&
-                planetsData.length === 26 &&
+                planetsData.length === 8 &&
                 visualisationOptions !== undefined &&
                 !isError && (
                     <div id='my-canvas'>
