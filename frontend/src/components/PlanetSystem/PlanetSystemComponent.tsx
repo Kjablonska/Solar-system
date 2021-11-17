@@ -1,6 +1,7 @@
 import { Engine, Scene } from '@babylonjs/core';
 import { useEffect, useRef } from 'react';
 import { UserPanel } from '../SolarSystem/UserPanel';
+import Info from './InfoPanel';
 import { SceneData } from './SatellitesData';
 
 const PlanetSystemComponent = (props: any) => {
@@ -22,9 +23,11 @@ const PlanetSystemComponent = (props: any) => {
             const initScene = new Scene(engine, sceneOptions);
             // setScene(initScene);
             if (initScene !== undefined && initScene.isReady()) {
-                const initData = new SceneData(planetsData, initScene, 100, 'Earth');
+                console.log("INIT", visualisationOptions.objects)
+                const initData = new SceneData(planetsData, initScene, fetchData.refill, visualisationOptions.objects.planets[0]);
                 const initUI = new UserPanel(initScene, initData.visualisationData, visualisationOptions, fetchData);
                 initUI.timer.start();
+                new Info(visualisationOptions.objects.planets[0])
 
                 initUI.timer.updateTimer(initData.visualisationData, fetchData);
                 initUI!.clock.updateClock(visualisationOptions, fetchData.speed)

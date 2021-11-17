@@ -1,7 +1,7 @@
 import { Vector3 } from '@babylonjs/core';
 import { PositionData } from '../types/planetInterfaces';
 
-// TODO: move to const
+// TODO: move to const / delete ?
 const diameterMap = new Map<string, number>([
     ['Mercury', 453904.0452],
     ['Venus', 848228.2847],
@@ -31,7 +31,7 @@ const diameterMap = new Map<string, number>([
     ["Lutetia", 2814361.869]
 ]);
 
-export default function rescaleData(position: PositionData, planet: string): Vector3[] {
+export default function rescaleData(position: PositionData, planet: string, satellite: boolean): Vector3[] {
     const points: Vector3[] = [];
     let factor = diameterMap.get(planet);
     if (factor === undefined) {

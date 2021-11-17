@@ -3,35 +3,41 @@ import { Vector3 } from '@babylonjs/core';
 import { SpeedModes } from '../../speedModes';
 import { PlanetData, PositionData } from '../../types/planetInterfaces';
 import findFetchPeriod from '../../utils/findFetchPeriod';
-import rescaleData from '../../utils/rescaleData';
 import ErrorMessage from '../LandingPage/ErrorMessage';
 import Spinner from '../LandingPage/Spinner';
 import PlanetSystemComponent from './PlanetSystemComponent';
 import { VisualisationOptions } from '../../types/period';
+import UserOptions from '../../types/userOptions';
+import { RootStateOrAny, useSelector } from 'react-redux';
 
-interface PlanetSystemSceneInterface {
-    planet: string;
-}
+const satellitesMap = new Map<string, number>([
+    ['Mercury', 0],
+    ['Venus', 0],
+    ['Earth', 1],
+    ['Mars', 1],
+    ['Jupiter', 1],
+    ['Saturn', 1],
+    ['Uranus', 1],
+    ['Neptune', 1],
+]);
 
-const startDate = '2021-9-24';
-const endDate = '2021-11-26';
-const step = '1h';
-
-export const PlanetSystemScene: React.FC<PlanetSystemSceneInterface> = ({ planet }) => {
-    planet = 'Earth';
+export const PlanetSystemScene = () => {
     const [isError, openError] = useState<boolean>(false);
     const { defineStartingPeriod, findFetchParameters } = findFetchPeriod();
     const [isLoading, openSpinner] = useState<boolean>(false);
     const [planetsData, setPlanetsData] = useState<PlanetData[]>([]);
     const fetchData = findFetchParameters(SpeedModes.Satellite);
-    const { start, end } = defineStartingPeriod(fetchData.period, startDate);
+    const options: UserOptions = useSelector((state: RootStateOrAny) => state.selectedOptions.userOptions);
+    const { start, end } = defineStartingPeriod(fetchData.period, options.startDate);
+
+    const satellitesNumber = satellitesMap.get(options.planet!)
 
     const visualisationOptions: VisualisationOptions = {
-        start: startDate,
-        end: undefined,
+        start: options.startDate,
+        end: options.endDate,
         currentEnd: end,
         mode: SpeedModes.Satellite,
-        objects: {planets: ['Earth'], satellites: true}
+        objects: {planets: [options.planet!], satellites: true}
     };
 
     async function getSatellitesData() {
@@ -39,7 +45,7 @@ export const PlanetSystemScene: React.FC<PlanetSystemSceneInterface> = ({ planet
         try {
             openSpinner(true);
             const response = await fetch(
-                `http://localhost:5000/getSatellitesJPLData?planet=${planet}&start=${start}&end=${end}&step=${fetchData.step}`,
+                `http://localhost:5000/getSatellitesJPLData?planet=${options.planet}&start=${start}&end=${end}&step=${fetchData.step}`,
             );
             const data = await response.json();
             console.log(data);
@@ -56,6 +62,7 @@ export const PlanetSystemScene: React.FC<PlanetSystemSceneInterface> = ({ planet
         }
     }
 
+    // TODO: calculate rescaling for each planet.
     const mapToArray = (position: PositionData) => {
         console.log("pos", position)
         const points: Vector3[] = [];
@@ -68,7 +75,6 @@ export const PlanetSystemScene: React.FC<PlanetSystemSceneInterface> = ({ planet
                 ),
             );
         }
-        console.log(points)
         return points;
     };
 
@@ -76,12 +82,11 @@ export const PlanetSystemScene: React.FC<PlanetSystemSceneInterface> = ({ planet
         getSatellitesData();
     }, []);
 
-    console.log("start?", planetsData !== undefined && planetsData.length === 2 && visualisationOptions !== undefined && !isError)
     return (
         <>
             {isLoading && <Spinner />}
             {isError && <ErrorMessage onRetry={getSatellitesData} />}
-            {planetsData !== undefined && planetsData.length === 1 && visualisationOptions !== undefined && !isError && (
+            {planetsData !== undefined && planetsData.length === satellitesNumber && visualisationOptions !== undefined && !isError && (
                 <div id='my-canvas'>
                     <PlanetSystemComponent
                         antialias

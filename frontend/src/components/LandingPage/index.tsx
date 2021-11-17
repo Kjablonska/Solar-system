@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import DataSelection from '../DataSelection';
 import infoButton from '../../assets/info_button.png';
+import Info from './Info'
 import { Star1, Star2, Star3, Star4, Star5 } from '../../styles/Stars';
 
 const BackgroundContainer = styled.div`
@@ -44,6 +46,8 @@ const InfoButton = styled.button`
 `;
 
 const LandingPage = () => {
+    const [openInfo, isInfoOpened] = useState<boolean>(false);
+
     return (
         <BackgroundContainer>
             <Header />
@@ -54,7 +58,10 @@ const LandingPage = () => {
             <Star4 />
             <Star5 />
             <DataSelection />
-            <InfoButton />
+            <InfoButton onClick={() => isInfoOpened(true)}/>
+            { openInfo &&
+                <Info onClose={() => isInfoOpened(false)}/>
+            }
         </BackgroundContainer>
     );
 };

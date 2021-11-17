@@ -42,14 +42,15 @@ export const InitSceneData = () => {
                 `http://localhost:5000/getPlanetsJPLData?name=${planets}&start=${start}&end=${end}&step=${fetchData.step}`,
             );
             const data = await response.json();
-            console.log(data);
+            console.log("fetch", data);
             const readyData = [];
             for (const key in data) {
-                const newPlanetData: PlanetData = { planet: key, position: rescaleData(data[key], key) };
+                const newPlanetData: PlanetData = { planet: key, position: rescaleData(data[key], key, false) };
                 readyData.push(newPlanetData);
             }
             setPlanetsData([...readyData]);
         } catch (e: any) {
+            console.log(e)
             openError(true);
         } finally {
             openSpinner(false);
@@ -61,12 +62,16 @@ export const InitSceneData = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    console.log("DATA", planetsData, planetsData !== undefined &&
+    planetsData.length === 8 &&
+    visualisationOptions !== undefined &&
+    !isError)
     return (
         <>
             {isLoading && <Spinner />}
             {isError && <ErrorMessage onRetry={setupData} />}
             {planetsData !== undefined &&
-                planetsData.length === 8 &&
+                planetsData.length === planets.length &&
                 visualisationOptions !== undefined &&
                 !isError && (
                     <div id='my-canvas'>

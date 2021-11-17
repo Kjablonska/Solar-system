@@ -30,13 +30,13 @@ export default function findFetchPeriod() {
         console.log("SPEED MODE", speedMode);
         switch (speedMode) {
             case SpeedModes.RealTime:
-                return {step: '1h', period: 2, refill: 60 * 58, timerSpeed: 1000};
+                return {step: '1h', period: 1, refill: 60 * 58, timerSpeed: 1000};
             case SpeedModes.Medium:
                 return {step: '24h', period: 120, refill: 100, timerSpeed: 10}; // 1s == 24h
             case SpeedModes.Fast:
                 return {step: '48h', period: 300, refill: 10, timerSpeed: 10};
             case SpeedModes.Satellite:
-                return {step: '1h', period: 10, refill: 600 * 58, timerSpeed: 100};
+                return {step: '1h', period: 1, refill: 60 * 58, timerSpeed: 1000};
                 // return {step: '10m', period: 60, refill: 100, timerSpeed: 10};
                 // return {step: '1m', period: 20, refill: 0, timerSpeed: 10};
             default:    // default is real-time mode.

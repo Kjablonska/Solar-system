@@ -23,7 +23,7 @@ export default async function getPlanetOrbitData({ objects, startDate, endDate, 
     const orbite = await response.json();
     const readyData: Map<string, Vector3[]> = new Map();
     for (const key in orbite) {
-        const newData = rescaleData(orbite[key], key);
+        const newData = rescaleData(orbite[key], key, objects.satellites ? true : false);
         const planetCurve = Curve3.CreateCatmullRomSpline(newData, fill, false);
         readyData.set(key, planetCurve.getPoints());
     }

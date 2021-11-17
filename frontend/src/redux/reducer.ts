@@ -10,9 +10,10 @@ interface UserOptionsReducer {
 export const userOptionsReducer = (
     state: UserOptionsReducer = {
         userOptions: {
-            mode: SpeedModes.Fast,
+            mode: SpeedModes.RealTime,
             startDate: formatDate(new Date()),
-            endDate: undefined,
+            planet: undefined,
+            endDate: undefined
         },
     },
     action: any,
