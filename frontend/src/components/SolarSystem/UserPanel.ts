@@ -22,7 +22,7 @@ export class UserPanel {
         this.clock = new Clock(visualisationOptions, fetchData.timerSpeed);
         stackPanel.addControl(this.clock.getClock());
         this.updateClock = this.updateClock.bind(this);
-        console.log("ui", visualisationData, fetchData, visualisationOptions)
+        console.log('ui', visualisationData, fetchData, visualisationOptions);
         this.timer = new Timer(scene, visualisationData, fetchData, visualisationOptions, this.clock.onUpdate);
     }
 
@@ -38,19 +38,19 @@ export class UserPanel {
     };
 
     private goBackButton = () => {
-        const retryButton = Button.CreateSimpleButton('back', 'Go back');
-        retryButton.width = '110px';
-        retryButton.height = '30px';
-        retryButton.color = 'white';
-        retryButton.cornerRadius = 20;
-        retryButton.background = 'grey';
-        retryButton.left = '0px';
-        retryButton.onPointerUpObservable.add(() => {
-            window.location.replace("http://localhost:3000/");
+        const backButton = Button.CreateSimpleButton('back', 'Go back');
+        backButton.width = '110px';
+        backButton.height = '30px';
+        backButton.color = 'white';
+        backButton.cornerRadius = 20;
+        backButton.background = 'grey';
+        backButton.left = '0px';
+        backButton.onPointerUpObservable.add(() => {
+            window.location.replace('http://localhost:3000/');
         });
 
-        return retryButton;
-    }
+        return backButton;
+    };
 
     updateClock(): void {
         this.clock.onUpdate();

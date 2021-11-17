@@ -25,6 +25,15 @@ CORS(app)
 #   planet    -   name of the planet for which the satellites data is fetched.
 #
 # -----------------------------------------------------------
+
+
+@app.route("/getPlanetInfo")
+def get_info():
+    planet = request.args.get('planet')
+    planet_data = get_planet(planet)
+    return json.dumps(planet_data["info"])
+
+
 @app.route("/getSatellitesJPLData")
 def get_satellites():
     planet = request.args.get('planet')
@@ -39,7 +48,13 @@ def get_satellites():
     data = {}
 
     for satellite in satellites:
-        res = Horizons(id=str(satellite["_id"]), location=location, epochs={"start": str(start), "stop": str(end), "step": str(step)}, id_type='majorbody')
+        cache_res = search_satellites_cache(satellite["name"], start)
+        if cache_res != None:
+            data[satellite["name"]] = cache_res
+            continue
+
+        res = Horizons(id=str(satellite["_id"]), location=location, epochs={
+                       "start": str(start), "stop": str(end), "step": str(step)}, id_type='majorbody')
         vec = res.vectors()
         print(satellite)
         possitons_data = {}
@@ -62,6 +77,7 @@ def get_satellites():
 #
 # -----------------------------------------------------------
 
+
 @app.route("/getSolarSystemJPLData")
 def get_JPL_solar_system_data():
     names = request.args.get('name')
@@ -76,6 +92,7 @@ def get_JPL_solar_system_data():
     # data.update(asteroids)
     return json.dumps(data)
 
+
 @app.route("/getPlanetsJPLData")
 def get_JPL_planets_data():
     names = request.args.get('name')
@@ -87,6 +104,7 @@ def get_JPL_planets_data():
     data = get_planets_data(start, end, step, names)
     return json.dumps(data)
 
+
 def get_planets_data(start, end, step, names):
     planets = get_planets(names)
     print(planets)
@@ -96,12 +114,13 @@ def get_planets_data(start, end, step, names):
 
     for planet in planets:
         if (step == '1h'):
-            cache_res = search_cache(planet["name"], start)
+            cache_res = search_planets_cache(planet["name"], start)
             if cache_res != None:
-                data[planet["name"]] = cache_res['points']
+                data[planet["name"]] = cache_res
                 continue
 
-        res = Horizons(id=str(planet["_id"]), location='@Sun', epochs={"start": str(start), "stop": str(end), "step": str(step)}, id_type='majorbody')
+        res = Horizons(id=str(planet["_id"]), location='@Sun', epochs={"start": str(
+            start), "stop": str(end), "step": str(step)}, id_type='majorbody')
         vec = res.vectors()
         print(planet)
 
@@ -109,22 +128,39 @@ def get_planets_data(start, end, step, names):
             if name in ['x', 'y', 'z']:
                 possitons_data[name] = vec[name].to(u.km).value.tolist()
         data[planet["name"]] = possitons_data
-        if step == '1h': add_to_cache(planet["name"], start, possitons_data)
+        if step == '1h':
+            add_to_cache(planet["name"], start, possitons_data)
 
     return data
 
-def search_cache(planet, date):
+
+
+
+def search_planets_cache(planet, date):
     mydb = connectToDatabase()
     planets_cache = mydb["planetsCache"]
-    data = planets_cache.find_one({"$and": [{'planet': planet}, {'date': date}]})
+    data = planets_cache.find_one(
+        {"$and": [{'planet': planet}, {'date': date}]})
     if data == None:
-        return data
+        return None
     return data['points']
+
+
+def search_satellites_cache(planet, date):
+    mydb = connectToDatabase()
+    satellites_cache = mydb["satellitesCache"]
+    data = satellites_cache.find_one(
+        {"$and": [{'satellite': planet}, {'date': date}]})
+    if data == None:
+        return None
+    return data['points']
+
 
 def add_to_cache(planet, start, data):
     mydb = connectToDatabase()
     planets_cache = mydb["planetsCache"]
     planets_cache.insert({'planet': planet, 'date': start, 'points': data})
+
 
 @app.route("/getAsteroidsJPLData")
 def get_JPL_asteroid_belt():
@@ -135,6 +171,7 @@ def get_JPL_asteroid_belt():
 
     return json.dumps(data)
 
+
 def get_asteroids_data(start, end, step):
     asteroids = get_asteroids()
     print(asteroids)
@@ -142,8 +179,8 @@ def get_asteroids_data(start, end, step):
     data = {}
 
     for asteroid in asteroids:
-        # print("here")
-        res = Horizons(id=str(asteroid["_id"]), location='@Sun', epochs={"start": str(start), "stop": str(end), "step": str(step)}, id_type='smallbody')
+        res = Horizons(id=str(asteroid["_id"]), location='@Sun', epochs={"start": str(
+            start), "stop": str(end), "step": str(step)}, id_type='smallbody')
         vec = res.vectors()
         print(asteroid)
         possitons_data = {}
@@ -161,11 +198,14 @@ def parse_names(names):
     return names.split(",")
 
 # TODO: put db credentials in config file.
+
+
 def connectToDatabase():
     client = pymongo.MongoClient(
         "mongodb://solar-system:solar-system@mongo:27017")
     mydb = client["celestial-bodies"]
     return mydb
+
 
 def get_planet(planet):
     mydb = connectToDatabase()
@@ -183,6 +223,7 @@ def get_planets(names):
     for doc in res:
         data.append(doc)
     return data
+
 
 @app.route("/asteroid")
 def get_asteroids():
@@ -202,6 +243,8 @@ def get_asteroids():
 #   name    -   image name to be returned.
 #
 # -----------------------------------------------------------
+
+
 @app.route('/assets/<name>')
 def get_skybox(name):
     return send_file(
@@ -210,6 +253,7 @@ def get_skybox(name):
         attachment_filename='test.jpg',
         mimetype='image/jpeg'
     )
+
 
 @app.route('/assets/planets/<planet>')
 def get_planet_texture(planet):
@@ -220,6 +264,7 @@ def get_planet_texture(planet):
         mimetype='image/jpeg'
     )
 
+
 @app.route('/assets/satellites/<planet>')
 def get_satellite_texture(planet):
     return send_file(
@@ -228,6 +273,7 @@ def get_satellite_texture(planet):
         attachment_filename="{}.jpg".format(planet),
         mimetype='image/jpeg'
     )
+
 
 @app.route('/assets/heightmaps/<planet>')
 def get_heightmap(planet):
@@ -239,6 +285,8 @@ def get_heightmap(planet):
     )
 
 # For testing purposes.
+
+
 @app.route("/conn")
 def conn():
     # client = pymongo.MongoClient("mongodb://solar-system:solar-system@mongo:27017")
@@ -260,3 +308,5 @@ def conn():
 # mongo --username solar-system --password solar-system
 # sudo docker-compose build
 # sudo docker-compose up
+
+# docker system prune -a --volumes

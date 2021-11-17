@@ -25,6 +25,7 @@ export class SceneData {
         this.scene = scene;
         attacheCamera(scene);
         new HemisphericLight('light', new Vector3(0, 1, 0), scene);
+        console.log("REFIL", refill)
         this.fill = refill;
         this.planet = planet;
         this.addPlanet();
@@ -80,24 +81,28 @@ export class SceneData {
     };
 
     addRotatation = (planet: Mesh) => {
-        var earthAxis = new Vector3(Math.sin((23 * Math.PI) / 180), Math.cos((23 * Math.PI) / 180), 0);
-        var axisLine = MeshBuilder.CreateLines(
+        const earthAxis = new Vector3(Math.sin((23 * Math.PI) / 180), Math.cos((23 * Math.PI) / 180), 0);
+        MeshBuilder.CreateLines(
             'axis',
             { points: [earthAxis.scale(-5), earthAxis.scale(5)] },
             this.scene,
         );
-        var angle = 7.2921159*0.00005; // per second.
-        var angle = 0.0007
+
+        // TODO: calcuate angle for each planet.
+        // var angle = 7.2921159*0.00005; // per second.
+        const angle = 0.0007
         this.scene.registerBeforeRender(function () {
             planet.rotate(earthAxis, angle, Space.WORLD);
         });
     };
 
     addSatellites = (planetsData: PlanetData[]) => {
-        if (planetsData === undefined) return;
-
+        if (planetsData === undefined || planetsData.length < 1) return;
+        console.log("planets data", planetsData)
         for (const el of planetsData) {
             const planetName = el.planet;
+            console.log("FIL", this.fill)
+            const planetCurve = Curve3.CreateCatmullRomSpline(el.position, this.fill, false);
             const planet = MeshBuilder.CreateSphere(planetName, { diameter: 5 }, this.scene);
             var material = new StandardMaterial(planetName, this.scene);
             material.diffuseTexture = new Texture(`http://localhost:5000/assets/satellites/${planetName}`, this.scene);
@@ -109,9 +114,10 @@ export class SceneData {
             this.meshes.set(planetName, planet);
             const newPlanetData: VisualisationData = {
                 planet: planet,
-                orbit: el.position as Vector3[],
+                // signature: new Mesh('xxx'),
+                orbit: planetCurve.getPoints(),
                 iter: 0,
-                length: el.position.length,
+                length: planetCurve.getPoints().length,
             };
             this.visualisationData.push(newPlanetData);
         }

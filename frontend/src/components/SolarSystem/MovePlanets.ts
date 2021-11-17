@@ -5,8 +5,6 @@ import { findNewPeriod } from '../../utils/findFetchPeriod';
 import getPlanetOrbitData from '../../utils/getOrbiteData';
 import ErrorHandler from '../../utils/handlers/ErrorHandler';
 
-const planets = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune'];
-
 interface OribteDrawer {
     linesMesh: LinesMesh;
     initPosition: Vector3;
@@ -105,6 +103,10 @@ export class MovePlanets {
             data.planet.position.x = data.orbit[0]._x;
             data.planet.position.y = data.orbit[0]._y;
             data.planet.position.z = data.orbit[0]._z;
+
+            // data.signature.position.x = data.orbit[0]._x - 2;
+            // data.signature.position.y = data.orbit[0]._y;
+            // data.signature.position.z = data.orbit[0]._z;
             if (draw) {
                 this.drawOrbit(data.orbit[0], data.planet.name);
             }
@@ -148,10 +150,8 @@ export class MovePlanets {
 
             for (const el of this.visualisationData) {
                 const toModify = newData.get(el.planet.name);
-                console.log('1')
                 el.length = el.orbit.length + toModify!.length;
                 el.orbit.push(...toModify!);
-                console.log('2')
                 el.iter = 0;
             }
             this.startVisualisation();

@@ -1,7 +1,7 @@
 import { Vector3 } from '@babylonjs/core';
 import { PositionData } from '../types/planetInterfaces';
 
-// TODO: move to const
+// TODO: move to const / delete ?
 const diameterMap = new Map<string, number>([
     ['Mercury', 453904.0452],
     ['Venus', 848228.2847],
@@ -33,14 +33,7 @@ const diameterMap = new Map<string, number>([
 
 export default function rescaleData(position: PositionData, planet: string, isSatellite: boolean): Vector3[] {
     const points: Vector3[] = [];
-    // let factor = diameterMap.get(planet);
-        // if (factor === undefined) {
-    //     factor = 10000;
-    //     console.log('undewfi', planet);
-    // }
-
     const factor = isSatellite ? 10000 : 12756000 * 2
-
     // TODO: not sure if division by 12756 is okay here
     for (let i = 0; i < position.x.length; i++) {
         points.push(new Vector3(position.x[i] / factor, position.y[i] / factor, position.z[i] / factor));

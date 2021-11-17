@@ -108,11 +108,13 @@ const ParamsPicker: React.FC<ParamsPickerProps> = ({ visualisationMode }) => {
         const newUserOptions: UserOptions = {
             mode: mode,
             startDate: startValue !== null ? formatDate(startValue) : formatDate(new Date()),
+            planet: visualisationMode === 'planet' ? planet : undefined,
             endDate: endValue !== null ? formatDate(endValue) : undefined,
         };
         dispatch(setUserSelection(newUserOptions));
         visualisationMode === 'solarSystem' ? history.push('/visualisation') : history.push('/planet')
     };
+
     return (
         <ParamsPickerContainer>
             <div>

@@ -9,8 +9,11 @@ import {
     MeshBuilder,
     Mesh,
     CubeTexture,
-    Texture
+    Texture,
+    DynamicTexture,
+    HemisphericLight,
 } from '@babylonjs/core';
+
 import { PlanetData, VisualisationData } from '../../types/planetInterfaces';
 
 const diameterMap = new Map<string, number>([
@@ -23,7 +26,7 @@ const diameterMap = new Map<string, number>([
     ['Saturn', 1.975402265],
     ['Uranus', 1.602859343],
     ['Neptune', 1.58913628],
-    ['Luna', 0.435240298]
+    ['Luna', 0.435240298],
 ]);
 export class SceneData {
     private camera: ArcRotateCamera;
@@ -68,7 +71,7 @@ export class SceneData {
 
         for (const el of planetsData) {
             const planetName = el.planet;
-            console.log("add planets", el)
+            console.log('add planets', el);
 
             const planetCurve = Curve3.CreateCatmullRomSpline(el.position, this.fill, false);
             let diameter = diameterMap.get(planetName);
@@ -83,11 +86,30 @@ export class SceneData {
             (material.diffuseTexture as Texture).uScale = -1;
             planet.material = material;
 
-            // TODO: add text following the planet with planet name.
+            // const signaturePlane = MeshBuilder.CreatePlane('plane', { width: 2, height: 1 }, scene);
+
+            // const signatureTexture = new DynamicTexture('dynamic texture', { width: 40, height: 20 }, scene, false);
+            // const signatureMaterial = new StandardMaterial('Mat', scene);
+            // signatureMaterial.diffuseTexture = signatureTexture;
+            // signaturePlane.material = signatureMaterial;
+
+            // var ctx = signatureTexture.getContext();
+            // var size = 12; //any value will work
+            // ctx.font = size + 'px ' + 'Arial';
+            // var textWidth = ctx.measureText(planetName).width;
+
+            // //Calculate ratio of text width to size of font used
+            // var ratio = textWidth / size;
+
+            // //set font to be actually used to write text on dynamic texture
+            // var font_size = Math.floor(40 / (ratio * 1)); //size of multiplier (1) can be adjusted, increase for smaller text
+            // var font = font_size + 'px ' + 'Arial';
+            // signatureTexture.drawText(planetName, null, null, font, 'black', 'white', true);
 
             this.meshes.set(planetName, planet);
             const newPlanetData: VisualisationData = {
                 planet: planet,
+                // signature: signaturePlane,
                 orbit: planetCurve.getPoints(),
                 iter: 0,
                 length: planetCurve.getPoints().length,
@@ -107,7 +129,7 @@ export class SceneData {
         skyboxMaterial.diffuseColor = new Color3(0, 0, 0);
         skyboxMaterial.specularColor = new Color3(0, 0, 0);
         skybox.material = skyboxMaterial;
-    }
+    };
 
     generateVisualisationData = (planetsData: PlanetData[]) => {
         for (const el of planetsData) {
@@ -116,6 +138,7 @@ export class SceneData {
                 planet:
                     this.meshes.get(el.planet) ||
                     MeshBuilder.CreateSphere(el.planet, { diameter: diameterMap.get(el.planet) }, this.scene),
+                // signature: new Mesh('xxxxx'),
                 orbit: planetCurve.getPoints(),
                 iter: 0,
                 length: planetCurve.getPoints().length,
