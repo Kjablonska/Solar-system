@@ -31,12 +31,17 @@ const diameterMap = new Map<string, number>([
     ["Lutetia", 2814361.869]
 ]);
 
-export default function rescaleData(position: PositionData, planet: string, isSatellite: boolean): Vector3[] {
+export default function rescaleData(position: PositionData, planet: string, satellite: boolean): Vector3[] {
     const points: Vector3[] = [];
-    const factor = isSatellite ? 10000 : 12756000 * 2
+    let factor = diameterMap.get(planet);
+    if (factor === undefined) {
+        factor = 1000;
+        console.log('undewfi', planet);
+    }
+
     // TODO: not sure if division by 12756 is okay here
     for (let i = 0; i < position.x.length; i++) {
-        points.push(new Vector3(position.x[i] / factor, position.y[i] / factor, position.z[i] / factor));
+        points.push(new Vector3(position.x[i] / (12756000 * 2), position.y[i] / (12756000 * 2), position.z[i] / (12756000 * 2)));
     }
     return points;
 }

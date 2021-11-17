@@ -113,11 +113,11 @@ def get_planets_data(start, end, step, names):
     possitons_data = {}
 
     for planet in planets:
-        if (step == '1h'):
-            cache_res = search_planets_cache(planet["name"], start)
-            if cache_res != None:
-                data[planet["name"]] = cache_res
-                continue
+        # if (step == '1h'):
+        #     cache_res = search_planets_cache(planet["name"], start)
+        #     if cache_res != None:
+        #         data[planet["name"]] = cache_res
+        #         continue
 
         res = Horizons(id=str(planet["_id"]), location='@Sun', epochs={"start": str(
             start), "stop": str(end), "step": str(step)}, id_type='majorbody')
@@ -128,8 +128,8 @@ def get_planets_data(start, end, step, names):
             if name in ['x', 'y', 'z']:
                 possitons_data[name] = vec[name].to(u.km).value.tolist()
         data[planet["name"]] = possitons_data
-        if step == '1h':
-            add_to_cache(planet["name"], start, possitons_data)
+        # if step == '1h':
+        #     add_to_cache(planet["name"], start, possitons_data)
 
     return data
 
