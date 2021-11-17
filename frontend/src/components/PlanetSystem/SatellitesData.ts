@@ -114,7 +114,7 @@ export class SceneData {
             this.meshes.set(planetName, planet);
             const newPlanetData: VisualisationData = {
                 planet: planet,
-                // signature: new Mesh('xxx'),
+                signature: new Mesh('xxx'),
                 orbit: planetCurve.getPoints(),
                 iter: 0,
                 length: planetCurve.getPoints().length,

@@ -42,7 +42,7 @@ export class SceneData {
         this.attacheCamera(scene);
         this.attacheLight(scene);
         this.fill = refill;
-        this.addPlanets(planetsData, scene);
+        this.addPlanets(planetsData);
     }
 
     attacheLight = (scene: Scene) => {
@@ -66,7 +66,7 @@ export class SceneData {
         this.camera.upperBetaLimit = Infinity;
     };
 
-    addPlanets = (planetsData: PlanetData[], scene: Scene) => {
+    addPlanets = (planetsData: PlanetData[]) => {
         if (planetsData === undefined) return;
 
         for (const el of planetsData) {
@@ -78,77 +78,62 @@ export class SceneData {
             console.log(planetName, diameter)
             if (diameter === undefined)
                 diameter = 0.2;
-            const planet = MeshBuilder.CreateSphere(planetName, { diameter: diameter }, scene);
-            var material = new StandardMaterial(planetName, scene);
-            material.diffuseTexture = new Texture(`http://localhost:5000/assets/planets/${planetName}`, scene);
+            const planet = MeshBuilder.CreateSphere(planetName, { diameter: diameter }, this.scene);
+            var material = new StandardMaterial(planetName, this.scene);
+            material.diffuseTexture = new Texture(`http://localhost:5000/assets/planets/${planetName}`, this.scene);
 
             (material.diffuseTexture as Texture).vScale = -1;
             (material.diffuseTexture as Texture).uScale = -1;
             planet.material = material;
 
-            // const signaturePlane = MeshBuilder.CreatePlane('plane', { width: 2, height: 1 }, scene);
-
-            // const signatureTexture = new DynamicTexture('dynamic texture', { width: 40, height: 20 }, scene, false);
-            // const signatureMaterial = new StandardMaterial('Mat', scene);
-            // signatureMaterial.diffuseTexture = signatureTexture;
-            // signaturePlane.material = signatureMaterial;
-
-            // var ctx = signatureTexture.getContext();
-            // var size = 12; //any value will work
-            // ctx.font = size + 'px ' + 'Arial';
-            // var textWidth = ctx.measureText(planetName).width;
-
-            // //Calculate ratio of text width to size of font used
-            // var ratio = textWidth / size;
-
-            // //set font to be actually used to write text on dynamic texture
-            // var font_size = Math.floor(40 / (ratio * 1)); //size of multiplier (1) can be adjusted, increase for smaller text
-            // var font = font_size + 'px ' + 'Arial';
-            // signatureTexture.drawText(planetName, null, null, font, 'black', 'white', true);
+            const signaturePlane: Mesh = this.addSignature(planetName)
 
             this.meshes.set(planetName, planet);
             const newPlanetData: VisualisationData = {
                 planet: planet,
-                // signature: signaturePlane,
+                signature: signaturePlane,
                 orbit: planetCurve.getPoints(),
                 iter: 0,
                 length: planetCurve.getPoints().length,
             };
             this.visualisationData.push(newPlanetData);
         }
+        console.log("x1", this.visualisationData);
 
-        this.generateSkyBox(scene);
+        this.generateSkyBox();
     };
 
-    generateSkyBox = (scene: Scene) => {
-        const skybox = MeshBuilder.CreateBox('skyBox', { size: 1000.0 }, scene);
-        const skyboxMaterial = new StandardMaterial('skyBox', scene);
+    addSignature = (planetName: string) => {
+        const signaturePlane = MeshBuilder.CreatePlane('plane', { width: 2, height: 1 }, this.scene);
+        const signatureTexture = new DynamicTexture('dynamic texture', { width: 40, height: 20 }, this.scene, false);
+        const signatureMaterial = new StandardMaterial('Mat', this.scene);
+        signatureMaterial.diffuseTexture = signatureTexture;
+        signaturePlane.material = signatureMaterial;
+
+        var ctx = signatureTexture.getContext();
+        var size = 12; //any value will work
+        ctx.font = size + 'px ' + 'Arial';
+        var textWidth = ctx.measureText(planetName).width;
+
+        //Calculate ratio of text width to size of font used
+        var ratio = textWidth / size;
+
+        //set font to be actually used to write text on dynamic texture
+        var font_size = Math.floor(40 / (ratio * 1)); //size of multiplier (1) can be adjusted, increase for smaller text
+        var font = font_size + 'px ' + 'Arial';
+        signatureTexture.drawText(planetName, null, null, font, 'black', 'white', true);
+
+        return signaturePlane;
+    }
+    generateSkyBox = () => {
+        const skybox = MeshBuilder.CreateBox('skyBox', { size: 1000.0 });
+        const skyboxMaterial = new StandardMaterial('skyBox', this.scene);
         skyboxMaterial.backFaceCulling = false;
-        skyboxMaterial.reflectionTexture = new CubeTexture('http://localhost:5000/assets/stars', scene);
+        skyboxMaterial.reflectionTexture = new CubeTexture('http://localhost:5000/assets/stars', this.scene);
         skyboxMaterial.reflectionTexture.coordinatesMode = Texture.SKYBOX_MODE;
         skyboxMaterial.diffuseColor = new Color3(0, 0, 0);
         skyboxMaterial.specularColor = new Color3(0, 0, 0);
         skybox.material = skyboxMaterial;
     };
 
-    generateVisualisationData = (planetsData: PlanetData[]) => {
-        for (const el of planetsData) {
-            const planetCurve = Curve3.CreateCatmullRomSpline(el.position, this.fill, false);
-            const newPlanetData: VisualisationData = {
-                planet:
-                    this.meshes.get(el.planet) ||
-                    MeshBuilder.CreateSphere(el.planet, { diameter: diameterMap.get(el.planet) }, this.scene),
-                // signature: new Mesh('xxxxx'),
-                orbit: planetCurve.getPoints(),
-                iter: 0,
-                length: planetCurve.getPoints().length,
-            };
-            this.visualisationData.push(newPlanetData);
-        }
-    };
-
-    public updateScene = (planetsData: PlanetData[]) => {
-        this.visualisationData = [];
-        this.generateVisualisationData(planetsData);
-    };
 }
