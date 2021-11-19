@@ -104,9 +104,9 @@ export class MovePlanets {
             data.planet.position.y = data.orbit[0]._y;
             data.planet.position.z = data.orbit[0]._z;
 
-            data.signature.position.x = data.orbit[0]._x - 2;
-            data.signature.position.y = data.orbit[0]._y;
-            data.signature.position.z = data.orbit[0]._z;
+            // data.signature.position.x = data.orbit[0]._x - 2;
+            // data.signature.position.y = data.orbit[0]._y;
+            // data.signature.position.z = data.orbit[0]._z;
             if (draw) {
                 this.drawOrbit(data.orbit[0], data.planet.name);
             }

@@ -11,7 +11,6 @@ import {
     CubeTexture,
     Texture,
     DynamicTexture,
-    HemisphericLight,
 } from '@babylonjs/core';
 
 import { PlanetData, VisualisationData } from '../../types/planetInterfaces';
@@ -86,45 +85,19 @@ export class SceneData {
             (material.diffuseTexture as Texture).uScale = -1;
             planet.material = material;
 
-            const signaturePlane: Mesh = this.addSignature(planetName)
-
             this.meshes.set(planetName, planet);
             const newPlanetData: VisualisationData = {
                 planet: planet,
-                signature: signaturePlane,
                 orbit: planetCurve.getPoints(),
                 iter: 0,
                 length: planetCurve.getPoints().length,
             };
             this.visualisationData.push(newPlanetData);
         }
-        console.log("x1", this.visualisationData);
 
         this.generateSkyBox();
     };
 
-    addSignature = (planetName: string) => {
-        const signaturePlane = MeshBuilder.CreatePlane('plane', { width: 2, height: 1 }, this.scene);
-        const signatureTexture = new DynamicTexture('dynamic texture', { width: 40, height: 20 }, this.scene, false);
-        const signatureMaterial = new StandardMaterial('Mat', this.scene);
-        signatureMaterial.diffuseTexture = signatureTexture;
-        signaturePlane.material = signatureMaterial;
-
-        var ctx = signatureTexture.getContext();
-        var size = 12; //any value will work
-        ctx.font = size + 'px ' + 'Arial';
-        var textWidth = ctx.measureText(planetName).width;
-
-        //Calculate ratio of text width to size of font used
-        var ratio = textWidth / size;
-
-        //set font to be actually used to write text on dynamic texture
-        var font_size = Math.floor(40 / (ratio * 1)); //size of multiplier (1) can be adjusted, increase for smaller text
-        var font = font_size + 'px ' + 'Arial';
-        signatureTexture.drawText(planetName, null, null, font, 'black', 'white', true);
-
-        return signaturePlane;
-    }
     generateSkyBox = () => {
         const skybox = MeshBuilder.CreateBox('skyBox', { size: 1000.0 });
         const skyboxMaterial = new StandardMaterial('skyBox', this.scene);

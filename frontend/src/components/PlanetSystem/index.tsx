@@ -14,11 +14,11 @@ const satellitesMap = new Map<string, number>([
     ['Mercury', 0],
     ['Venus', 0],
     ['Earth', 1],
-    ['Mars', 1],
-    ['Jupiter', 1],
-    ['Saturn', 1],
-    ['Uranus', 1],
-    ['Neptune', 1],
+    ['Mars', 2],
+    ['Jupiter', 4],
+    ['Saturn', 8],
+    ['Uranus', 5],
+    ['Neptune', 8],
 ]);
 
 export const PlanetSystemScene = () => {
@@ -41,7 +41,7 @@ export const PlanetSystemScene = () => {
     };
 
     async function getSatellitesData() {
-        console.log()
+        openError(false);
         try {
             openSpinner(true);
             const response = await fetch(
@@ -56,6 +56,7 @@ export const PlanetSystemScene = () => {
             }
             setPlanetsData(readyData);
         } catch (e: any) {
+            console.log(e)
             openError(true);
         } finally {
             openSpinner(false);

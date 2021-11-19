@@ -123,40 +123,45 @@ db.asteroids.insert(
 db.planets.insert(
     [
         {
+            "_id": "0",
+            "name": "SolarSystem",
+            "info": {},
+        },
+        {
             "_id": "199",
             "name": "Mercury",
+            "info": {},
             "satellites": [],
         },
         {
             "_id": "299",
             "name": "Venus",
-            "info": [
-                {
-                    "radius": "6051.84 km",
-                    "mass": "48.685 x10^23 kg",
-                    "gravity": "8.870 m/s^2",
-                    "density": "5.204 g/cm^3",
-                    "mean_solar_day": "116.7490 d",
-                    "orbit_period": "225 d",
-                    "orbit_speed": "35.021 km/s",
-                    "mean_temperature": "735 K"
-                }
-            ],
+            "info":
+            {
+                "radius": "6051.84 km",
+                "mass": "48.685 x10^23 kg",
+                "gravity": "8.870 m/s^2",
+                "density": "5.204 g/cm^3",
+                "mean_solar_day": "116.7490 d",
+                "orbit_period": "225 d",
+                "orbit_speed": "35.021 km/s",
+                "mean_temperature": "735 K"
+            },
+
             "satellites": [],
         },
         {
             "_id": "399",
             "name": "Earth",
-            "info": [
-                {
-                    "radius": "6371.01 km",
-                    "mass": "5.97219 x10^24 kg",
-                    "density": "5.51 g/cm^3",
-                    "mean_solar_day": "23.9344695944 h",
-                    "orbit_period": "365.256 d",
-                    "mean_temperature": "270 K"
-                }
-            ],
+            "info":
+            {
+                "radius": "6371.01 km",
+                "mass": "5.97219 x10^24 kg",
+                "density": "5.51 g/cm^3",
+                "mean_solar_day": "23.9344695944 h",
+                "orbit_period": "365.256 d",
+                "mean_temperature": "270 K"
+            },
             "satellites": [
                 {
                     "_id": "301",
@@ -176,7 +181,8 @@ db.planets.insert(
                     "_id": "402",
                     "name": "Deimos"
                 }
-            ]
+            ],
+            "info": {},
         },
         {
             "_id": "599",
@@ -197,88 +203,114 @@ db.planets.insert(
                 {
                     "_id": "504",
                     "name": "Callisto"
-                },
-                {
-                    "_id": "505",
-                    "name": "Amalthea"
-                },
-                {
-                    "_id": "506",
-                    "name": "Himalia"
-                },
-                {
-                    "_id": "507",
-                    "name": "Elara"
-                },
-                {
-                    "_id": "508",
-                    "name": "Pasiphae"
-                },
-                {
-                    "_id": "509",
-                    "name": "Sinope"
-                },
-                {
-                    "_id": "510",
-                    "name": "Lysithea"
-                },
-                {
-                    "_id": "511",
-                    "name": "Carme"
-                },
-                {
-                    "_id": "512",
-                    "name": "Ananke"
-                },
-                {
-                    "_id": "513",
-                    "name": "Leda"
-                },
-                {
-                    "_id": "514",
-                    "name": "Thebe"
-                },
-                {
-                    "_id": "515",
-                    "name": "Adrastea"
-                },
-                {
-                    "_id": "516",
-                    "name": "Metis"
-                },
-                {
-                    "_id": "517",
-                    "name": "Callirrhoe"
                 }
-            ]
+            ],
+            "info": {},
         },
         {
             "_id": "699",
             "name": "Saturn",
             "satellites": [
                 {
-                    "_id": "601",
-                    "name": "Mimas"
+                    "_id": "606",
+                    "name": "Titan"
+                },
+                {
+                    "_id": "604",
+                    "name": "Dione"
                 },
                 {
                     "_id": "602",
                     "name": "Enceladus"
                 },
                 {
+                    "_id": "607",
+                    "name": "Hyperion"
+                },
+                {
+                    "_id": "608",
+                    "name": "Iapetus"
+                },
+                {
+                    "_id": "601",
+                    "name": "Mimas"
+                },
+                {
+                    "_id": "605",
+                    "name": "Rhea"
+                },
+                {
                     "_id": "603",
                     "name": "Tethys"
                 }
-            ]
+            ],
+            "info": {},
         },
         {
             "_id": "799",
             "name": "Uranus",
-            "satellites": []
+            "satellites": [
+                {
+                    "_id": "701",
+                    "name": "Ariel"
+                },
+                {
+                    "_id": "702",
+                    "name": "Umbriel"
+                },
+                {
+                    "_id": "703",
+                    "name": "Titania"
+                },
+                {
+                    "_id": "704",
+                    "name": "Oberon"
+                },
+                {
+                    "_id": "705",
+                    "name": "Miranda"
+                }
+            ],
+            "info": {},
         },
         {
             "_id": "899",
             "name": "Neptune",
-            "satellites": []
+            "satellites": [
+                {
+                    "_id": "801",
+                    "name": "Triton"
+                },
+                {
+                    "_id": "802",
+                    "name": "Nereid"
+                },
+                {
+                    "_id": "803",
+                    "name": "Naiad"
+                },
+                {
+                    "_id": "804",
+                    "name": "Thalassa"
+                },
+                {
+                    "_id": "805",
+                    "name": "Despina"
+                },
+                {
+                    "_id": "806",
+                    "name": "Galatea"
+                },
+                {
+                    "_id": "807",
+                    "name": "Larissa"
+                },
+                {
+                    "_id": "808",
+                    "name": "Proteus"
+                },
+            ],
+            "info": {},
         }
     ]
 );

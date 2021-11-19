@@ -2,40 +2,28 @@ import { AdvancedDynamicTexture, StackPanel, Button, TextBlock } from '@babylonj
 
 class Info {
     private planet: string;
-    private infoText: TextBlock = new TextBlock();
+    public infoText: TextBlock = new TextBlock();
+    public info: Button;
 
     constructor (planet: string) {
         this.planet = planet;
-        const infoPanel = AdvancedDynamicTexture.CreateFullscreenUI('infoPanel');
-        const stackPanel = this.initStackPanel();
-        infoPanel.addControl(stackPanel);
-        stackPanel.addControl(this.infoButton());
+        this.infoButton();
         this.infoContainer();
-        stackPanel.addControl(this.infoText)
     }
 
-    private initStackPanel = () => {
-        const stackPanel = new StackPanel();
-        stackPanel.width = 0.83;
-        stackPanel.height = '100%';
-        stackPanel.width = '100%';
-        stackPanel.top = '30px';
-        stackPanel.verticalAlignment = 0;
-
-        return stackPanel;
-    };
-
-    private infoButton = () => {
-        const info = Button.CreateSimpleButton('info', 'Get more info');
+    public infoButton = () => {
+        const info = Button.CreateSimpleButton('info', 'More info');
         info.width = '110px';
-        info.height = '30px';
+        info.height = '40px';
         info.color = 'white';
-        info.cornerRadius = 20;
-        info.background = 'grey';
+        info.cornerRadius = 5;
+        info.background = '#A6808C';
+        info.top = '0px';
+        info.left = '800px';
         info.onPointerUpObservable.add(() => {
             this.infoText.isVisible ? this.infoText.isVisible = false : this.infoText.isVisible = true;
         });
-
+        this.info = info;
         return info;
     }
 
@@ -46,7 +34,8 @@ class Info {
         const data = await response.json();
         console.log(data);
 
-        return data[0];
+        // TODO: map info object to text.
+        return JSON.stringify(data);
     }
 
     private infoContainer = async () => {
@@ -62,6 +51,13 @@ class Info {
         this.infoText.text = JSON.stringify(text);
 
         return this.infoText;
+    }
+
+    public setVisibility = () => {
+        this.info.isVisible = !this.info.isVisible;
+
+        if (this.infoText.isVisible)
+            this.infoText.isVisible = false;
     }
 
 }

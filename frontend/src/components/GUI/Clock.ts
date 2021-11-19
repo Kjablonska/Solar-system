@@ -35,7 +35,8 @@ export class Clock {
         this.clock.resizeToFit = true;
         this.clock.height = '96px';
         this.clock.width = '220px';
-        this.clock.fontFamily = 'Viga';
+        this.clock.top = '0px';
+        this.clock.fontFamily = 'Arial';
     };
 
     public getClock = () => {
@@ -55,4 +56,8 @@ export class Clock {
             this.startDate.getMonth() + 1
         } - ${this.startDate.getFullYear()}   ${this.startDate.getHours()}:${this.startDate.getMinutes()}:${this.startDate.getSeconds()}`;
     };
+
+    public setVisibility = () => {
+        this.clock.isVisible = !this.clock.isVisible;
+    }
 }

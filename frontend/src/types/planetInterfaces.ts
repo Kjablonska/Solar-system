@@ -17,7 +17,7 @@ export interface PositionData {
 
 export interface VisualisationData {
     planet: Mesh;
-    signature: Mesh;
+    // signature: Mesh;
     orbit: Vector3[];
     iter: number;
     length: number;

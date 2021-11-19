@@ -20,6 +20,7 @@ export class SceneData {
     private scene: Scene;
     private fill: number;
     private planet: string;
+    public planetMesh: Mesh;
 
     constructor(planetsData: PlanetData[], scene: Scene, refill: number, planet: string) {
         this.scene = scene;
@@ -78,6 +79,8 @@ export class SceneData {
         planet1.material = material;
         planet2.material = material;
         planet3.material = material;
+
+        this.planetMesh = planet;
     };
 
     addRotatation = (planet: Mesh) => {
@@ -114,7 +117,6 @@ export class SceneData {
             this.meshes.set(planetName, planet);
             const newPlanetData: VisualisationData = {
                 planet: planet,
-                signature: new Mesh('xxx'),
                 orbit: planetCurve.getPoints(),
                 iter: 0,
                 length: planetCurve.getPoints().length,
