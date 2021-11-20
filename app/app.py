@@ -13,9 +13,11 @@ import pymongo
 import urllib.parse
 import json
 import numpy as np
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)
+
 
 @app.route("/getPlanetInfo")
 def get_info():
@@ -33,6 +35,7 @@ def get_info():
 #
 # -----------------------------------------------------------
 
+
 def get_planet(planet):
     client = pymongo.MongoClient(
         "mongodb://solar-system:solar-system@mongo:27017")
@@ -42,6 +45,7 @@ def get_planet(planet):
     planet_data = planet_collection.find_one({'name': planet})
     client.close()
     return planet_data
+
 
 @app.route("/getSatellitesJPLData")
 def get_satellites():
@@ -79,7 +83,6 @@ def get_satellites():
                 possitons_data[name] = vec[name].to(u.km).value.tolist()
         data[satellite["name"]] = possitons_data
         add_to_satellites_cache(satellite["name"], start, possitons_data, mydb)
-
 
     client.close()
     return json.dumps(data)
@@ -167,6 +170,7 @@ def get_cache():
     client.close()
     return json.dumps(res, default=str)
 
+
 @app.route("/cacheS")
 def get_cache_s():
     client = pymongo.MongoClient(
@@ -178,13 +182,42 @@ def get_cache_s():
     return json.dumps(res, default=str)
 
 
+@app.route("/cacheSize")
+def size():
+    client = pymongo.MongoClient(
+        "mongodb://solar-system:solar-system@mongo:27017")
+    mydb = client["celestial-bodies"]
+    satellites_cache = mydb["satellitesCache"]
+    size = satellites_cache.count_documents({})
+    client.close()
+    return str(size)
+
+# TODO: test
 def search_planets_cache(planet, date, mydb):
     planets_cache = mydb["planetsCache"]
     data = planets_cache.find_one(
-        {"$and": [{'planet': planet}, {'date': date}]})
+        {"$and": [{'planet': planet}, {'date': date}]}
+    )
     if data == None:
         return None
+
+    planets_cache.updateOne({"$and": [{'planet': planet}, {'date': date}]}, {
+                            "$set": {'last_used': datetime.now()}})
     return data['points']
+
+def clean_cache(planets_cache):
+    size = planets_cache.count_documents({})
+
+    if size > 3:
+        res = planets_cache.find()
+        dates = []
+        for doc in res:
+            print(doc)
+            dates.append(doc["last_used"])
+
+        dates.sort()
+        last_used = dates[0]
+        planets_cache.delete_one({"last_used": last_used})
 
 
 def search_satellites_cache(satellite, date, mydb):
@@ -193,16 +226,23 @@ def search_satellites_cache(satellite, date, mydb):
         {"$and": [{'satellite': satellite}, {'date': date}]})
     if data == None:
         return None
+
+    satellites_cache.updateOne({"$and": [{'planet': satellite}, {'date': date}]}, {
+                            "$set": {'last_used': datetime.now()}})
     return data['points']
 
 
 def add_to_planets_cache(planet, start, data, mydb):
     planets_cache = mydb["planetsCache"]
-    planets_cache.insert({'planet': planet, 'date': start, 'points': data})
+    planets_cache.insert({'planet': planet, 'date': start, 'points': data, 'last_used': datetime.now()})
+    clean_cache(planets_cache)
+
 
 def add_to_satellites_cache(planet, start, data, mydb):
     satellites_cache = mydb["satellitesCache"]
-    satellites_cache.insert({'satellite': planet, 'date': start, 'points': data})
+    satellites_cache.insert(
+        {'satellite': planet, 'date': start, 'points': data, 'last_used': datetime.now()})
+    clean_cache(satellites_cache)
 
 
 @app.route("/getAsteroidsJPLData")

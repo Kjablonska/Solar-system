@@ -1,4 +1,4 @@
-import { AdvancedDynamicTexture, StackPanel, Button, TextBlock } from '@babylonjs/gui';
+import { Button, TextBlock, TextWrapping, Control } from '@babylonjs/gui';
 
 class Info {
     private planet: string;
@@ -21,9 +21,11 @@ class Info {
         info.top = '0px';
         info.left = '800px';
         info.onPointerUpObservable.add(() => {
-            this.infoText.isVisible ? this.infoText.isVisible = false : this.infoText.isVisible = true;
+            this.infoText.isVisible = this.infoText.isVisible ? false : true;
+            console.log(this.infoText.isVisible)
         });
         this.info = info;
+
         return info;
     }
 
@@ -32,23 +34,34 @@ class Info {
             `http://localhost:5000/getPlanetInfo?planet=${this.planet}`,
         );
         const data = await response.json();
-        console.log(data);
 
-        // TODO: map info object to text.
-        return JSON.stringify(data);
+        let formatted = `${this.planet} infomatation:\n\n`;
+        for (const [key, val] of Object.entries(data)) {
+            formatted += `${key}:\t${val}\n`;
+        }
+
+        return formatted
     }
 
     private infoContainer = async () => {
         this.infoText.isVisible = false;
-        this.infoText.name = 'clock';
-        this.infoText.textHorizontalAlignment = TextBlock.HORIZONTAL_ALIGNMENT_CENTER;
-        this.infoText.fontSize = '18px';
+        this.infoText.name = 'info';
+        // this.infoText.paddingTop = '50px'
+        this.infoText.paddingLeft = '50px'
+        this.infoText.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+        this.infoText.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+        this.infoText.textHorizontalAlignment = TextBlock.HORIZONTAL_ALIGNMENT_LEFT;
+        this.infoText.textVerticalAlignment = TextBlock.VERTICAL_ALIGNMENT_TOP;
+        this.infoText.fontSize = '20px';
+        this.infoText.fontFamily = 'Arial';
         this.infoText.color = 'white';
         this.infoText.resizeToFit = true;
-        this.infoText.height = '400px';
-        this.infoText.width = '400px';
+        this.infoText.height = '100%';
+        this.infoText.width = '100%';
+        this.infoText.lineSpacing = "5px";
+        this.infoText.textWrapping = TextWrapping.WordWrap;
         const text = await this.fetchInfoData();
-        this.infoText.text = JSON.stringify(text);
+        this.infoText.text = text;
 
         return this.infoText;
     }

@@ -29,14 +29,16 @@ export class UserPanel {
         const userPanel = AdvancedDynamicTexture.CreateFullscreenUI('UI');
         const stackPanel = this.initStackPanel();
         const buttonsPanel = this.initButtonsStackPanel();
+        const infoPanel = this.initInfoStackPanel();
         this.info = info;
         userPanel.addControl(stackPanel);
-        userPanel.addControl(buttonsPanel)
+        userPanel.addControl(buttonsPanel);
+        userPanel.addControl(infoPanel);
         buttonsPanel.addControl(this.goBackButton());
         buttonsPanel.addControl(this.showPlanetsLabel());
         buttonsPanel.addControl(info.info);
         buttonsPanel.addControl(this.closeInfo());
-        stackPanel.addControl(info.infoText);
+        infoPanel.addControl(info.infoText);
         stackPanel.addControl(this.visualisationText(text));
         this.clock = new Clock(visualisationOptions, fetchData.timerSpeed);
         stackPanel.addControl(this.clock.getClock());
@@ -68,6 +70,17 @@ export class UserPanel {
 
         return stackPanel;
     };
+
+    private initInfoStackPanel = () => {
+        const stackPanel = new StackPanel();
+        stackPanel.height = '100%';
+        stackPanel.width = '100%'
+        stackPanel.top = '100px'
+        stackPanel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+        stackPanel.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+
+        return stackPanel;
+    }
 
     private initButtonsStackPanel = () => {
         const stackPanel = new StackPanel();

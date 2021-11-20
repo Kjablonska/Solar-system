@@ -35,6 +35,7 @@ export class SceneData {
         // // this.scene.fogEnd = 30;
         // this.scene.fogDensity = 0.008;
         this.addSatellites(planetsData);
+        this.generateSkyBox();
     }
 
     addPlanet = () => {
@@ -93,10 +94,6 @@ export class SceneData {
 
         // TODO: calcuate angle for each planet.
         // var angle = 7.2921159*0.00005; // per second.
-        const angle = 0.0007
-        this.scene.registerBeforeRender(function () {
-            planet.rotate(earthAxis, angle, Space.WORLD);
-        });
     };
 
     addSatellites = (planetsData: PlanetData[]) => {
@@ -124,7 +121,6 @@ export class SceneData {
             this.visualisationData.push(newPlanetData);
         }
 
-        this.generateSkyBox();
     };
 
     generateSkyBox = () => {
