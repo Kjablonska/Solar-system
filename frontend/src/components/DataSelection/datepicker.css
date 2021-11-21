@@ -1,11 +1,11 @@
 .date-picker-wrapper {
-    width: 110px;
+    width: 140px;
     height: 22px;
     padding: 0;
 }
 
 .date-picker {
-    width: 110px;
+    width: 140px;
     height: 25px;
     background-color: #D6CFCB;
     border: 0.1px solid black;
@@ -20,6 +20,5 @@
     display: table-cell;
     vertical-align: middle;
     content: "×";
-    right: -10px;
 }
 

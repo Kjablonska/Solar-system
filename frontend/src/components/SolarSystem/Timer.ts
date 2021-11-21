@@ -9,7 +9,6 @@ export class Timer {
     private scene: Scene;
     private visualisationData: VisualisationData[];
     private fetchData: FetchData;
-
     public timer: AdvancedTimer;
     private planetsMovement: MovePlanets;
     private updateClock: () => void;
@@ -66,7 +65,7 @@ export class Timer {
             fetchData,
             scene,
         );
-        this.planetsMovement.onEndDateReached = this.onEndDateReached;
+
         this.updateClock = updateClock;
         this.setUpTimer();
     }

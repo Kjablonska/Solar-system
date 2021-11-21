@@ -9,7 +9,6 @@ import {
     Mesh,
     CubeTexture,
     Texture,
-    Space,
 } from '@babylonjs/core';
 import { PlanetData, VisualisationData } from '../../types/planetInterfaces';
 import { attacheCamera } from '../SceneInitData';
@@ -19,21 +18,23 @@ export class SceneData {
     public visualisationData: VisualisationData[] = [];
     private scene: Scene;
     private fill: number;
+    private visualisationMinutes: number;
     private planet: string;
     public planetMesh: Mesh;
 
-    constructor(planetsData: PlanetData[], scene: Scene, refill: number, planet: string) {
+    constructor(planetsData: PlanetData[], scene: Scene, refill: number, planet: string, minutes: number) {
         this.scene = scene;
         attacheCamera(scene);
         new HemisphericLight('light', new Vector3(0, 1, 0), scene);
-        console.log("REFIL", refill)
         this.fill = refill;
+        this.visualisationMinutes = minutes;
         this.planet = planet;
         this.addPlanet();
 
         // this.scene.fogMode = Scene.FOGMODE_EXP;
         // // this.scene.fogEnd = 30;
         // this.scene.fogDensity = 0.008;
+
         this.addSatellites(planetsData);
         this.generateSkyBox();
     }
@@ -64,9 +65,9 @@ export class SceneData {
             this.scene,
         );
 
-        planet3.addLODLevel(30, planet2)
+        planet3.addLODLevel(30, planet2);
         planet3.addLODLevel(60, planet1);
-        planet3.addLODLevel(100, planet)
+        planet3.addLODLevel(100, planet);
         var material = new StandardMaterial(this.planet, this.scene);
         material.diffuseTexture = new Texture(`http://localhost:5000/assets/planets/${this.planet}`, this.scene);
         // material.wireframe = true;
@@ -75,7 +76,6 @@ export class SceneData {
         planet2.applyDisplacementMap(heightMap, 0, 0.4);
         planet3.applyDisplacementMap(heightMap, 0, 0.6);
         (material.diffuseTexture as Texture).vScale = -1;
-        // (material.diffuseTexture as Texture).uScale = -1;
         planet.material = material;
         planet1.material = material;
         planet2.material = material;
@@ -86,11 +86,7 @@ export class SceneData {
 
     addRotatation = (planet: Mesh) => {
         const earthAxis = new Vector3(Math.sin((23 * Math.PI) / 180), Math.cos((23 * Math.PI) / 180), 0);
-        MeshBuilder.CreateLines(
-            'axis',
-            { points: [earthAxis.scale(-5), earthAxis.scale(5)] },
-            this.scene,
-        );
+        MeshBuilder.CreateLines('axis', { points: [earthAxis.scale(-5), earthAxis.scale(5)] }, this.scene);
 
         // TODO: calcuate angle for each planet.
         // var angle = 7.2921159*0.00005; // per second.
@@ -98,29 +94,28 @@ export class SceneData {
 
     addSatellites = (planetsData: PlanetData[]) => {
         if (planetsData === undefined || planetsData.length < 1) return;
-        console.log("planets data", planetsData)
+        console.log('planets data', planetsData);
         for (const el of planetsData) {
             const planetName = el.planet;
-            console.log("FIL", this.fill)
+            console.log('FIL', this.fill);
             const planetCurve = Curve3.CreateCatmullRomSpline(el.position, this.fill, false);
+            const points = planetCurve.getPoints().slice(this.visualisationMinutes * 60);
             const planet = MeshBuilder.CreateSphere(planetName, { diameter: 5 }, this.scene);
             var material = new StandardMaterial(planetName, this.scene);
             material.diffuseTexture = new Texture(`http://localhost:5000/assets/satellites/${planetName}`, this.scene);
 
             (material.diffuseTexture as Texture).vScale = -1;
-            // (material.diffuseTexture as Texture).uScale = -1;
             planet.material = material;
 
             this.meshes.set(planetName, planet);
             const newPlanetData: VisualisationData = {
                 planet: planet,
-                orbit: planetCurve.getPoints(),
+                orbit: points,
                 iter: 0,
-                length: planetCurve.getPoints().length,
+                length: points.length,
             };
             this.visualisationData.push(newPlanetData);
         }
-
     };
 
     generateSkyBox = () => {

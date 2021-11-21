@@ -1,29 +1,46 @@
 import { TextBlock } from '@babylonjs/gui';
+import { SpeedModes } from '../../speedModes';
 import { VisualisationOptions } from '../../types/period';
-
-const INIT_TIMER_SPEED = 1000; // in ms
+import { TimeSelection } from '../../types/userOptions';
+import MessageHandler from '../../utils/handlers/MessageHandler';
 
 export class Clock {
     private startDate: Date;
     private endDate?: Date;
-    private timerSpeed: number;
     private clock: TextBlock;
+    public onUpdate: () => void;
+    public onEndDateReached: () => void;
+    private upadeValue: number;
 
-    constructor(visualisationOptions: VisualisationOptions, speed?: number) {
+    constructor(visualisationOptions: VisualisationOptions, speedMode: SpeedModes, time?: TimeSelection) {
         this.initClock();
-        this.startDate = new Date(visualisationOptions.start);
+        const constructInitValue =
+            time === undefined
+                ? `${visualisationOptions.start} 00:00:00`
+                : `${visualisationOptions.start} ${time!.hours}:${time!.minutes}:00`;
+        console.log('TIME', constructInitValue);
+        this.startDate = new Date(constructInitValue);
         this.endDate = visualisationOptions.end !== undefined ? new Date(visualisationOptions.end) : undefined;
-        this.timerSpeed = speed || INIT_TIMER_SPEED;
+        this.findUpdateParameters(speedMode);
     }
 
-    public initSpeed = (speed: number) => {
-        this.timerSpeed = speed;
-    };
-
-    public updateClock = (visualisationOptions: VisualisationOptions, speed?: number) => {
-        this.startDate = new Date(visualisationOptions.start);
-        this.endDate = visualisationOptions.end !== undefined ? new Date(visualisationOptions.end) : visualisationOptions.end;
-        this.timerSpeed = speed !== undefined ? speed : this.timerSpeed;
+    private findUpdateParameters = (speedMode: SpeedModes) => {
+        switch (speedMode) {
+            case SpeedModes.RealTime:
+                this.onUpdate = this.findNextValueRealTime;
+                break;
+            case SpeedModes.Medium:
+                this.onUpdate = this.findNextValue;
+                this.upadeValue = 24;
+                break;
+            case SpeedModes.Fast:
+                this.onUpdate = this.findNextValue;
+                this.upadeValue = 48;
+                break;
+            default:
+                this.onUpdate = this.findNextValueRealTime;
+                break;
+        }
     };
 
     private initClock = () => {
@@ -43,21 +60,39 @@ export class Clock {
         return this.clock;
     };
 
-    // TODO: fix for medium and fast speed modes.
-    public findNextValue = () => {
-        const update = this.startDate.getMilliseconds() + this.timerSpeed;
+    public findNextValueRealTime = () => {
+        const update = this.startDate.getSeconds() + 1000;
         this.startDate.setMilliseconds(update);
-    };
 
-    // TODO: stop clock on endDate reached.
-    public onUpdate = () => {
-        this.findNextValue();
+        if (this.checkIfEndDateReached()) return;
+
         this.clock.text = `${this.startDate.getDate()} - ${
             this.startDate.getMonth() + 1
         } - ${this.startDate.getFullYear()}   ${this.startDate.getHours()}:${this.startDate.getMinutes()}:${this.startDate.getSeconds()}`;
     };
 
+    public findNextValue = () => {
+        const update = this.startDate.getHours() + this.upadeValue;
+        this.startDate.setUTCHours(update);
+
+        if (this.checkIfEndDateReached()) return;
+
+        this.clock.text = `${this.startDate.getDate()} - ${
+            this.startDate.getMonth() + 1
+        } - ${this.startDate.getFullYear()}`;
+    };
+
+    private checkIfEndDateReached = () => {
+        if (this.endDate === undefined) return false;
+
+        if (this.startDate.getTime() > this.endDate.getTime()) {
+            this.onEndDateReached();
+            new MessageHandler('End date reached.', '220px');
+            return true;
+        }
+    };
+
     public setVisibility = () => {
         this.clock.isVisible = !this.clock.isVisible;
-    }
+    };
 }

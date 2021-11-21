@@ -6,6 +6,7 @@ import Info from './InfoPanel';
 import { Timer } from '../SolarSystem/Timer';
 import { Clock } from './Clock';
 import Label from './Label';
+import { TimeSelection } from '../../types/userOptions';
 
 
 export class UserPanel {
@@ -24,7 +25,8 @@ export class UserPanel {
         fetchData: FetchData,
         text: string,
         info: Info,
-        planet?: Mesh
+        planet?: Mesh,
+        time?: TimeSelection,
     ) {
         const userPanel = AdvancedDynamicTexture.CreateFullscreenUI('UI');
         const stackPanel = this.initStackPanel();
@@ -40,11 +42,12 @@ export class UserPanel {
         buttonsPanel.addControl(this.closeInfo());
         infoPanel.addControl(info.infoText);
         stackPanel.addControl(this.visualisationText(text));
-        this.clock = new Clock(visualisationOptions, fetchData.timerSpeed);
+        this.clock = new Clock(visualisationOptions, visualisationOptions.mode, time);
         stackPanel.addControl(this.clock.getClock());
         this.updateClock = this.updateClock.bind(this);
         this.generateLabels(visualisationData, planet);
         this.timer = new Timer(scene, visualisationData, fetchData, visualisationOptions, this.clock.onUpdate);
+        this.clock.onEndDateReached = this.timer.onEndDateReached;
     }
 
     private visualisationText = (text: string) => {
@@ -74,8 +77,8 @@ export class UserPanel {
     private initInfoStackPanel = () => {
         const stackPanel = new StackPanel();
         stackPanel.height = '100%';
-        stackPanel.width = '100%'
-        stackPanel.top = '100px'
+        stackPanel.width = '460px'
+        stackPanel.top = '150px'
         stackPanel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
         stackPanel.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
 

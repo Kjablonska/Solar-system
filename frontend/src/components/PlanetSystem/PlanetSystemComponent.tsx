@@ -24,7 +24,9 @@ const PlanetSystemComponent = (props: any) => {
             if (initScene !== undefined && initScene.isReady()) {
                 const planetName: string = visualisationOptions.objects.planets[0];
                 const info = new Info(planetName);
-                const initData = new SceneData(planetsData, initScene, fetchData.refill, planetName);
+                const minutes = visualisationOptions.time === undefined ? 0 : visualisationOptions.time.minutes;
+
+                const initData = new SceneData(planetsData, initScene, fetchData.refill, planetName, minutes);
                 const initUI = new UserPanel(
                     initScene,
                     initData.visualisationData,
@@ -32,12 +34,10 @@ const PlanetSystemComponent = (props: any) => {
                     fetchData,
                     planetName,
                     info,
-                    initData.planetMesh
+                    initData.planetMesh,
+                    visualisationOptions.time,
                 );
                 initUI.timer.start();
-
-                initUI.timer.updateTimer(initData.visualisationData, fetchData);
-                initUI!.clock.updateClock(visualisationOptions, fetchData.speed);
             }
             engine.runRenderLoop(() => {
                 initScene.render();
