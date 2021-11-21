@@ -17,7 +17,6 @@ export class MovePlanets {
     fetchAll: boolean = false;
     fetchData: FetchData;
     currentPeriod: DatesPeriod;
-    onEndDateReached: () => void;
     stop: boolean = false;
     stopFetch: boolean = false;
     errorHandler: ErrorHandler;
@@ -101,10 +100,6 @@ export class MovePlanets {
             data.planet.position.x = data.orbit[0]._x;
             data.planet.position.y = data.orbit[0]._y;
             data.planet.position.z = data.orbit[0]._z;
-
-            // data.signature.position.x = data.orbit[0]._x - 2;
-            // data.signature.position.y = data.orbit[0]._y;
-            // data.signature.position.z = data.orbit[0]._z;
             if (draw) {
                 this.drawOrbit(data.orbit[0], data.planet.name);
             }
@@ -155,7 +150,6 @@ export class MovePlanets {
             this.startVisualisation();
             this.stopFetch = false;
         } catch (e: any) {
-            // this.stopVisualisation();
             console.log('ERROR', e);
             this.stopFetch = true;
             this.errorHandler.openErrorHandler();
@@ -165,10 +159,9 @@ export class MovePlanets {
     checkIfEndDateReached = () => {
         if (
             this.visualisationOptions.end !== undefined &&
-            new Date(this.currentPeriod.end) >= new Date(this.visualisationOptions.end)
+            new Date(this.currentPeriod.start) >= new Date(this.visualisationOptions.end)
         ) {
             console.log('end');
-            this.onEndDateReached();
             return true;
         }
 

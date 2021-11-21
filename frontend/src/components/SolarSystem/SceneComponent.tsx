@@ -27,8 +27,8 @@ const SceneComponent = (props: any) => {
                 const initUI = new UserPanel(initScene, initData.visualisationData, visualisationOptions, fetchData, 'Solar System', info);
                 initUI.timer.start();
 
-                initUI.timer.updateTimer(initData.visualisationData, fetchData);
-                initUI!.clock.updateClock(visualisationOptions, fetchData.speed)
+                // initUI.timer.updateTimer(initData.visualisationData, fetchData);
+                // initUI!.clock.updateClock(visualisationOptions, fetchData.speed)
             }
             engine.runRenderLoop(() => {
                 initScene.render();

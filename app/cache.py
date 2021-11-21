@@ -41,7 +41,7 @@ def search_cache(cache, date, body):
     if data == None:
         return None
 
-    cache.updateOne({"$and": [{'object': body}, {'date': date}]}, {
+    cache.update_one({"$and": [{'object': body}, {'date': date}]}, {
         "$set": {'last_used': datetime.now()}})
     return data['points']
 

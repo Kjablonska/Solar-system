@@ -46,8 +46,6 @@ class Info {
     private infoContainer = async () => {
         this.infoText.isVisible = false;
         this.infoText.name = 'info';
-        // this.infoText.paddingTop = '50px'
-        this.infoText.paddingLeft = '50px'
         this.infoText.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
         this.infoText.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
         this.infoText.textHorizontalAlignment = TextBlock.HORIZONTAL_ALIGNMENT_LEFT;

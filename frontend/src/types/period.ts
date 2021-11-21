@@ -1,4 +1,5 @@
 import { SpeedModes } from "../speedModes";
+import { TimeSelection } from "./userOptions";
 
 export interface DatesPeriod {
     start: string;
@@ -11,6 +12,7 @@ export interface VisualisationOptions {
     currentEnd: string;
     mode: SpeedModes;
     objects: FetchObjects;
+    time?: TimeSelection;
 }
 
 export interface FetchObjects {

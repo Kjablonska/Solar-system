@@ -1,9 +1,14 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import ParamsPicker from './paramsPicker/ParamsPicker';
 import dataSelectionBackground from '../../assets/data_selection_background.png';
 import 'react-datepicker/dist/react-datepicker.css';
 import './datepicker.css';
-import ParamsPicker from './ParamsPicker';
+
+export enum VisualisationMode {
+    Satellites = 'satellites',
+    SolarSystem = 'solarSystem',
+}
 
 const DataSelectionContainer = styled.div`
     position: absolute;
@@ -54,12 +59,16 @@ const ModalTitle = styled.div.attrs({ children: 'Please select mode' })`
 `;
 
 const DataSelection = () => {
-    const [mode, setMode] = useState<string>('');
-    const handleModeSelection = (selectedMode: string) => {
+    const [mode, setMode] = useState<VisualisationMode | null>(null);
+    const handleModeSelection = (selectedMode: VisualisationMode) => {
         setMode(selectedMode);
         const selected = document.getElementById(selectedMode);
         selected!.style.backgroundColor = '#a6808c';
-        const unselected = document.getElementById(selectedMode === 'planet' ? 'solarSystem' : 'planet');
+        const unselected = document.getElementById(
+            selectedMode === VisualisationMode.Satellites
+                ? VisualisationMode.SolarSystem
+                : VisualisationMode.Satellites,
+        );
         unselected!.style.backgroundColor = '#d6cfcb';
     };
 
@@ -69,16 +78,22 @@ const DataSelection = () => {
                 <ModalTitle />
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <ModeSelectionContainer>
-                        <ModeCheckBox id='solarSystem' onClick={() => handleModeSelection('solarSystem')} />
+                        <ModeCheckBox
+                            id={VisualisationMode.SolarSystem}
+                            onClick={() => handleModeSelection(VisualisationMode.SolarSystem)}
+                        />
                         <ModalText>Solar System</ModalText>
                     </ModeSelectionContainer>
                     <ModeSelectionContainer>
-                        <ModeCheckBox id='planet' onClick={() => handleModeSelection('planet')} />
+                        <ModeCheckBox
+                            id={VisualisationMode.Satellites}
+                            onClick={() => handleModeSelection(VisualisationMode.Satellites)}
+                        />
                         <ModalText>Planet & its satellite</ModalText>
                     </ModeSelectionContainer>
                 </div>
             </DataSelectionContainer>
-            {mode !== '' && <ParamsPicker visualisationMode={mode} />}
+            {mode !== null && <ParamsPicker visualisationMode={mode} />}
         </div>
     );
 };
