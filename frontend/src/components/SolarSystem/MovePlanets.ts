@@ -59,7 +59,6 @@ export class MovePlanets {
             // }
         }
 
-        console.log(this.linesMeshes);
     }
 
     movePlanet = async () => {
@@ -68,7 +67,6 @@ export class MovePlanets {
             this.draw = true;
             this.oribteDrawerCounter = 0;
         }
-        console.log(this.visualisationData !== undefined && !this.stop && !this.checkIfEndDateReached());
         if (this.visualisationData !== undefined && !this.stop && !this.checkIfEndDateReached()) {
             for (let data of this.visualisationData) {
                 data = this.setPosition(data, this.draw);
