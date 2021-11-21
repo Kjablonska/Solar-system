@@ -13,78 +13,25 @@ import pymongo
 import urllib.parse
 import json
 import numpy as np
-from datetime import datetime
+
+from asstes import get_skybox, get_planet_texture, get_satellite_texture, get_heightmap
+from satellites import get_satellites
+from planets import get_info, get_planets_data
+from asteroids import get_asteroids, get_asteroids_data
+from cache import get_cache, get_cache_satellites, cache_size
 
 app = Flask(__name__)
+
 CORS(app)
 
 
-@app.route("/getPlanetInfo")
-def get_info():
-    planet = request.args.get('planet')
-    planet_data = get_planet(planet)
-    if planet_data is None:
-        return None
-    return json.dumps(planet_data["info"])
-
-# -----------------------------------------------------------
-#
-# Method for finding planet's satellites JPL data.
-# @params:
-#   planet    -   name of the planet for which the satellites data is fetched.
-#
-# -----------------------------------------------------------
-
-
-def get_planet(planet):
-    client = pymongo.MongoClient(
-        "mongodb://solar-system:solar-system@mongo:27017")
-    mydb = client["celestial-bodies"]
-    planet_collection = mydb["planets"]
-
-    planet_data = planet_collection.find_one({'name': planet})
-    client.close()
-    return planet_data
-
-
 @app.route("/getSatellitesJPLData")
-def get_satellites():
+def get_satellites_data():
     planet = request.args.get('planet')
     start = request.args.get('start')
     end = request.args.get('end')
     step = request.args.get('step')
-
-    client = pymongo.MongoClient(
-        "mongodb://solar-system:solar-system@mongo:27017")
-    mydb = client["celestial-bodies"]
-    planet_collection = mydb["planets"]
-
-    planet_data = planet_collection.find_one({'name': planet})
-    if planet_data is None:
-        return {}
-
-    location = f'@{planet_data["_id"]}'
-    satellites = planet_data["satellites"]
-    objects = {}
-    data = {}
-
-    for satellite in satellites:
-        cache_res = search_satellites_cache(satellite["name"], start, mydb)
-        if (cache_res is not None):
-            data[satellite["name"]] = cache_res
-            continue
-
-        res = Horizons(id=str(satellite["_id"]), location=location, epochs={
-                       "start": str(start), "stop": str(end), "step": str(step)}, id_type='majorbody')
-        vec = res.vectors()
-        possitons_data = {}
-        for name in vec.colnames:
-            if name in ['x', 'y', 'z']:
-                possitons_data[name] = vec[name].to(u.km).value.tolist()
-        data[satellite["name"]] = possitons_data
-        add_to_satellites_cache(satellite["name"], start, possitons_data, mydb)
-
-    client.close()
+    data = get_satellites(planet, start, end, step)
     return json.dumps(data)
 
 # -----------------------------------------------------------
@@ -99,20 +46,14 @@ def get_satellites():
 #
 # -----------------------------------------------------------
 
-
-@app.route("/getSolarSystemJPLData")
-def get_JPL_solar_system_data():
-    names = request.args.get('name')
-    names = parse_names(names)
-    start = request.args.get('start')
-    end = request.args.get('end')
-    step = request.args.get('step')
-    planets = get_planets_data(start, end, step, names)
-    asteroids = get_asteroids_data(start, end, step)
-
-    data = dict(planets)
-    data.update(asteroids)
-    return json.dumps(data)
+# @app.route("/getSolarSystemJPLData")
+# def get_JPL_solar_system_data():
+#     names = request.args.get('name')
+#     names = parse_names(names)
+#     start = request.args.get('start')
+#     end = request.args.get('end')
+#     step = request.args.get('step')
+#     return get_JPL_solar_system_data(names, start, end, step)
 
 
 @app.route("/getPlanetsJPLData")
@@ -127,124 +68,14 @@ def get_JPL_planets_data():
     return json.dumps(data)
 
 
-def get_planets_data(start, end, step, names):
-    client = pymongo.MongoClient(
-        "mongodb://solar-system:solar-system@mongo:27017")
-    mydb = client["celestial-bodies"]
-    planets = get_planets(names, mydb)
-    print(planets)
-    objects = {}
-    data = {}
-
-    for planet in planets:
-        if (step == '1h'):
-            cache_res = search_planets_cache(planet["name"], start, mydb)
-            if (cache_res is not None):
-                data[planet["name"]] = cache_res
-                continue
-
-        res = Horizons(id=str(planet["_id"]), location='@Sun', epochs={"start": str(
-            start), "stop": str(end), "step": str(step)}, id_type='majorbody')
-        vec = res.vectors()
-        print(planet)
-        possitons_data = {}
-        for name in vec.colnames:
-            if name in ['x', 'y', 'z']:
-                possitons_data[name] = vec[name].to(u.km).value.tolist()
-        data[planet["name"]] = possitons_data
-        if (step == '1h'):
-            add_to_planets_cache(planet["name"], start, possitons_data, mydb)
-
-    client.close()
-
-    return data
+@app.route("/getPlanetInfo")
+def get_planet_info():
+    planet = request.args.get('planet')
+    data = get_info(planet)
+    return json.dumps(data)
 
 
-@app.route("/cache")
-def get_cache():
-    client = pymongo.MongoClient(
-        "mongodb://solar-system:solar-system@mongo:27017")
-    mydb = client["celestial-bodies"]
-    planets_cache = mydb["planetsCache"]
-    res = list(planets_cache.find())
-    client.close()
-    return json.dumps(res, default=str)
-
-
-@app.route("/cacheS")
-def get_cache_s():
-    client = pymongo.MongoClient(
-        "mongodb://solar-system:solar-system@mongo:27017")
-    mydb = client["celestial-bodies"]
-    planets_cache = mydb["satellitesCache"]
-    res = list(planets_cache.find())
-    client.close()
-    return json.dumps(res, default=str)
-
-
-@app.route("/cacheSize")
-def size():
-    client = pymongo.MongoClient(
-        "mongodb://solar-system:solar-system@mongo:27017")
-    mydb = client["celestial-bodies"]
-    satellites_cache = mydb["satellitesCache"]
-    size = satellites_cache.count_documents({})
-    client.close()
-    return str(size)
-
-# TODO: test
-def search_planets_cache(planet, date, mydb):
-    planets_cache = mydb["planetsCache"]
-    data = planets_cache.find_one(
-        {"$and": [{'planet': planet}, {'date': date}]}
-    )
-    if data == None:
-        return None
-
-    planets_cache.updateOne({"$and": [{'planet': planet}, {'date': date}]}, {
-                            "$set": {'last_used': datetime.now()}})
-    return data['points']
-
-def clean_cache(planets_cache):
-    size = planets_cache.count_documents({})
-
-    if size > 3:
-        res = planets_cache.find()
-        dates = []
-        for doc in res:
-            print(doc)
-            dates.append(doc["last_used"])
-
-        dates.sort()
-        last_used = dates[0]
-        planets_cache.delete_one({"last_used": last_used})
-
-
-def search_satellites_cache(satellite, date, mydb):
-    satellites_cache = mydb["satellitesCache"]
-    data = satellites_cache.find_one(
-        {"$and": [{'satellite': satellite}, {'date': date}]})
-    if data == None:
-        return None
-
-    satellites_cache.updateOne({"$and": [{'planet': satellite}, {'date': date}]}, {
-                            "$set": {'last_used': datetime.now()}})
-    return data['points']
-
-
-def add_to_planets_cache(planet, start, data, mydb):
-    planets_cache = mydb["planetsCache"]
-    planets_cache.insert({'planet': planet, 'date': start, 'points': data, 'last_used': datetime.now()})
-    clean_cache(planets_cache)
-
-
-def add_to_satellites_cache(planet, start, data, mydb):
-    satellites_cache = mydb["satellitesCache"]
-    satellites_cache.insert(
-        {'satellite': planet, 'date': start, 'points': data, 'last_used': datetime.now()})
-    clean_cache(satellites_cache)
-
-
+# Asteroids
 @app.route("/getAsteroidsJPLData")
 def get_JPL_asteroid_belt():
     start = request.args.get('start')
@@ -255,105 +86,48 @@ def get_JPL_asteroid_belt():
     return json.dumps(data)
 
 
-def get_asteroids_data(start, end, step):
-    asteroids = get_asteroids()
-    print(asteroids)
-    objects = {}
-    data = {}
+@app.route("/asteroid")
+def get_asteroids():
+    return get_asteroids()
 
-    for asteroid in asteroids:
-        # print("here")
-        res = Horizons(id=str(asteroid["_id"]), location='@Sun', epochs={"start": str(
-            start), "stop": str(end), "step": str(step)}, id_type='smallbody')
-        vec = res.vectors()
-        print(asteroid)
-        possitons_data = {}
-        for name in vec.colnames:
-            if name in ['x', 'y', 'z']:
-                possitons_data[name] = vec[name].to(u.km).value.tolist()
-        data[asteroid["name"]] = possitons_data
+## Assets
 
-    return data
+@app.route('/assets/<name>')
+def get_skybox_pictures(name):
+    return get_skybox(name)
+
+@app.route('/assets/planets/<planet>')
+def get_planet_texture_picture(planet):
+    return get_planet_texture(planet)
+
+@app.route('/assets/satellites/<planet>')
+def get_satellite_texture_picture(planet):
+    return get_satellite_texture(planet)
+
+@app.route('/assets/heightmaps/<planet>')
+def get_heightmap_picture(planet):
+    return get_heightmap(planet)
+
+
+@app.route("/cachePlanets")
+def get_planets_cache():
+    res = get_cache()
+    return json.dumps(res, default=str)
+
+@app.route("/cacheSatellites")
+def satellites_cache():
+    res = get_cache_satellites()
+    return json.dumps(res, default=str)
+
+@app.route("/cacheSize")
+def get_cache_size():
+    return cache_size()
 
 
 def parse_names(names):
     names = names.replace("[", "")
     names = names.replace("]", "")
     return names.split(",")
-
-
-def get_planets(names, mydb):
-    planet_collection = mydb["planets"]
-    print(type(names))
-    print(names)
-    res = planet_collection.find({'name': {"$in": names}})
-    data = []
-    for doc in res:
-        data.append(doc)
-    return data
-
-
-@app.route("/asteroid")
-def get_asteroids():
-    client = pymongo.MongoClient(
-        "mongodb://solar-system:solar-system@mongo:27017")
-    mydb = client["celestial-bodies"]
-    asteroids_collection = mydb["asteroids"]
-    res = asteroids_collection.find()
-    client.close()
-    data = []
-    for doc in res:
-        print(doc)
-        data.append(doc)
-    return data
-
-# -----------------------------------------------------------
-#
-# Returns skybox images.
-# @params:
-#   name    -   image name to be returned.
-#
-# -----------------------------------------------------------
-
-
-@app.route('/assets/<name>')
-def get_skybox(name):
-    return send_file(
-        "./assets/skybox/{}".format(name),
-        as_attachment=True,
-        attachment_filename='test.jpg',
-        mimetype='image/jpeg'
-    )
-
-
-@app.route('/assets/planets/<planet>')
-def get_planet_texture(planet):
-    return send_file(
-        "./assets/planets/{}.jpg".format(planet),
-        as_attachment=True,
-        attachment_filename="{}.jpg".format(planet),
-        mimetype='image/jpeg'
-    )
-
-
-@app.route('/assets/satellites/<planet>')
-def get_satellite_texture(planet):
-    return send_file(
-        "./assets/satellites/{}.jpg".format(planet),
-        as_attachment=True,
-        attachment_filename="{}.jpg".format(planet),
-        mimetype='image/jpeg'
-    )
-
-
-@app.route('/assets/heightmaps/<planet>')
-def get_heightmap(planet):
-    return send_file(
-        "./assets/heightmaps/{}.jpg".format(planet),
-        as_attachment=True,
-        attachment_filename="{}.jpg".format(planet),
-        mimetype='image/jpeg'
-    )
 
 # For testing purposes.
 
