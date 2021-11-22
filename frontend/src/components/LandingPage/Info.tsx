@@ -29,12 +29,7 @@ const Info: React.FC<InfoProps> = ({ onClose }) => {
             <InfoContent>
                 <CloseButton onClick={onClose} />
                 <p>Welcome to the Solar System visualisation!</p>
-                <ul>
-                    There are two possible modes:
-                    <li>Solar System</li>
-                    <li>Planet & its satellites</li>
-                </ul>
-                <p></p>
+                <p>...</p>
             </InfoContent>
         </InfoContainer>
     );

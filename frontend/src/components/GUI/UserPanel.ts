@@ -46,7 +46,7 @@ export class UserPanel {
         stackPanel.addControl(this.clock.getClock());
         this.updateClock = this.updateClock.bind(this);
         this.generateLabels(visualisationData, planet);
-        this.timer = new Timer(scene, visualisationData, fetchData, visualisationOptions, this.clock.onUpdate);
+        this.timer = new Timer(scene, visualisationData, fetchData, visualisationOptions, this.clock.onUpdate, this.clock.stopClock, planet);
         this.clock.onEndDateReached = this.timer.onEndDateReached;
     }
 

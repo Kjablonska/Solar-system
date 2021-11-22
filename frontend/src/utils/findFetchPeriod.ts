@@ -39,11 +39,12 @@ export default function findFetchPeriod() {
             case SpeedModes.RealTime:
                 return {step: '1h', period: 1, refill: 3540, timerSpeed: 1000};
             case SpeedModes.Medium:
-                return {step: '24h', period: 120, refill: 100, timerSpeed: 10}; // 1s == 24h
+                return {step: '24h', period: 120, refill: 100, timerSpeed: 10};
             case SpeedModes.Fast:
                 return {step: '48h', period: 300, refill: 10, timerSpeed: 10};
             case SpeedModes.Satellite:
                 return {step: '1h', period: 1, refill: 60 * 58, timerSpeed: 1000};
+                // return {step: '12h', period: 3, refill: 60, timerSpeed: 10};
             default:
                 return {step: '1h', period: 2, refill: 60 * 58, timerSpeed: 1000};
         }

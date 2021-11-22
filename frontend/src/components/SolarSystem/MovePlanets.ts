@@ -1,4 +1,4 @@
-import { Scene, LinesMesh, Vector3, Curve3, MeshBuilder } from '@babylonjs/core';
+import { Scene, LinesMesh, Vector3, Curve3, MeshBuilder, Mesh, Space } from '@babylonjs/core';
 import { DatesPeriod, FetchData, VisualisationOptions } from '../../types/period';
 import { VisualisationData } from '../../types/planetInterfaces';
 import { findNewPeriod } from '../../utils/findFetchPeriod';
@@ -24,12 +24,17 @@ export class MovePlanets {
     linesMeshes: Map<string, OribteDrawer>;
     oribteDrawerCounter: number = 0;
     draw: boolean = true;
+    stopClock: () => void;
+    planet?: Mesh;
+    private earthAxis = new Vector3(Math.sin((23 * Math.PI) / 180), Math.cos((23 * Math.PI) / 180), 0);
 
     constructor(
         visualisationData: VisualisationData[],
         visualisationOptions: VisualisationOptions,
         fetchData: FetchData,
         scene: Scene,
+        stopClock: () => void,
+        planet?: Mesh,
     ) {
         this.visualisationOptions = visualisationOptions;
         this.currentPeriod = { start: visualisationOptions.start, end: visualisationOptions.currentEnd };
@@ -38,26 +43,28 @@ export class MovePlanets {
         this.errorHandler = new ErrorHandler(this.onDataEnd);
         this.scene = scene;
         this.linesMeshes = new Map<string, OribteDrawer>();
+        this.stopClock = stopClock;
         for (let el of visualisationData) {
             // if (planets.includes(el.planet.name)) {
-                const initPoints = [];
+            const initPoints = [];
 
-                for (let i = 0; i < 10; i++) {
-                    initPoints.push(el.orbit[i]);
-                }
+            for (let i = 0; i < 10; i++) {
+                initPoints.push(el.orbit[i]);
+            }
 
-                const lineMesh = MeshBuilder.CreateLines(`${el.planet.name} orbit`, {
-                    points: initPoints,
-                    updatable: true,
-                });
-                this.linesMeshes.set(el.planet.name, {
-                    linesMesh: lineMesh,
-                    initPosition: el.orbit[10],
-                    buffer: initPoints,
-                });
+            const lineMesh = MeshBuilder.CreateLines(`${el.planet.name} orbit`, {
+                points: initPoints,
+                updatable: true,
+            });
+            this.linesMeshes.set(el.planet.name, {
+                linesMesh: lineMesh,
+                initPosition: el.orbit[10],
+                buffer: initPoints,
+            });
             // }
         }
 
+        this.planet = planet;
     }
 
     movePlanet = async () => {
@@ -83,8 +90,18 @@ export class MovePlanets {
         }
     };
 
+    // TODO: only for earth?
+    roatePlanet = () => {
+        if (this.planet !== undefined) {
+            const angle = 0.00073
+            this.planet.rotateAround(this.planet.position, this.earthAxis, angle)
+        }
+    };
+
+
     stopVisualisation = () => {
         console.log('visualisation stopped');
+        this.stopClock();
         this.stop = true;
     };
 
@@ -94,12 +111,14 @@ export class MovePlanets {
     };
 
     setPosition = (data: VisualisationData, draw: boolean): VisualisationData => {
-        if (data.orbit.length < 1) {console.log("here");
-        this.stopVisualisation();}
-        else {
+        if (data.orbit.length < 1) {
+            console.log('here');
+            this.stopVisualisation();
+        } else {
             data.planet.position.x = data.orbit[0]._x;
             data.planet.position.y = data.orbit[0]._y;
             data.planet.position.z = data.orbit[0]._z;
+            // this.roatePlanet()
             if (draw) {
                 this.drawOrbit(data.orbit[0], data.planet.name);
             }

@@ -62,10 +62,6 @@ export const InitSceneData = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    console.log("DATA", planetsData, planetsData !== undefined &&
-    planetsData.length === 8 &&
-    visualisationOptions !== undefined &&
-    !isError)
     return (
         <>
             {isLoading && <Spinner />}

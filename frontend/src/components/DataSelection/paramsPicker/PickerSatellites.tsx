@@ -32,6 +32,7 @@ const PickerSatellites: React.FC<PickerProps> = ({ startVisualisation }) => {
 
     return (
         <ParamsPickerContainer>
+
             <div>
                 <ModeSelectionContainer>
                     <SelectionText>Planet:</SelectionText>
@@ -48,8 +49,8 @@ const PickerSatellites: React.FC<PickerProps> = ({ startVisualisation }) => {
                         className='date-picker'
                         clearButtonClassName='date-picker-clear-button'
                         // dateFormat="Pp"
-                        dateFormat="P HH:mm"
-                        timeFormat="HH:mm"
+                        dateFormat='P HH:mm'
+                        timeFormat='HH:mm'
                         timeIntervals={5}
                         showTimeSelect
                     />

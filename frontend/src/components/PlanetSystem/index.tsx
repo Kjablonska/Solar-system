@@ -21,6 +21,16 @@ const satellitesMap = new Map<string, number>([
     ['Neptune', 8],
 ]);
 
+
+const scaleMap = new Map<string, number>([
+    ['Earth', 10000],
+    ['Mars', 100],
+    ['Jupiter', 1000],
+    ['Saturn', 1000],
+    ['Uranus', 1000],
+    ['Neptune', 1000],
+]);
+
 export const PlanetSystemScene = () => {
     const [isError, openError] = useState<boolean>(false);
     const { defineStartingPeriod, findFetchParameters } = findFetchPeriod();
@@ -70,9 +80,10 @@ export const PlanetSystemScene = () => {
         const points: Vector3[] = [];
 
         const start = visualisationOptions.time !== undefined ? visualisationOptions.time.hours : 0;
-
+        let factor = scaleMap.get(options.planet!);
+        factor = factor !== undefined ? factor : 1000;
         for (let i = start; i < position.x.length; i++) {
-            points.push(new Vector3(position.x[i] / 10000, position.y[i] / 10000, position.z[i] / 10000));
+            points.push(new Vector3(position.x[i] / factor, position.y[i] / factor, position.z[i] / factor));
         }
         return points;
     };

@@ -9,8 +9,8 @@ class MessageHandler {
         const error = AdvancedDynamicTexture.CreateFullscreenUI('Message');
         const stackPanel = this.initStackPanel(width);
         error.addControl(stackPanel);
-        this.messageText(message)
-        this.stackPanel.addControl(this.message)
+        this.messageText(message);
+        this.stackPanel.addControl(this.message);
         this.closeButton();
         this.stackPanel.addControl(this.button);
     }
@@ -29,7 +29,7 @@ class MessageHandler {
         const stackPanel = new StackPanel();
         stackPanel.height = '30%';
         stackPanel.width = width;
-        stackPanel.top = '20px'
+        stackPanel.top = '50px';
         stackPanel.isVertical = false;
         stackPanel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
         stackPanel.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
@@ -46,10 +46,10 @@ class MessageHandler {
         this.message.width = '220px';
         this.message.fontFamily = 'Arial';
         this.message.text = messageText;
-        this.message.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER
-        this.message.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER
-        this.message.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER
-    }
+        this.message.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+        this.message.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+        this.message.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+    };
 
     private closeButton() {
         this.button = Button.CreateSimpleButton('closeButton', 'x');
@@ -58,7 +58,7 @@ class MessageHandler {
         this.button.color = 'white';
         this.button.cornerRadius = 5;
         this.button.background = '#A6808C';
-        this.button.paddingLeft = '10px'
+        this.button.paddingLeft = '10px';
         this.button.onPointerUpObservable.add(() => {
             this.button.isVisible = false;
             this.message.isVisible = false;

@@ -32,6 +32,7 @@ const diameterMap = new Map<string, number>([
 ]);
 
 export default function rescaleData(position: PositionData, planet: string, satellite: boolean): Vector3[] {
+    console.log("before", position)
     const points: Vector3[] = [];
     let factor = diameterMap.get(planet);
     if (factor === undefined) {
@@ -43,5 +44,7 @@ export default function rescaleData(position: PositionData, planet: string, sate
     for (let i = 0; i < position.x.length; i++) {
         points.push(new Vector3(position.x[i] / (12756000 * 2), position.y[i] / (12756000 * 2), position.z[i] / (12756000 * 2)));
     }
+
+    console.log("rescale", points)
     return points;
 }

@@ -1,10 +1,11 @@
-import { AdvancedDynamicTexture, StackPanel, Button } from '@babylonjs/gui';
+import { AdvancedDynamicTexture, StackPanel, Button, Control } from '@babylonjs/gui';
 import MessageHandler from './MessageHandler';
 
 class ErrorHandler {
     private onRetry: () => void;
     private stackPanel: StackPanel;
     private messageHandler: MessageHandler;
+    private retryButton: Button;
 
     constructor(onRetry: () => void) {
         this.onRetry = onRetry;
@@ -18,20 +19,22 @@ class ErrorHandler {
 
     public openErrorHandler() {
         this.messageHandler.openMessageHandler()
-        this.stackPanel.isVisible = true;
+        this.retryButton.isVisible = true;
     }
 
     public closeErrorHandler() {
         this.stackPanel.isVisible = false;
         this.messageHandler.closeMessageHandler()
+        this.retryButton.isVisible = false;
     }
 
     private initStackPanel() {
         const stackPanel = new StackPanel();
         stackPanel.height = '100%';
         stackPanel.width = '100%';
-        stackPanel.top = '50px';
-        stackPanel.verticalAlignment = 0;
+        stackPanel.top = '120px';
+        stackPanel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+        stackPanel.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
         this.stackPanel = stackPanel;
         this.stackPanel.isVisible = false;
         return stackPanel;
@@ -42,13 +45,16 @@ class ErrorHandler {
         retryButton.width = '110px';
         retryButton.height = '30px';
         retryButton.color = 'white';
-        retryButton.cornerRadius = 20;
-        retryButton.background = 'grey';
+        retryButton.top = '50px'
+        retryButton.cornerRadius = 5;
+        retryButton.fontFamily = 'Arial';
+        retryButton.background = '#A6808C';
         retryButton.left = '0px';
         retryButton.onPointerUpObservable.add(() => {
             this.onRetry();
-            console.log('retry');
         });
+
+        this.retryButton = retryButton;
 
         return retryButton;
     }

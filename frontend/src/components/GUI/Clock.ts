@@ -11,6 +11,7 @@ export class Clock {
     public onUpdate: () => void;
     public onEndDateReached: () => void;
     private upadeValue: number;
+    private stop: boolean = false;
 
     constructor(visualisationOptions: VisualisationOptions, speedMode: SpeedModes, time?: TimeSelection) {
         this.initClock();
@@ -35,7 +36,7 @@ export class Clock {
                 break;
             case SpeedModes.Fast:
                 this.onUpdate = this.findNextValue;
-                this.upadeValue = 48;
+                this.upadeValue = 4.8;
                 break;
             default:
                 this.onUpdate = this.findNextValueRealTime;
@@ -60,7 +61,19 @@ export class Clock {
         return this.clock;
     };
 
+    public stopClock = () => {
+        console.log("stop clock")
+        this.stop = true;
+    }
+
+    public startClock = () => {
+        this.stop = false;
+    }
+
     public findNextValueRealTime = () => {
+        if (this.stop)
+            return;
+
         const update = this.startDate.getSeconds() + 1000;
         this.startDate.setMilliseconds(update);
 
@@ -72,6 +85,9 @@ export class Clock {
     };
 
     public findNextValue = () => {
+        if (this.stop)
+            return;
+
         const update = this.startDate.getHours() + this.upadeValue;
         this.startDate.setUTCHours(update);
 

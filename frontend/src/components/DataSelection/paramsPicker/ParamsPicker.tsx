@@ -7,6 +7,8 @@ import { setUserSelection } from '../../../redux/action';
 import { VisualisationMode } from '..';
 import PickerSatellites from './PickerSatellites';
 import PickerSolarSystem from './PickerSolarSystem';
+import { useState } from 'react';
+import ErrorHandler from './ErrorHandler';
 
 interface ParamsPickerProps {
     visualisationMode: VisualisationMode;
@@ -17,11 +19,17 @@ export interface PickerProps {
 }
 
 const ParamsPicker: React.FC<ParamsPickerProps> = ({ visualisationMode }) => {
+    const [isError, openError] = useState<boolean>(false);
     const { formatDate, formatTime } = findFetchPeriod();
     const dispatch = useDispatch();
     const history = useHistory();
 
     const startVisualisation = (startValue: Date | null, endValue: Date | null, planet?: string, mode?: SpeedModes) => {
+        // console.log("onstart", startValue, endValue, startValue!.getTime() < endValue!.getTime())
+        // if (startValue === null || (endValue !== null && startValue !== null && endValue.getTime() > startValue.getTime())) {
+        //     openError(true);
+        //     return;
+        // }
         console.log(startValue, endValue);
         if (startValue === null)
             return;
@@ -36,8 +44,13 @@ const ParamsPicker: React.FC<ParamsPickerProps> = ({ visualisationMode }) => {
         visualisationMode === 'solarSystem' ? history.push('/visualisation') : history.push('/planet');
     };
 
+    const closeErrorMessage = () => {
+        openError(false)
+    }
+
     return (
         <>
+            {isError && <ErrorHandler onClose={closeErrorMessage}/>}
             {visualisationMode === VisualisationMode.Satellites ? (
                 <PickerSatellites startVisualisation={startVisualisation} />
             ) : (

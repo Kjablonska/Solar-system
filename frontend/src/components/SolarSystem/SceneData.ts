@@ -10,7 +10,6 @@ import {
     Mesh,
     CubeTexture,
     Texture,
-    DynamicTexture,
 } from '@babylonjs/core';
 
 import { PlanetData, VisualisationData } from '../../types/planetInterfaces';
@@ -27,6 +26,7 @@ const diameterMap = new Map<string, number>([
     ['Neptune', 1.58913628],
     ['Luna', 0.435240298],
 ]);
+
 export class SceneData {
     private camera: ArcRotateCamera;
     private light: PointLight;
@@ -70,8 +70,6 @@ export class SceneData {
 
         for (const el of planetsData) {
             const planetName = el.planet;
-            console.log('add planets', el);
-
             const planetCurve = Curve3.CreateCatmullRomSpline(el.position, this.fill, false);
             let diameter = diameterMap.get(planetName);
             console.log(planetName, diameter)

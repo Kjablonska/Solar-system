@@ -1,4 +1,4 @@
-import { Scene, AdvancedTimer } from '@babylonjs/core';
+import { Scene, AdvancedTimer, Mesh } from '@babylonjs/core';
 import { FetchData, VisualisationOptions } from '../../types/period';
 import { VisualisationData } from '../../types/planetInterfaces';
 import setMovementTimer from '../../utils/setMovementTimer';
@@ -12,9 +12,9 @@ export class Timer {
     public timer: AdvancedTimer;
     private planetsMovement: MovePlanets;
     private updateClock: () => void;
+    private stopClock: () => void;
 
     start = () => {
-        console.log("start", this.fetchData.timerSpeed)
         this.timer.start(this.fetchData.timerSpeed);
     };
 
@@ -55,6 +55,8 @@ export class Timer {
         fetchData: FetchData,
         visualisationOptions: VisualisationOptions,
         updateClock: () => void,
+        stopClock: () => void,
+        planet?: Mesh,
     ) {
         this.fetchData = fetchData;
         this.scene = scene;
@@ -64,9 +66,12 @@ export class Timer {
             visualisationOptions,
             fetchData,
             scene,
+            stopClock,
+            planet
         );
 
         this.updateClock = updateClock;
+        this.stopClock = stopClock;
         this.setUpTimer();
     }
 }
