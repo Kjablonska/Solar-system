@@ -35,7 +35,7 @@ class Info {
         );
         const data = await response.json();
 
-        let formatted = `${this.planet} infomatation:\n\n`;
+        let formatted = `${this.planet} data:\n\n`;
         for (const [key, val] of Object.entries(data)) {
             formatted += `${key}:\t${val}\n`;
         }

@@ -21,6 +21,7 @@ const SceneComponent = (props: any) => {
         if (reactCanvas.current) {
             const engine = new Engine(reactCanvas.current, antialias, engineOptions, adaptToDeviceRatio);
             const initScene = new Scene(engine, sceneOptions);
+            console.log(planetsData)
             if (initScene !== undefined && initScene.isReady()) {
                 const initData = new SceneData(planetsData, initScene, fetchData.refill);
                 const info = new Info('SolarSystem');

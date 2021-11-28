@@ -75,7 +75,6 @@ export const PlanetSystemScene = () => {
         }
     }
 
-    // TODO: calculate rescaling for each planet.
     const mapToArray = (position: PositionData) => {
         const points: Vector3[] = [];
 

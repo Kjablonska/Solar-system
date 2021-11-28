@@ -18,6 +18,30 @@ const diameterMap = new Map<string, number>([
     ['Luna', 8.2],
     ['Phobos', 0.1],
     ['Venus', 0.05],
+    ['Io', 1],
+    ['Eurpoa', 1],
+    ['Ganymede', 1],
+    ['Callisto', 1],
+    ['Mimas', 1],
+    ['Enceladus', 1],
+    ['Tethys', 1],
+    ['Dione', 1],
+    ['Rhea', 1],
+    ['Titan', 1],
+    ['Hyperion', 1],
+    ['Iapetus', 1],
+    ['Ariel', 1],
+    ['Umbriel', 1],
+    ['Oberon', 1],
+    ['Miranda', 1],
+    ['Triton', 1],
+    ['Nereid', 1],
+    ['Naiad', 1],
+    ['Thalassa', 1],
+    ['Despina', 1],
+    ['Galatea', 1],
+    ['Larissa', 1],
+    ['Proteus', 1]
 ]);
 
 export class SceneData {
@@ -37,10 +61,6 @@ export class SceneData {
         this.visualisationMinutes = minutes;
         this.planet = planet;
         this.addPlanet();
-
-        // this.scene.fogMode = Scene.FOGMODE_EXP;
-        // // this.scene.fogEnd = 30;
-        // this.scene.fogDensity = 0.008;
 
         this.addSatellites(planetsData);
         this.generateSkyBox();
@@ -77,7 +97,7 @@ export class SceneData {
         planet3.addLODLevel(100, planet);
         var material = new StandardMaterial(this.planet, this.scene);
         material.diffuseTexture = new Texture(`http://localhost:5000/assets/planets/${this.planet}`, this.scene);
-        // material.wireframe = true;
+
         planet.applyDisplacementMap(heightMap, 0, 0.3);
         planet1.applyDisplacementMap(heightMap, 0, 0.6);
         planet2.applyDisplacementMap(heightMap, 0, 0.8);

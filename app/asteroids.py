@@ -1,5 +1,6 @@
 import pymongo
 from astroquery.jplhorizons import Horizons
+from astropy import units as u
 
 def get_asteroids():
     client = pymongo.MongoClient(

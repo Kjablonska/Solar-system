@@ -19,40 +19,28 @@ db.createCollection('satellitesCache');
 db.asteroids.insert(
     [
         {
-            "_id": "951",
-            "name": "Gaspra"
-        },
-        {
-            "_id": "243",
-            "name": "Ida"
-        },
-        {
-            "_id": "431011",
-            "name": "Dactyl"
-        },
-        {
             "_id": "000001",
             "name": "Ceres"
         },
         {
-            "_id": "000002",
-            "name": "Pallas"
+            "_id": "101955",
+            "name": "Bennu"
         },
         {
             "_id": "000004",
             "name": "Vesta"
         },
         {
+            "_id": "000002",
+            "name": "Pallas"
+        },
+        {
             "_id": "000016",
             "name": "Psyche"
         },
         {
-            "_id": "000021",
-            "name": "Lutetia"
-        },
-        {
-            "_id": "000216",
-            "name": "Kleopatra"
+            "_id": "243",
+            "name": "Ida"
         },
         {
             "_id": "000433",
@@ -61,35 +49,7 @@ db.asteroids.insert(
         {
             "_id": "000511",
             "name": "Davida"
-        },
-        {
-            "_id": "000253",
-            "name": "Mathilde"
-        },
-        {
-            "_id": "002867",
-            "name": "Steins"
-        },
-        {
-            "_id": "009969",
-            "name": "Braille"
-        },
-        {
-            "_id": "004015",
-            "name": "WilsonHarringtonnnu"
-        },
-        {
-            "_id": "004179",
-            "name": "Toutatis"
-        },
-        {
-            "_id": "025143",
-            "name": "Itokawa"
-        },
-        {
-            "_id": "101955",
-            "name": "Bennu"
-        },
+        }
     ]
 );
 
@@ -98,12 +58,26 @@ db.planets.insert(
         {
             "_id": "0",
             "name": "SolarSystem",
-            "info": {},
+            "info": {
+                "Age": "~ 4.6 billion years",
+                "Number of planets": "8",
+                "Number of asteroids": "Over 1.113,527 (Nov 2021)",
+                "Diameter": "18.75 trillion km",
+                "Speed": "720,000 km/h",
+                "Galaxy": "Milky Way"
+            },
         },
         {
             "_id": "199",
             "name": "Mercury",
-            "info": {},
+            "info": {
+                "Orbit period": "87.97 d",
+                "Mass": "3.285 × 10^23 kg",
+                "Redius": "2,439.7 km",
+                "Mean solar day": "58d 15h 30m",
+                "Surface area": "74.8 million km²",
+                "Gravity": "3.7 m/s²"
+            },
             "satellites": [],
         },
         {
@@ -155,7 +129,9 @@ db.planets.insert(
                     "name": "Deimos"
                 }
             ],
-            "info": {},
+            "info": {
+
+            },
         },
         {
             "_id": "599",
@@ -287,3 +263,41 @@ db.planets.insert(
         }
     ]
 );
+
+
+// {
+//     "_id": "000021",
+//     "name": "Lutetia"
+// },
+// {
+//     "_id": "000216",
+//     "name": "Kleopatra"
+// },
+// {
+//     "_id": "000253",
+//     "name": "Mathilde"
+// },
+// {
+//     "_id": "002867",
+//     "name": "Steins"
+// },
+// {
+//     "_id": "009969",
+//     "name": "Braille"
+// },
+// {
+//     "_id": "004015",
+//     "name": "WilsonHarringtonnnu"
+// },
+// {
+//     "_id": "004179",
+//     "name": "Toutatis"
+// }
+// {
+//     "_id": "951",
+//     "name": "Gaspra"
+// },
+// {
+//     "_id": "025143",
+//     "name": "Itokawa"
+// }
