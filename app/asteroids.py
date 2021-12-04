@@ -8,11 +8,11 @@ def get_asteroids():
     mydb = client["celestial-bodies"]
     asteroids_collection = mydb["asteroids"]
     res = asteroids_collection.find()
-    client.close()
     data = []
     for doc in res:
         print(doc)
         data.append(doc)
+    client.close()
     return data
 
 

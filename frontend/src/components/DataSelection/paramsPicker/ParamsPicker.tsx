@@ -36,9 +36,8 @@ const ParamsPicker: React.FC<ParamsPickerProps> = ({ visualisationMode }) => {
     const history = useHistory();
 
     const startVisualisation = (startValue: Date | null, endValue: Date | null, planet?: string, mode?: SpeedModes) => {
-        if (startValue === null || (endValue !== null && startValue !== null && endValue >= startValue)) {
+        if (startValue === null || (endValue !== null && startValue !== null && endValue <= startValue)) {
             openError(true);
-            // console.log(endValue.getTime() > startValue.getTime(), endValue > startValue)
             return;
         }
         console.log(startValue, endValue);

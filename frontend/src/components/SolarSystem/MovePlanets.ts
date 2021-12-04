@@ -90,15 +90,6 @@ export class MovePlanets {
         }
     };
 
-    // TODO: only for earth?
-    roatePlanet = () => {
-        if (this.planet !== undefined) {
-            const angle = 0.00073
-            this.planet.rotateAround(this.planet.position, this.earthAxis, angle)
-        }
-    };
-
-
     stopVisualisation = () => {
         console.log('visualisation stopped');
         this.stopClock();
@@ -118,7 +109,6 @@ export class MovePlanets {
             data.planet.position.x = data.orbit[0]._x;
             data.planet.position.y = data.orbit[0]._y;
             data.planet.position.z = data.orbit[0]._z;
-            // this.roatePlanet()
             if (draw) {
                 this.drawOrbit(data.orbit[0], data.planet.name);
             }
@@ -152,7 +142,7 @@ export class MovePlanets {
             this.currentPeriod = findNewPeriod(this.currentPeriod, this.fetchData.period);
             if (this.checkIfEndDateReached()) return;
 
-            const newData = await getPlanetOrbitData({
+            const { data, asteroidsPresent } = await getPlanetOrbitData({
                 objects: this.visualisationOptions.objects,
                 startDate: this.currentPeriod.start,
                 endDate: this.currentPeriod.end,
@@ -160,11 +150,16 @@ export class MovePlanets {
                 step: this.fetchData.step,
             });
 
+            console.log('visualisation', this.visualisationData, data);
             for (const el of this.visualisationData) {
-                const toModify = newData.get(el.planet.name);
-                el.length = el.orbit.length + toModify!.length;
-                el.orbit.push(...toModify!);
-                el.iter = 0;
+                const toModify = data.get(el.planet.name);
+
+                if (toModify !== undefined) {
+                    console.log(toModify);
+                    el.length = el.orbit.length + toModify!.length;
+                    el.orbit.push(...toModify!);
+                    el.iter = 0;
+                }
             }
             this.startVisualisation();
             this.stopFetch = false;

@@ -57,6 +57,7 @@
     ]
   },
   "devDependencies": {
-    "@types/react-datepicker": "^4.1.4"
+    "@types/react-datepicker": "^4.1.4",
+    "jest": "^26.6.0"
   }
 }

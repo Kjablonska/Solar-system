@@ -48,7 +48,7 @@ export const InitSceneData = () => {
                 readyData.push(newPlanetData);
             }
 
-            await getAsteroidsOrbit(readyData);
+            // await getAsteroidsOrbit(readyData);
             console.log("READY DATA", readyData)
             setPlanetsData([...readyData]);
         } catch (e: any) {
@@ -71,7 +71,7 @@ export const InitSceneData = () => {
                 const newPlanetData: PlanetData = { planet: key, position: rescaleData(data[key], key, false) };
                 readyData.push(newPlanetData);
             }
-            console.log(readyData)
+            console.log(" data", readyData)
             // setPlanetsData([...readyData]);
         } catch (e: any) {
             console.log(e)
@@ -84,12 +84,13 @@ export const InitSceneData = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+
     return (
         <>
             {isLoading && <Spinner />}
             {isError && <ErrorMessage onRetry={setupData} />}
             {planetsData !== undefined &&
-                planetsData.length !== 0 &&
+                planetsData.length > 1 &&
                 visualisationOptions !== undefined &&
                 !isError && (
                     <div id='my-canvas'>

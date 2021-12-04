@@ -1,26 +1,31 @@
+from flask import abort
 import pymongo
 from datetime import datetime
+from database import connect_to_db, close_db_connection
 
-CACHE_SIZE = 20
+CACHE_SIZE = 200
 
-def get_cache():
-    client = pymongo.MongoClient(
-        "mongodb://solar-system:solar-system@mongo:27017")
+def get_cache_data():
+    client = connect_to_db()
     mydb = client["celestial-bodies"]
     planets_cache = mydb["planetsCache"]
     res = list(planets_cache.find())
-    client.close()
+    close_db_connection(client)
     return res
 
+def get_planets_cache_collection():
+    client = connect_to_db()
+    mydb = client["celestial-bodies"]
+    planets_cache = mydb["planetsCache"]
+    return planets_cache
 
 def get_cache_satellites():
-    client = pymongo.MongoClient(
-        "mongodb://solar-system:solar-system@mongo:27017")
+    client = connect_to_db()
     mydb = client["celestial-bodies"]
     planets_cache = mydb["satellitesCache"]
     res = list(planets_cache.find())
-    client.close()
-
+    print(res)
+    close_db_connection(client)
     return res
 
 
@@ -33,8 +38,26 @@ def search_planets_cache(planet, date, mydb):
     planets_cache = mydb["planetsCache"]
     return search_cache(planets_cache, date, planet)
 
+def search_satellites_cache_db(planet, date):
+    client = connect_to_db()
+    mydb = client["celestial-bodies"]
+    planets_cache = mydb["satellitesCache"]
+    res = search_cache(planets_cache, date, planet)
+    print(res)
+    close_db_connection(client)
+    return res
+
+def search_planets_cache_db(planet, date):
+    client = connect_to_db()
+    mydb = client["celestial-bodies"]
+    planets_cache = mydb["planetsCache"]
+    res = search_cache(planets_cache, date, planet)
+    print(res)
+    close_db_connection(client)
+    return res
 
 def search_cache(cache, date, body):
+    print(cache)
     data = cache.find_one(
         {"$and": [{'object': body}, {'date': date}]}
     )
@@ -57,7 +80,7 @@ def add_to_satellites_cache(satellite, start, data, mydb):
 
 
 def update_cache(cache, body, start, data):
-    cache.insert(
+    cache.insert_one(
         {'object': body, 'date': start, 'points': data, 'last_used': datetime.now()})
     size = cache.count_documents({})
 
@@ -74,10 +97,9 @@ def update_cache(cache, body, start, data):
 
 
 def cache_size():
-    client = pymongo.MongoClient(
-        "mongodb://solar-system:solar-system@mongo:27017")
+    client = connect_to_db()
     mydb = client["celestial-bodies"]
     satellites_cache = mydb["satellitesCache"]
     size = satellites_cache.count_documents({})
-    client.close()
+    close_db_connection(client)
     return str(size)

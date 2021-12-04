@@ -130,7 +130,12 @@ db.planets.insert(
                 }
             ],
             "info": {
-
+                "Radius": "3389.5km",
+                "Distance from Sun": "227.9 million km",
+                "Mass": "6.39 × 10^23 kg",
+                "Orbital period": "687 days",
+                "Mean solar day": "1day 37minutes",
+                "Gravity": "3.721 m/s²"
             },
         },
         {
@@ -154,7 +159,13 @@ db.planets.insert(
                     "name": "Callisto"
                 }
             ],
-            "info": {},
+            "info": {
+                "Radius": "69911 km",
+                "Distance from Sun": "778.5 million km",
+                "Mass": "1.898 × 10^27 kg",
+                "Orbital period": "12 years",
+                "Mean solar day": "9h 56m"
+            },
         },
         {
             "_id": "699",
@@ -193,7 +204,13 @@ db.planets.insert(
                     "name": "Iapetus"
                 },
             ],
-            "info": {},
+            "info": {
+                "Radius": "58232 km",
+                "Distance from Sun": "1.434 billion km",
+                "Mass": "5.683 × 10^26 kg",
+                "Orbital period": "29 years",
+                "Mean solar day": "10h 42m"
+            },
         },
         {
             "_id": "799",
@@ -220,7 +237,13 @@ db.planets.insert(
                     "name": "Miranda"
                 }
             ],
-            "info": {},
+            "info": {
+                "Radius": "25362 km",
+                "Distance from Sun": "2.871 billion km",
+                "Mass": "8.681 × 10^25 kg",
+                "Orbital period": "84 years",
+                "Mean solar day": "17h 14m"
+            },
         },
         {
             "_id": "899",
@@ -259,7 +282,13 @@ db.planets.insert(
                     "name": "Proteus"
                 },
             ],
-            "info": {},
+            "info": {
+                "Radius": "24622 km",
+                "Distance from Sun": "4.495 billion km",
+                "Mass": "1.024 × 10^26 kg",
+                "Orbital period": "165 years",
+                "Mean solar day": "16h 6m"
+            },
         }
     ]
 );

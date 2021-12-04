@@ -86,8 +86,9 @@ export class Clock {
     public findNextValue = () => {
         if (this.stop) return;
 
-        const update = this.startDate.getHours() + this.upadeValue;
-        this.startDate.setUTCHours(update);
+        // const update = this.startDate.getHours() + this.upadeValue;
+        this.startDate.setTime(this.startDate.getTime() + (this.upadeValue*60*60*1000));
+        // this.startDate.setUTCHours(update);
 
         if (this.checkIfEndDateReached()) {
             console.log('end clock');
@@ -98,7 +99,6 @@ export class Clock {
             this.startDate.getMonth() + 1
         } - ${this.startDate.getFullYear()}`;
 
-        console.log(this.clock.text)
     };
 
     private checkIfEndDateReached = () => {
