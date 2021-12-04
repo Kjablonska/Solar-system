@@ -98,7 +98,6 @@ def get_asteroids():
 
 # Assets
 
-
 @app.route('/assets/<name>')
 def get_skybox_pictures(name):
     return get_skybox(name)
@@ -118,26 +117,6 @@ def get_satellite_texture_picture(planet):
 def get_heightmap_picture(planet):
     return get_heightmap(planet)
 
-
-@app.route('/searchSatellitesCache')
-def serach_in_satellites_cache():
-    date = request.args.get('date')
-    body = request.args.get('body')
-    data = search_satellites_cache_db(body, date)
-    print(data)
-    if data is None:
-        return ''
-    return json.dumps(data)
-
-@app.route('/searchPlanetsCache')
-def serach_in_planets_cache():
-    date = request.args.get('date')
-    body = request.args.get('body')
-    data = search_planets_cache_db(body, date)
-    print(data)
-    if data is None:
-        return ''
-    return json.dumps(data)
 
 
 @app.route("/cachePlanets")

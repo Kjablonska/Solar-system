@@ -13,11 +13,18 @@ def get_cache_data():
     close_db_connection(client)
     return res
 
-def get_planets_cache_collection():
-    client = connect_to_db()
-    mydb = client["celestial-bodies"]
-    planets_cache = mydb["planetsCache"]
-    return planets_cache
+# def get_planets_cache_collection():
+#     client = connect_to_db()
+#     mydb = client["celestial-bodies"]
+#     planets_cache = mydb["planetsCache"]
+#     return client, planets_cache
+
+
+# def get_satellites_cache_collection():
+#     client = connect_to_db()
+#     mydb = client["celestial-bodies"]
+#     satellites_cache = mydb["satellitesCache"]
+#     return client, satellites_cache
 
 def get_cache_satellites():
     client = connect_to_db()
@@ -43,7 +50,6 @@ def search_satellites_cache_db(planet, date):
     mydb = client["celestial-bodies"]
     planets_cache = mydb["satellitesCache"]
     res = search_cache(planets_cache, date, planet)
-    print(res)
     close_db_connection(client)
     return res
 
@@ -52,7 +58,6 @@ def search_planets_cache_db(planet, date):
     mydb = client["celestial-bodies"]
     planets_cache = mydb["planetsCache"]
     res = search_cache(planets_cache, date, planet)
-    print(res)
     close_db_connection(client)
     return res
 

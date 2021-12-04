@@ -13,17 +13,11 @@ def get_satellites(planet, start, end, step):
     client = connect_to_db()
     mydb = client["celestial-bodies"]
     planet_collection = mydb["planets"]
-
-    planet_data = planet_collection.find_one({'name': planet})
-    if planet_data is None:
-        return {}
-
-    location = f'@{planet_data["_id"]}'
-    satellites = planet_data["satellites"]
     objects = {}
     data = {}
     try:
         validate_dates(start, end)
+        location, satellites = get_satellites_data(planet_collection, planet)
         for satellite in satellites:
             cache_res = search_satellites_cache(satellite["name"], start, mydb)
             if (cache_res is not None):
@@ -51,3 +45,13 @@ def get_JPL_Horizons(start, end, step, location, satellite_id):
         if name in ['x', 'y', 'z']:
             possitons_data[name] = vec[name].to(u.km).value.tolist()
     return possitons_data
+
+def get_satellites_data(planet_collection, planet):
+    planet_data = planet_collection.find_one({'name': planet})
+    if planet_data is None:
+        raise ValueError
+
+    location = f'@{planet_data["_id"]}'
+    satellites = planet_data["satellites"]
+
+    return location, satellites

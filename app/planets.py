@@ -62,7 +62,7 @@ def get_planets(names, mydb):
     data = []
     for doc in res:
         data.append(doc)
-    print(data)
+    print(data, len(data))
     if len(data) < 1:
         raise ValueError
 
