@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
-import { SpeedModes } from '../../../speedModes';
+import { SpeedModes } from '../../../utils/speedModes';
 import { PickerProps } from './ParamsPicker';
 import { Option, DropDown, ModeSelectionContainer, ParamsPickerContainer, SelectionText, StartButton } from './style';
 
 const PickerSolarSystem: React.FC<PickerProps> = ({ startVisualisation }) => {
     const [startValue, setStart] = useState<Date | null>(null);
     const [endValue, setEnd] = useState<Date | null>(null);
-    const [mode, setMode] = useState<SpeedModes>(SpeedModes.RealTime);
+    const [mode, setMode] = useState<SpeedModes>('RealTime');
 
     const handleSpeedModeSelection = (event: React.ChangeEvent<HTMLSelectElement>) => {
         event.preventDefault();
@@ -48,13 +48,13 @@ const PickerSolarSystem: React.FC<PickerProps> = ({ startVisualisation }) => {
                 <ModeSelectionContainer>
                     <SelectionText>Speed mode</SelectionText>
                     <DropDown onChange={handleSpeedModeSelection}>
-                        <Option id='real-time' value={SpeedModes.RealTime}>
+                        <Option id='real-time' value={'RealTime'}>
                             Real-time
                         </Option>
-                        <Option id='medium' value={SpeedModes.Medium}>
+                        <Option id='medium' value={'Medium'}>
                             Medium
                         </Option>
-                        <Option id='fast' value={SpeedModes.Fast}>
+                        <Option id='fast' value={'Fast'}>
                             Fast
                         </Option>
                     </DropDown>

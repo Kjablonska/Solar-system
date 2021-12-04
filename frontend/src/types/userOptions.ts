@@ -1,4 +1,4 @@
-import { SpeedModes } from "../speedModes";
+import { SpeedModes } from "../utils/speedModes";
 
 export interface TimeSelection {
     hours: number;

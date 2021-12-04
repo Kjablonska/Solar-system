@@ -97,6 +97,18 @@ def test_planet_data_incorrect_name(client):
 
 
 """
+Case scenario: request for correct data but dates are passed without leading zeros.
+Expected result: Response 200 OK.
+"""
+
+
+def test_planet_data_dates_check(client):
+    response = client.get(
+        "/getPlanetsJPLData?name=Earth&start=2021-1-4&end=2021-1-5&step=2h")
+    assert response.status_code == 200
+
+
+"""
 Case scenario: request for planets.
 Expected result: All planets data returned.
 """

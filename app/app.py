@@ -38,27 +38,6 @@ def get_satellites_data():
     data = get_satellites(planet, start, end, step)
     return json.dumps(data)
 
-# -----------------------------------------------------------
-#
-# Method for finding planet's satellites JPL data.
-# Returns json object of a following structure: {}
-# @params:
-#   name    -   array of planet's names.
-#   start   -   start date
-#   end     -   end date
-#   step    -   fetch step.
-#
-# -----------------------------------------------------------
-
-# @app.route("/getSolarSystemJPLData")
-# def get_JPL_solar_system_data():
-#     names = request.args.get('name')
-#     names = parse_names(names)
-#     start = request.args.get('start')
-#     end = request.args.get('end')
-#     step = request.args.get('step')
-#     return get_JPL_solar_system_data(names, start, end, step)
-
 
 @app.route("/getPlanetsJPLData")
 def get_JPL_planets_data():

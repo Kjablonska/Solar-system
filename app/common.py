@@ -1,10 +1,13 @@
-from datetime import datetime
-from flask import abort
+from datetime import date
+
 
 def validate_dates(start, end):
-    d1 = datetime.fromisoformat(start)
-    d2 = datetime.fromisoformat(end)
-    print(d1)
-    print(d2)
+    d1 = date.fromisoformat(parser_date(start))
+    d2 = date.fromisoformat(parser_date(end))
+
     if d1 >= d2:
         raise ValueError
+
+
+def parser_date(date):
+    return '-'.join(i.zfill(2) for i in date.split('-'))

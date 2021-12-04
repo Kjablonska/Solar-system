@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Vector3 } from '@babylonjs/core';
-import { SpeedModes } from '../../speedModes';
 import { PlanetData, PositionData } from '../../types/planetInterfaces';
-import findFetchPeriod from '../../utils/findFetchPeriod';
+import { defineStartingPeriod, findFetchParameters } from '../../utils/findFetchPeriod';
 import ErrorMessage from '../LandingPage/ErrorMessage';
 import Spinner from '../LandingPage/Spinner';
 import PlanetSystemComponent from './PlanetSystemComponent';
 import { VisualisationOptions } from '../../types/period';
 import UserOptions from '../../types/userOptions';
 import { RootStateOrAny, useSelector } from 'react-redux';
+import rescaleData from '../../utils/rescaleData';
 
 const satellitesMap = new Map<string, number>([
     ['Mercury', 0],
@@ -21,23 +21,13 @@ const satellitesMap = new Map<string, number>([
     ['Neptune', 8],
 ]);
 
-
-const scaleMap = new Map<string, number>([
-    ['Earth', 10000],
-    ['Mars', 100],
-    ['Jupiter', 1000],
-    ['Saturn', 1000],
-    ['Uranus', 1000],
-    ['Neptune', 1000],
-]);
-
 export const PlanetSystemScene = () => {
     const [isError, openError] = useState<boolean>(false);
-    const { defineStartingPeriod, findFetchParameters } = findFetchPeriod();
     const [isLoading, openSpinner] = useState<boolean>(false);
     const [planetsData, setPlanetsData] = useState<PlanetData[]>([]);
-    const fetchData = findFetchParameters(SpeedModes.Satellite);
-    const options: UserOptions = useSelector((state: RootStateOrAny) => state.selectedOptions.userOptions);
+    const fetchData = findFetchParameters('Satellite');
+    const options: UserOptions = useSelector((state: RootStateOrAny) => state.userOptions);
+    console.log('STATE', options);
     const { start, end } = defineStartingPeriod(fetchData.period, options.startDate);
 
     const satellitesNumber = satellitesMap.get(options.planet!);
@@ -46,7 +36,7 @@ export const PlanetSystemScene = () => {
         start: options.startDate,
         end: options.endDate,
         currentEnd: end,
-        mode: SpeedModes.Satellite,
+        mode: 'Satellite',
         objects: { planets: [options.planet!], satellites: true },
         time: options.time,
     };
@@ -61,11 +51,13 @@ export const PlanetSystemScene = () => {
             const data = await response.json();
             const readyData = [];
             for (const key in data) {
-                const newPlanetData: PlanetData = { planet: key, position: mapToArray(data[key]) };
+                const newPlanetData: PlanetData = {
+                    planet: key,
+                    position: rescaleData(data[key], options.planet!, true),
+                };
                 readyData.push(newPlanetData);
             }
             setPlanetsData(readyData);
-            console.log('ready data', readyData);
         } catch (e: any) {
             console.log(e);
             openError(true);
@@ -73,18 +65,6 @@ export const PlanetSystemScene = () => {
             openSpinner(false);
         }
     }
-
-    const mapToArray = (position: PositionData) => {
-        const points: Vector3[] = [];
-
-        const start = visualisationOptions.time !== undefined ? visualisationOptions.time.hours : 0;
-        let factor = scaleMap.get(options.planet!);
-        factor = factor !== undefined ? factor : 1000;
-        for (let i = start; i < position.x.length; i++) {
-            points.push(new Vector3(position.x[i] / factor, position.y[i] / factor, position.z[i] / factor));
-        }
-        return points;
-    };
 
     useEffect(() => {
         getSatellitesData();

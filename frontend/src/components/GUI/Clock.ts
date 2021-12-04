@@ -1,8 +1,8 @@
 import { TextBlock } from '@babylonjs/gui';
-import { SpeedModes } from '../../speedModes';
 import { VisualisationOptions } from '../../types/period';
 import { TimeSelection } from '../../types/userOptions';
 import MessageHandler from '../../utils/handlers/MessageHandler';
+import { SpeedModes } from '../../utils/speedModes';
 
 export class Clock {
     private startDate: Date;
@@ -27,14 +27,14 @@ export class Clock {
 
     private findUpdateParameters = (speedMode: SpeedModes) => {
         switch (speedMode) {
-            case SpeedModes.RealTime:
+            case 'RealTime':
                 this.onUpdate = this.findNextValueRealTime;
                 break;
-            case SpeedModes.Medium:
+            case 'Medium':
                 this.onUpdate = this.findNextValue;
                 this.upadeValue = 24;
                 break;
-            case SpeedModes.Fast:
+            case 'Fast':
                 this.onUpdate = this.findNextValue;
                 this.upadeValue = 4.8;
                 break;

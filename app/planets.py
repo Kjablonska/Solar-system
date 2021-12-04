@@ -28,6 +28,7 @@ def get_planets_data(start, end, step, names):
             if (step == '1h'):
                 add_to_planets_cache(planet["name"], start, possitons_data, mydb)
     except (ex1.ConnectTimeout, ex2.MaxRetryError, ex2.ConnectTimeoutError) as error:
+        print(error)
         abort(408, error)
     except ValueError:
         abort(422, 'Invalid input data.')

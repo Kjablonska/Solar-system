@@ -1,5 +1,5 @@
-import { SpeedModes } from "../speedModes";
-import { TimeSelection } from "./userOptions";
+import { SpeedModes } from '../utils/speedModes';
+import { TimeSelection } from './userOptions';
 
 export interface DatesPeriod {
     start: string;

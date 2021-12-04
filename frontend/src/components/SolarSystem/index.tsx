@@ -2,21 +2,20 @@ import { useEffect, useState } from 'react';
 import { RootStateOrAny, useSelector } from 'react-redux';
 import { PlanetData } from '../../types/planetInterfaces';
 import rescaleData from '../../utils/rescaleData';
-import findFetchPeriod from '../../utils/findFetchPeriod';
 import { VisualisationOptions } from '../../types/period';
 import UserOptions from '../../types/userOptions';
 import Spinner from '../LandingPage/Spinner';
 import ErrorMessage from '../LandingPage/ErrorMessage';
 import SceneComponent from './SceneComponent';
 import { planets } from '../../utils/consts';
+import { defineStartingPeriod, findFetchParameters } from '../../utils/findFetchPeriod';
 
 export const InitSceneData = () => {
-    const { defineStartingPeriod, findFetchParameters } = findFetchPeriod();
     const [isError, openError] = useState<boolean>(false);
     const [isLoading, openSpinner] = useState<boolean>(false);
     const [planetsData, setPlanetsData] = useState<PlanetData[]>([]);
     const [visualisationOptions, setVisualisationOptions] = useState<VisualisationOptions>();
-    const options: UserOptions = useSelector((state: RootStateOrAny) => state.selectedOptions.userOptions);
+    const options: UserOptions = useSelector((state: RootStateOrAny) => state.userOptions);
 
     const fetchData = findFetchParameters(options.mode);
     const { start, end } = defineStartingPeriod(fetchData.period, options.startDate);
@@ -49,7 +48,6 @@ export const InitSceneData = () => {
             }
 
             // await getAsteroidsOrbit(readyData);
-            console.log("READY DATA", readyData)
             setPlanetsData([...readyData]);
         } catch (e: any) {
             console.log(e);
