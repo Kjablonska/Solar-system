@@ -13,10 +13,10 @@ from urllib3 import exceptions as ex2
 
 def get_planets_data(start, end, step, names):
     client, mydb = connect_to_db()
-    planets = get_planets(names, mydb)
     data = {}
     try:
         validate_dates(start, end)
+        planets = get_planets(names, mydb)
         for planet in planets:
             if (step == '1h'):
                 cache_res = search_planets_cache(planet["name"], start, mydb)
@@ -58,12 +58,14 @@ def connect_to_db():
 
 def get_planets(names, mydb):
     planet_collection = mydb["planets"]
-    print(type(names))
-    print(names)
     res = planet_collection.find({'name': {"$in": names}})
     data = []
     for doc in res:
         data.append(doc)
+    print(data)
+    if len(data) < 1:
+        raise ValueError
+
     return data
 
 

@@ -31,6 +31,10 @@ def test_planet_data_incorrect(client):
     response = client.get("/getPlanetsJPLData?name=Mercury,Venus,Earth&start=2021-12-14&end=2021-12-10&step=2h")
     assert response.status_code == 422
 
+def test_planet_data_incorrect_name(client):
+    response = client.get("/getPlanetsJPLData?name=Luna&start=2021-12-14&end=2021-12-15&step=2h")
+    assert response.status_code == 422
+
 # Incorrect dates (start date < end date), raise ValueError.
 def test_satellites_data_incorrect(client):
     response = client.get("/getSatellitesJPLData?planet=Earth&start=2021-12-14&end=2021-12-10&step=2h")
