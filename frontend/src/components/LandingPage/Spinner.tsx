@@ -1,5 +1,6 @@
 import stars from '../../assets/spinner/stars.jpg';
 import turtle from '../../assets/spinner/turtle.png';
+import satellite from '../../assets/spinner/satellite.png';
 import styled, { keyframes } from 'styled-components';
 
 const rotate = keyframes`
@@ -14,7 +15,7 @@ const rotate = keyframes`
 const ConstatntElipse = styled.div`
     position: absolute;
     width: 400px;
-    height: 300px;
+    height: 350px;
     background: url(${turtle});
 `;
 
@@ -30,11 +31,22 @@ const RotatingElipse = styled.div`
     margin-top: 100px;
 `;
 
+const rotation = keyframes`
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(359deg);
+    }
+`;
+
 const Sun = styled.div`
     width: 80px;
     height: 80px;
-    background: yellow;
-    border-radius: 50%;
+    background: url(${satellite});
+    animation-name: ${rotation};
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
 `;
 
 const AnimationContainer = styled.div`
@@ -45,7 +57,6 @@ const AnimationContainer = styled.div`
 `;
 
 const SpinnerContainer = styled.div`
-    /* background-color: #2a0e58; */
     background: url(${stars});
     width: 100%;
     height: 100%;

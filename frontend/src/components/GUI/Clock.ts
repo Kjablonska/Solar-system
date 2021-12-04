@@ -62,17 +62,16 @@ export class Clock {
     };
 
     public stopClock = () => {
-        console.log("stop clock")
+        console.log('stop clock');
         this.stop = true;
-    }
+    };
 
     public startClock = () => {
         this.stop = false;
-    }
+    };
 
     public findNextValueRealTime = () => {
-        if (this.stop)
-            return;
+        if (this.stop) return;
 
         const update = this.startDate.getSeconds() + 1000;
         this.startDate.setMilliseconds(update);
@@ -85,17 +84,21 @@ export class Clock {
     };
 
     public findNextValue = () => {
-        if (this.stop)
+        if (this.stop) return;
+
+        // const update = this.startDate.getHours() + this.upadeValue;
+        this.startDate.setTime(this.startDate.getTime() + (this.upadeValue*60*60*1000));
+        // this.startDate.setUTCHours(update);
+
+        if (this.checkIfEndDateReached()) {
+            console.log('end clock');
             return;
-
-        const update = this.startDate.getHours() + this.upadeValue;
-        this.startDate.setUTCHours(update);
-
-        if (this.checkIfEndDateReached()) return;
+        }
 
         this.clock.text = `${this.startDate.getDate()} - ${
             this.startDate.getMonth() + 1
         } - ${this.startDate.getFullYear()}`;
+
     };
 
     private checkIfEndDateReached = () => {

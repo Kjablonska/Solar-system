@@ -1,74 +1,84 @@
 import pymongo
+from flask import abort
 from astroquery.jplhorizons import Horizons
 import json
 from astropy import units as u
 from cache import search_planets_cache, add_to_planets_cache
+from database import close_db_connection
+from common import validate_dates
 
-# def get_JPL_solar_system_data(names, start, end, step):
-#     planets = get_planets_data(start, end, step, names)
-#     asteroids = get_asteroids_data(start, end, step)
+from requests import exceptions as ex1
+from urllib3 import exceptions as ex2
 
-#     data = dict(planets)
-#     data.update(asteroids)
-#     return json.dumps(data)
 
 def get_planets_data(start, end, step, names):
-    client = pymongo.MongoClient(
-        "mongodb://solar-system:solar-system@mongo:27017")
-    mydb = client["celestial-bodies"]
-    planets = get_planets(names, mydb)
-    print(planets)
-    objects = {}
+    client, mydb = connect_to_db()
     data = {}
-
-    for planet in planets:
-        if (step == '1h'):
-            cache_res = search_planets_cache(planet["name"], start, mydb)
-            if (cache_res is not None):
-                data[planet["name"]] = cache_res
-                continue
-
-        res = Horizons(id=str(planet["_id"]), location='@Sun', epochs={"start": str(
-            start), "stop": str(end), "step": str(step)}, id_type='majorbody')
-        vec = res.vectors()
-        print(planet)
-        possitons_data = {}
-        for name in vec.colnames:
-            if name in ['x', 'y', 'z']:
-                possitons_data[name] = vec[name].to(u.km).value.tolist()
-        data[planet["name"]] = possitons_data
-        if (step == '1h'):
-            add_to_planets_cache(planet["name"], start, possitons_data, mydb)
-
-    client.close()
-
+    try:
+        validate_dates(start, end)
+        planets = get_planets(names, mydb)
+        for planet in planets:
+            if (step == '1h'):
+                cache_res = search_planets_cache(planet["name"], start, mydb)
+                if (cache_res is not None):
+                    data[planet["name"]] = cache_res
+                    continue
+            possitons_data = get_JPL_Horizons(start, end, step, planet["_id"])
+            data[planet["name"]] = possitons_data
+            if (step == '1h'):
+                add_to_planets_cache(planet["name"], start, possitons_data, mydb)
+    except (ex1.ConnectTimeout, ex2.MaxRetryError, ex2.ConnectTimeoutError) as error:
+        abort(408, error)
+    except ValueError:
+        abort(422, 'Invalid input data.')
+    finally:
+        close_db_connection(client)
     return data
 
+def get_JPL_Horizons(start, end, step, planet_id):
+    res = Horizons(id=str(planet_id), location='@Sun', epochs={"start": str(
+        start), "stop": str(end), "step": str(step)}, id_type='majorbody')
+    vec = res.vectors()
+    possitons_data = {}
+    data = {}
+    for name in vec.colnames:
+        if name in ['x', 'y', 'z']:
+            possitons_data[name] = vec[name].to(u.km).value.tolist()
+    return possitons_data
+
+
+def connect_to_db():
+    try:
+        client = pymongo.MongoClient(
+        "mongodb://solar-system:solar-system@mongo:27017")
+        mydb = client["celestial-bodies"]
+        return client, mydb
+    except (pymongo.ServerSelectionTimeoutError) as error:
+        abort(503, error)
 
 def get_planets(names, mydb):
     planet_collection = mydb["planets"]
-    print(type(names))
-    print(names)
     res = planet_collection.find({'name': {"$in": names}})
     data = []
     for doc in res:
         data.append(doc)
+    print(data)
+    if len(data) < 1:
+        raise ValueError
+
     return data
 
 
 def get_info(planet):
     planet_data = get_planet(planet)
     if planet_data is None:
-        return None
+        abort(404, 'Not found')
     return planet_data["info"]
 
 
 def get_planet(planet):
-    client = pymongo.MongoClient(
-        "mongodb://solar-system:solar-system@mongo:27017")
-    mydb = client["celestial-bodies"]
-    planet_collection = mydb["planets"]
+    client, mydb = connect_to_db()
 
-    planet_data = planet_collection.find_one({'name': planet})
-    client.close()
+    planet_data = mydb['planets'].find_one({'name': planet})
+    close_db_connection(client)
     return planet_data

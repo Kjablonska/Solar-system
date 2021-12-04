@@ -9,10 +9,21 @@ import PickerSatellites from './PickerSatellites';
 import PickerSolarSystem from './PickerSolarSystem';
 import { useState } from 'react';
 import ErrorHandler from './ErrorHandler';
+import styled from 'styled-components';
 
 interface ParamsPickerProps {
     visualisationMode: VisualisationMode;
 }
+
+const ErrorContainer = styled.div`
+position: absolute;
+width: 100%;
+height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 35px;
+`;
 
 export interface PickerProps {
     startVisualisation: (start: Date | null, end: Date | null, planet?: string, mode?: SpeedModes) => void;
@@ -25,14 +36,12 @@ const ParamsPicker: React.FC<ParamsPickerProps> = ({ visualisationMode }) => {
     const history = useHistory();
 
     const startVisualisation = (startValue: Date | null, endValue: Date | null, planet?: string, mode?: SpeedModes) => {
-        // console.log("onstart", startValue, endValue, startValue!.getTime() < endValue!.getTime())
-        // if (startValue === null || (endValue !== null && startValue !== null && endValue.getTime() > startValue.getTime())) {
-        //     openError(true);
-        //     return;
-        // }
-        console.log(startValue, endValue);
-        if (startValue === null)
+        if (startValue === null || (endValue !== null && startValue !== null && endValue <= startValue)) {
+            openError(true);
             return;
+        }
+        console.log(startValue, endValue);
+        if (startValue === null) return;
         const newUserOptions: UserOptions = {
             mode: mode === undefined ? SpeedModes.RealTime : mode,
             startDate: startValue !== null ? formatDate(startValue) : formatDate(new Date()),
@@ -45,12 +54,16 @@ const ParamsPicker: React.FC<ParamsPickerProps> = ({ visualisationMode }) => {
     };
 
     const closeErrorMessage = () => {
-        openError(false)
-    }
+        openError(false);
+    };
 
     return (
         <>
-            {isError && <ErrorHandler onClose={closeErrorMessage}/>}
+            {isError && (
+                <ErrorContainer>
+                    <ErrorHandler onClose={closeErrorMessage} />
+                </ErrorContainer>
+            )}
             {visualisationMode === VisualisationMode.Satellites ? (
                 <PickerSatellites startVisualisation={startVisualisation} />
             ) : (

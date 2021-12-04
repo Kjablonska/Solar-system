@@ -18,11 +18,15 @@ from asstes import get_skybox, get_planet_texture, get_satellite_texture, get_he
 from satellites import get_satellites
 from planets import get_info, get_planets_data
 from asteroids import get_asteroids, get_asteroids_data
-from cache import get_cache, get_cache_satellites, cache_size
+from cache import get_cache_data, get_cache_satellites, cache_size, search_satellites_cache_db, search_planets_cache_db
 
 app = Flask(__name__)
 
 CORS(app)
+
+
+def get_app():
+    return app
 
 
 @app.route("/getSatellitesJPLData")
@@ -59,7 +63,9 @@ def get_satellites_data():
 @app.route("/getPlanetsJPLData")
 def get_JPL_planets_data():
     names = request.args.get('name')
+    print(names)
     names = parse_names(names)
+    print(names)
     start = request.args.get('start')
     end = request.args.get('end')
     step = request.args.get('step')
@@ -90,34 +96,61 @@ def get_JPL_asteroid_belt():
 def get_asteroids():
     return get_asteroids()
 
-## Assets
+# Assets
+
 
 @app.route('/assets/<name>')
 def get_skybox_pictures(name):
     return get_skybox(name)
 
+
 @app.route('/assets/planets/<planet>')
 def get_planet_texture_picture(planet):
     return get_planet_texture(planet)
 
+
 @app.route('/assets/satellites/<planet>')
 def get_satellite_texture_picture(planet):
     return get_satellite_texture(planet)
+
 
 @app.route('/assets/heightmaps/<planet>')
 def get_heightmap_picture(planet):
     return get_heightmap(planet)
 
 
+@app.route('/searchSatellitesCache')
+def serach_in_satellites_cache():
+    date = request.args.get('date')
+    body = request.args.get('body')
+    data = search_satellites_cache_db(body, date)
+    print(data)
+    if data is None:
+        return ''
+    return json.dumps(data)
+
+@app.route('/searchPlanetsCache')
+def serach_in_planets_cache():
+    date = request.args.get('date')
+    body = request.args.get('body')
+    data = search_planets_cache_db(body, date)
+    print(data)
+    if data is None:
+        return ''
+    return json.dumps(data)
+
+
 @app.route("/cachePlanets")
 def get_planets_cache():
-    res = get_cache()
+    res = get_cache_data()
     return json.dumps(res, default=str)
+
 
 @app.route("/cacheSatellites")
 def satellites_cache():
     res = get_cache_satellites()
     return json.dumps(res, default=str)
+
 
 @app.route("/cacheSize")
 def get_cache_size():
@@ -128,16 +161,6 @@ def parse_names(names):
     names = names.replace("[", "")
     names = names.replace("]", "")
     return names.split(",")
-
-# For testing purposes.
-
-# @app.route("/conn")
-# def conn():
-#     # client = pymongo.MongoClient("mongodb://solar-system:solar-system@mongo:27017")
-#     mydb = connectToDatabase()
-#     planet_collection = mydb["planets"]
-#     data = planet_collection.find_one({'_id': '399'})
-#     return data
 
 
 # Local db commands:
@@ -152,3 +175,8 @@ def parse_names(names):
 # mongo --username solar-system --password solar-system
 # sudo docker-compose build
 # sudo docker-compose up
+
+
+# See current containers:  sudo docker container ls
+# See logs:  sudo docker logs <id>
+# Run tests: sudo docker exec -it <id> pytest test.py

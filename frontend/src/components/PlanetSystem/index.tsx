@@ -59,7 +59,6 @@ export const PlanetSystemScene = () => {
                 `http://localhost:5000/getSatellitesJPLData?planet=${options.planet}&start=${start}&end=${end}&step=${fetchData.step}`,
             );
             const data = await response.json();
-            console.log('data', data);
             const readyData = [];
             for (const key in data) {
                 const newPlanetData: PlanetData = { planet: key, position: mapToArray(data[key]) };
@@ -75,7 +74,6 @@ export const PlanetSystemScene = () => {
         }
     }
 
-    // TODO: calculate rescaling for each planet.
     const mapToArray = (position: PositionData) => {
         const points: Vector3[] = [];
 

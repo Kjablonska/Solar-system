@@ -74,7 +74,7 @@ export class SceneData {
             let diameter = diameterMap.get(planetName);
             console.log(planetName, diameter)
             if (diameter === undefined)
-                diameter = 0.2;
+                diameter = 1;
             const planet = MeshBuilder.CreateSphere(planetName, { diameter: diameter }, this.scene);
             var material = new StandardMaterial(planetName, this.scene);
             material.diffuseTexture = new Texture(`http://localhost:5000/assets/planets/${planetName}`, this.scene);
