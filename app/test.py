@@ -1,9 +1,8 @@
 import pytest
 import json
 
-# First party modules
 from app import get_app
-from cache import search_planets_cache_db, search_satellites_cache_db
+from cache import search_planets_cache_db, search_satellites_cache_db, planets_cache_size, satellites_cache_size
 from planets import get_planets, connect_to_db
 from database import close_db_connection
 
@@ -52,6 +51,26 @@ Expected result: Response 404 Not found.
 
 def test_planet_info_not_found(client):
     response = client.get("/getPlanetInfo?planet=Pluto")
+    assert response.status_code == 404
+
+"""
+Case scenario: request for planet's info for satellite.
+Expected result: Response 404 Not found.
+"""
+
+
+def test_planet_info_not_found_satellite(client):
+    response = client.get("/getPlanetInfo?planet=Phobos")
+    assert response.status_code == 404
+
+"""
+Case scenario: request for planet's info for more than one planet.
+Expected result: Response 404 Not found.
+"""
+
+
+def test_planets_info_not_found(client):
+    response = client.get("/getPlanetInfo?planet=Earth,Mars")
     assert response.status_code == 404
 
 
@@ -165,11 +184,16 @@ def test_satellites_planet_incorrect(client):
     assert response.status_code == 422
 
 
-def test_add_to_cache(client):
+"""
+Case scenario: Request for the satellites of more then one planet.
+Expected result: Response 422 Invalid Input Data.
+"""
+
+
+def test_satellites_planet_incorrect_2(client):
     response = client.get(
-        "/getSatellitesJPLData?planet=Earth&start=2021-12-14&end=2021-12-15&step=1h")
-    res = search_satellites_cache_db('Luna', '2021-12-14')
-    assert res != None
+        "/getSatellitesJPLData?planet=Earth,Mars&start=2021-12-14&end=2021-12-10&step=2h")
+    assert response.status_code == 422
 
 
 # -----------------------------------------------------------
@@ -237,3 +261,25 @@ Expected result: Result is None.
 def test_find_in_cache_planets(client):
     res = search_planets_cache_db('Luna', '2021-12-14')
     assert res == None
+
+
+"""
+Case scenario: Get planets cache size.
+Expected result: Result is greater than 0.
+"""
+
+
+def test_get_planets_cache_size(client):
+    res = planets_cache_size()
+    assert res > 0
+
+
+"""
+Case scenario: Get satellites cache size.
+Expected result: Result is greater than 0.
+"""
+
+
+def test_get_satellites_cache_size(client):
+    res = satellites_cache_size()
+    assert res > 0

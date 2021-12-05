@@ -19,5 +19,5 @@ module.exports = {
         'shared',
         '/shared/vendor/modules',
       ],
-    },
+    }
   };

@@ -15,16 +15,14 @@ export const defineStartingPeriod = (fetchStep: number, startDate?: string) => {
 };
 
 export const findFetchParameters = (speedMode: SpeedModes): FetchData => {
-    console.log("SPEED MODE", speedMode);
     switch (speedMode) {
+        case 'Satellite':
         case 'RealTime':
             return {step: '1h', period: 1, refill: 3540, timerSpeed: 1000};
         case 'Medium':
             return {step: '24h', period: 120, refill: 100, timerSpeed: 10};
         case 'Fast':
             return {step: '48h', period: 300, refill: 10, timerSpeed: 10};
-        case 'Satellite':
-            return {step: '1h', period: 1, refill: 60 * 58, timerSpeed: 1000};
         default:
             return {step: '1h', period: 2, refill: 60 * 58, timerSpeed: 1000};
     }

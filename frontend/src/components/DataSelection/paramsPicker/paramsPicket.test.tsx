@@ -7,13 +7,13 @@ import PickerSolarSystem from './PickerSolarSystem';
 
 describe('params picker tests', () => {
     configure({ adapter: new Adapter() });
-    it('start button should occure 1', () => {
+    it('picker satellites - start button should not occure', () => {
         const satelitesPicker = shallow(<PickerSatellites startVisualisation={() => {}} />);
         const startButton = satelitesPicker.find(<StartButton />);
         expect(startButton).toEqual({});
     });
 
-    it('start button should occure', () => {
+    it('picker solar system - start button should not occure', () => {
         const satelitesPicker = shallow(<PickerSolarSystem startVisualisation={() => {}} />);
         const startButton = satelitesPicker.find(<StartButton />);
         expect(startButton).toEqual({});

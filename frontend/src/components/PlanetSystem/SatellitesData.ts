@@ -70,15 +70,21 @@ export class SceneData {
 
     addPlanet = () => {
         const heightMap = `http://localhost:5000/assets/heightmaps/${this.planet}`;
-        const basePlanet = MeshBuilder.CreateSphere(
-            this.planet,
-            { segments: 256, diameter: 30, updatable: true },
-            this.scene,
-        );
+
+        const isGasPlanet = gasPlanets.includes(this.planet);
+
+        const basePlanet = isGasPlanet
+            ? MeshBuilder.CreateSphere(this.planet, { diameter: 30, updatable: true }, this.scene)
+            : MeshBuilder.CreateSphere(this.planet, { segments: 256, diameter: 30, updatable: true }, this.scene);
+        // const basePlanet = MeshBuilder.CreateSphere(
+        //     this.planet,
+        //     { segments: 256, diameter: 30, updatable: true },
+        //     this.scene,
+        // );
 
         const material = new StandardMaterial(this.planet, this.scene);
         material.diffuseTexture = new Texture(`http://localhost:5000/assets/planets/${this.planet}`, this.scene);
-        if (!gasPlanets.includes(this.planet)) {
+        if (!isGasPlanet) {
             const planet = MeshBuilder.CreateSphere(
                 `${this.planet}0`,
                 { segments: 30, diameter: 30, updatable: true },
@@ -108,8 +114,10 @@ export class SceneData {
             planet.material = material;
             planet1.material = material;
             planet2.material = material;
+
+            basePlanet.applyDisplacementMap(heightMap, 0, 1);
         }
-        basePlanet.applyDisplacementMap(heightMap, 0, 1);
+
         basePlanet.material = material;
 
         this.planetMesh = basePlanet;

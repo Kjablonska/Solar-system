@@ -18,7 +18,7 @@ from asstes import get_skybox, get_planet_texture, get_satellite_texture, get_he
 from satellites import get_satellites
 from planets import get_info, get_planets_data
 from asteroids import get_asteroids, get_asteroids_data
-from cache import get_cache_data, get_cache_satellites, cache_size, search_satellites_cache_db, search_planets_cache_db
+from cache import get_cache_data, get_cache_satellites, search_satellites_cache_db, search_planets_cache_db
 
 app = Flask(__name__)
 
@@ -108,11 +108,6 @@ def get_planets_cache():
 def satellites_cache():
     res = get_cache_satellites()
     return json.dumps(res, default=str)
-
-
-@app.route("/cacheSize")
-def get_cache_size():
-    return cache_size()
 
 
 def parse_names(names):
