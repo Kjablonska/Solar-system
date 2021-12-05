@@ -4,7 +4,6 @@ import { VisualisationData } from '../../types/planetInterfaces';
 import setMovementTimer from '../../utils/setMovementTimer';
 import { MovePlanets } from './MovePlanets';
 
-
 export class Timer {
     private scene: Scene;
     private visualisationData: VisualisationData[];
@@ -67,7 +66,7 @@ export class Timer {
             fetchData,
             scene,
             stopClock,
-            planet
+            planet,
         );
 
         this.updateClock = updateClock;

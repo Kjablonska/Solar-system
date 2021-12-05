@@ -13,18 +13,18 @@ class ErrorHandler {
         const stackPanel = this.initStackPanel();
         error.addControl(stackPanel);
         this.stackPanel.addControl(this.initRetryButton());
-        this.messageHandler = new MessageHandler('Something went wrong while fetching the data', '600px')
-        this.messageHandler.closeMessageHandler()
+        this.messageHandler = new MessageHandler('Something went wrong while fetching the data', '600px');
+        this.messageHandler.closeMessageHandler();
     }
 
     public openErrorHandler() {
-        this.messageHandler.openMessageHandler()
+        this.messageHandler.openMessageHandler();
         this.retryButton.isVisible = true;
     }
 
     public closeErrorHandler() {
         this.stackPanel.isVisible = false;
-        this.messageHandler.closeMessageHandler()
+        this.messageHandler.closeMessageHandler();
         this.retryButton.isVisible = false;
     }
 
@@ -45,7 +45,7 @@ class ErrorHandler {
         retryButton.width = '110px';
         retryButton.height = '30px';
         retryButton.color = 'white';
-        retryButton.top = '50px'
+        retryButton.top = '50px';
         retryButton.cornerRadius = 5;
         retryButton.fontFamily = 'Arial';
         retryButton.background = '#A6808C';

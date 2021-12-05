@@ -26,7 +26,6 @@ export class MovePlanets {
     draw: boolean = true;
     stopClock: () => void;
     planet?: Mesh;
-    private earthAxis = new Vector3(Math.sin((23 * Math.PI) / 180), Math.cos((23 * Math.PI) / 180), 0);
 
     constructor(
         visualisationData: VisualisationData[],
@@ -91,19 +90,16 @@ export class MovePlanets {
     };
 
     stopVisualisation = () => {
-        console.log('visualisation stopped');
         this.stopClock();
         this.stop = true;
     };
 
     startVisualisation = () => {
-        console.log('stopeed');
         this.stop = false;
     };
 
     setPosition = (data: VisualisationData, draw: boolean): VisualisationData => {
         if (data.orbit.length < 1) {
-            console.log('here');
             this.stopVisualisation();
         } else {
             data.planet.position.x = data.orbit[0]._x;
@@ -138,7 +134,6 @@ export class MovePlanets {
 
     onDataEnd = async () => {
         try {
-            console.log('DATA ENDED');
             this.currentPeriod = findNewPeriod(this.currentPeriod, this.fetchData.period);
             if (this.checkIfEndDateReached()) return;
 
@@ -150,7 +145,6 @@ export class MovePlanets {
                 step: this.fetchData.step,
             });
 
-            console.log('visualisation', this.visualisationData, data);
             for (const el of this.visualisationData) {
                 const toModify = data.get(el.planet.name);
 
@@ -175,7 +169,6 @@ export class MovePlanets {
             this.visualisationOptions.end !== undefined &&
             new Date(this.currentPeriod.start) >= new Date(this.visualisationOptions.end)
         ) {
-            console.log('end');
             return true;
         }
 

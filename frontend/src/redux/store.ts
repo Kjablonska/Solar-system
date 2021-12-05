@@ -12,9 +12,7 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(
     persistConfig,
-    combineReducers({
-        selectedOptions: userOptionsReducer,
-    }),
+    userOptionsReducer
 );
 
 // eslint-disable-next-line import/no-anonymous-default-export

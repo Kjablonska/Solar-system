@@ -1,7 +1,6 @@
-import findFetchPeriod from '../../../utils/findFetchPeriod';
-import { useDispatch } from 'react-redux';
+import React from 'react'
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { SpeedModes } from '../../../speedModes';
 import UserOptions from '../../../types/userOptions';
 import { setUserSelection } from '../../../redux/action';
 import { VisualisationMode } from '..';
@@ -10,6 +9,8 @@ import PickerSolarSystem from './PickerSolarSystem';
 import { useState } from 'react';
 import ErrorHandler from './ErrorHandler';
 import styled from 'styled-components';
+import { SpeedModes } from '../../../utils/speedModes';
+import { formatDate, formatTime } from '../../../utils/findFetchPeriod';
 
 interface ParamsPickerProps {
     visualisationMode: VisualisationMode;
@@ -31,19 +32,18 @@ export interface PickerProps {
 
 const ParamsPicker: React.FC<ParamsPickerProps> = ({ visualisationMode }) => {
     const [isError, openError] = useState<boolean>(false);
-    const { formatDate, formatTime } = findFetchPeriod();
     const dispatch = useDispatch();
     const history = useHistory();
 
     const startVisualisation = (startValue: Date | null, endValue: Date | null, planet?: string, mode?: SpeedModes) => {
         if (startValue === null || (endValue !== null && startValue !== null && endValue <= startValue)) {
             openError(true);
-            return;
+            return false;
         }
         console.log(startValue, endValue);
         if (startValue === null) return;
         const newUserOptions: UserOptions = {
-            mode: mode === undefined ? SpeedModes.RealTime : mode,
+            mode: mode === undefined ? 'RealTime' : mode,
             startDate: startValue !== null ? formatDate(startValue) : formatDate(new Date()),
             time: visualisationMode === VisualisationMode.Satellites ? formatTime(startValue) : undefined,
             planet: visualisationMode === VisualisationMode.Satellites ? planet : undefined,
@@ -51,6 +51,8 @@ const ParamsPicker: React.FC<ParamsPickerProps> = ({ visualisationMode }) => {
         };
         dispatch(setUserSelection(newUserOptions));
         visualisationMode === 'solarSystem' ? history.push('/visualisation') : history.push('/planet');
+
+        return true;
     };
 
     const closeErrorMessage = () => {

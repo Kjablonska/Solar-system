@@ -18,7 +18,7 @@ from asstes import get_skybox, get_planet_texture, get_satellite_texture, get_he
 from satellites import get_satellites
 from planets import get_info, get_planets_data
 from asteroids import get_asteroids, get_asteroids_data
-from cache import get_cache_data, get_cache_satellites, cache_size, search_satellites_cache_db, search_planets_cache_db
+from cache import get_cache_data, get_cache_satellites, search_satellites_cache_db, search_planets_cache_db
 
 app = Flask(__name__)
 
@@ -37,27 +37,6 @@ def get_satellites_data():
     step = request.args.get('step')
     data = get_satellites(planet, start, end, step)
     return json.dumps(data)
-
-# -----------------------------------------------------------
-#
-# Method for finding planet's satellites JPL data.
-# Returns json object of a following structure: {}
-# @params:
-#   name    -   array of planet's names.
-#   start   -   start date
-#   end     -   end date
-#   step    -   fetch step.
-#
-# -----------------------------------------------------------
-
-# @app.route("/getSolarSystemJPLData")
-# def get_JPL_solar_system_data():
-#     names = request.args.get('name')
-#     names = parse_names(names)
-#     start = request.args.get('start')
-#     end = request.args.get('end')
-#     step = request.args.get('step')
-#     return get_JPL_solar_system_data(names, start, end, step)
 
 
 @app.route("/getPlanetsJPLData")
@@ -98,7 +77,6 @@ def get_asteroids():
 
 # Assets
 
-
 @app.route('/assets/<name>')
 def get_skybox_pictures(name):
     return get_skybox(name)
@@ -119,26 +97,6 @@ def get_heightmap_picture(planet):
     return get_heightmap(planet)
 
 
-@app.route('/searchSatellitesCache')
-def serach_in_satellites_cache():
-    date = request.args.get('date')
-    body = request.args.get('body')
-    data = search_satellites_cache_db(body, date)
-    print(data)
-    if data is None:
-        return ''
-    return json.dumps(data)
-
-@app.route('/searchPlanetsCache')
-def serach_in_planets_cache():
-    date = request.args.get('date')
-    body = request.args.get('body')
-    data = search_planets_cache_db(body, date)
-    print(data)
-    if data is None:
-        return ''
-    return json.dumps(data)
-
 
 @app.route("/cachePlanets")
 def get_planets_cache():
@@ -150,11 +108,6 @@ def get_planets_cache():
 def satellites_cache():
     res = get_cache_satellites()
     return json.dumps(res, default=str)
-
-
-@app.route("/cacheSize")
-def get_cache_size():
-    return cache_size()
 
 
 def parse_names(names):

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { planets } from '../../../utils/consts';
 import { PickerProps } from './ParamsPicker';

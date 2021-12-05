@@ -1,26 +1,25 @@
-import { SpeedModes } from '../speedModes';
 import UserOptions from '../types/userOptions';
-import findFetchPeriod from '../utils/findFetchPeriod';
+import { formatDate } from '../utils/findFetchPeriod';
 
-const { formatDate } = findFetchPeriod();
-interface UserOptionsReducer {
-    userOptions: UserOptions,
+export interface UserOptionsReducer {
+    userOptions: UserOptions;
 }
 
 export const userOptionsReducer = (
     state: UserOptionsReducer = {
         userOptions: {
-            mode: SpeedModes.RealTime,
+            mode: 'RealTime',
             startDate: formatDate(new Date()),
             planet: undefined,
-            endDate: undefined
+            endDate: undefined,
         },
     },
     action: any,
 ) => {
     switch (action.type) {
         case 'SELECT_OPTIONS':
-            console.log('options', action.payload.options);
+            const userOptions = action.payload.options;
+            const mode = userOptions.mode ? userOptions.mode : state.userOptions.mode;
             return {
                 ...state,
                 userOptions: action.payload.options,
@@ -29,3 +28,4 @@ export const userOptionsReducer = (
             return state;
     }
 };
+

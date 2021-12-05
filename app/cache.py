@@ -5,6 +5,7 @@ from database import connect_to_db, close_db_connection
 
 CACHE_SIZE = 200
 
+
 def get_cache_data():
     client = connect_to_db()
     mydb = client["celestial-bodies"]
@@ -13,11 +14,6 @@ def get_cache_data():
     close_db_connection(client)
     return res
 
-def get_planets_cache_collection():
-    client = connect_to_db()
-    mydb = client["celestial-bodies"]
-    planets_cache = mydb["planetsCache"]
-    return planets_cache
 
 def get_cache_satellites():
     client = connect_to_db()
@@ -38,23 +34,24 @@ def search_planets_cache(planet, date, mydb):
     planets_cache = mydb["planetsCache"]
     return search_cache(planets_cache, date, planet)
 
+
 def search_satellites_cache_db(planet, date):
     client = connect_to_db()
     mydb = client["celestial-bodies"]
     planets_cache = mydb["satellitesCache"]
     res = search_cache(planets_cache, date, planet)
-    print(res)
     close_db_connection(client)
     return res
+
 
 def search_planets_cache_db(planet, date):
     client = connect_to_db()
     mydb = client["celestial-bodies"]
     planets_cache = mydb["planetsCache"]
     res = search_cache(planets_cache, date, planet)
-    print(res)
     close_db_connection(client)
     return res
+
 
 def search_cache(cache, date, body):
     print(cache)
@@ -96,10 +93,19 @@ def update_cache(cache, body, start, data):
         cache.delete_one({"last_used": last_used})
 
 
-def cache_size():
+def satellites_cache_size():
     client = connect_to_db()
     mydb = client["celestial-bodies"]
     satellites_cache = mydb["satellitesCache"]
     size = satellites_cache.count_documents({})
     close_db_connection(client)
-    return str(size)
+    return size
+
+
+def planets_cache_size():
+    client = connect_to_db()
+    mydb = client["celestial-bodies"]
+    planets_cache = mydb["planetsCache"]
+    size = planets_cache.count_documents({})
+    close_db_connection(client)
+    return size
