@@ -37,7 +37,6 @@ export default async function getPlanetOrbitData({ objects, startDate, endDate, 
         const planetCurve = Curve3.CreateCatmullRomSpline(newData, fill, false);
         readyData.set(key, planetCurve.getPoints());
     }
-    console.log("OUT", readyData)
     return {data: readyData, asteroidsPresent};
 }
 

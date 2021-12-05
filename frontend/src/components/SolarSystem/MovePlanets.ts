@@ -26,7 +26,6 @@ export class MovePlanets {
     draw: boolean = true;
     stopClock: () => void;
     planet?: Mesh;
-    private earthAxis = new Vector3(Math.sin((23 * Math.PI) / 180), Math.cos((23 * Math.PI) / 180), 0);
 
     constructor(
         visualisationData: VisualisationData[],

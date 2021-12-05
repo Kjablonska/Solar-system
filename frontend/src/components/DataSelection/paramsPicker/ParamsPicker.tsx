@@ -1,3 +1,4 @@
+import React from 'react'
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import UserOptions from '../../../types/userOptions';
@@ -34,13 +35,10 @@ const ParamsPicker: React.FC<ParamsPickerProps> = ({ visualisationMode }) => {
     const dispatch = useDispatch();
     const history = useHistory();
 
-    const options: UserOptions = useSelector((state: RootStateOrAny) => state);
-    console.log('PARAMS PICKER', options)
-
     const startVisualisation = (startValue: Date | null, endValue: Date | null, planet?: string, mode?: SpeedModes) => {
         if (startValue === null || (endValue !== null && startValue !== null && endValue <= startValue)) {
             openError(true);
-            return;
+            return false;
         }
         console.log(startValue, endValue);
         if (startValue === null) return;
@@ -53,6 +51,8 @@ const ParamsPicker: React.FC<ParamsPickerProps> = ({ visualisationMode }) => {
         };
         dispatch(setUserSelection(newUserOptions));
         visualisationMode === 'solarSystem' ? history.push('/visualisation') : history.push('/planet');
+
+        return true;
     };
 
     const closeErrorMessage = () => {

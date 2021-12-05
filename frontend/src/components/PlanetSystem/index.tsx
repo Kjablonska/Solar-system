@@ -42,12 +42,15 @@ export const PlanetSystemScene = () => {
     };
 
     async function getSatellitesData() {
+        let resCode = 200;
         openError(false);
         try {
             openSpinner(true);
             const response = await fetch(
                 `http://localhost:5000/getSatellitesJPLData?planet=${options.planet}&start=${start}&end=${end}&step=${fetchData.step}`,
             );
+            resCode = response.status;
+            console.log(resCode)
             const data = await response.json();
             const readyData = [];
             for (const key in data) {
@@ -63,6 +66,7 @@ export const PlanetSystemScene = () => {
             openError(true);
         } finally {
             openSpinner(false);
+            return resCode;
         }
     }
 

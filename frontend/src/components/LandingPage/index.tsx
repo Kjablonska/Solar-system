@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import DataSelection from '../DataSelection';
 import infoButton from '../../assets/info_button.png';

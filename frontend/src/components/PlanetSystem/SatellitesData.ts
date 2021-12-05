@@ -13,36 +13,38 @@ import {
 import { PlanetData, VisualisationData } from '../../types/planetInterfaces';
 import { attacheCamera } from '../SceneInitData';
 
-
 const diameterMap = new Map<string, number>([
     ['Luna', 8.2],
     ['Phobos', 0.1],
     ['Venus', 0.05],
-    ['Io', 1],
-    ['Eurpoa', 1],
-    ['Ganymede', 1],
+    ['Io', 0.8],
+    ['Eurpoa', 0.6],
+    ['Ganymede', 1.1],
     ['Callisto', 1],
-    ['Mimas', 1],
-    ['Enceladus', 1],
-    ['Tethys', 1],
-    ['Dione', 1],
-    ['Rhea', 1],
-    ['Titan', 1],
-    ['Hyperion', 1],
-    ['Iapetus', 1],
-    ['Ariel', 1],
-    ['Umbriel', 1],
-    ['Oberon', 1],
-    ['Miranda', 1],
-    ['Triton', 1],
-    ['Nereid', 1],
-    ['Naiad', 1],
-    ['Thalassa', 1],
-    ['Despina', 1],
-    ['Galatea', 1],
-    ['Larissa', 1],
-    ['Proteus', 1]
+    ['Mimas', 0.1],
+    ['Enceladus', 0.13],
+    ['Tethys', 0.2],
+    ['Dione', 0.3],
+    ['Rhea', 0.4],
+    ['Titan', 1.3],
+    ['Hyperion', 0.06],
+    ['Iapetus', 0.3],
+    ['Ariel', 0.7],
+    ['Umbriel', 0.7],
+    ['Titania', 0.9],
+    ['Oberon', 0.9],
+    ['Miranda', 0.2],
+    ['Triton', 1.7],
+    ['Nereid', 0.2],
+    ['Naiad', 0.04],
+    ['Thalassa', 0.05],
+    ['Despina', 0.1],
+    ['Galatea', 0.1],
+    ['Larissa', 0.1],
+    ['Proteus', 0.3],
 ]);
+
+const gasPlanets = ['Jupiter', 'Saturn', 'Neptune', 'Uranus'];
 
 export class SceneData {
     private meshes: Map<string, Mesh> = new Map();
@@ -68,47 +70,49 @@ export class SceneData {
 
     addPlanet = () => {
         const heightMap = `http://localhost:5000/assets/heightmaps/${this.planet}`;
-        const planet = MeshBuilder.CreateSphere(
-            this.planet,
-            { segments: 30, diameter: 30, updatable: true },
-            this.scene,
-        );
-
-        const planet1 = MeshBuilder.CreateSphere(
-            this.planet,
-            { segments: 100, diameter: 30, updatable: true },
-            this.scene,
-        );
-
-        const planet2 = MeshBuilder.CreateSphere(
-            this.planet,
-            { segments: 160, diameter: 30, updatable: true },
-            this.scene,
-        );
-
-        const planet3 = MeshBuilder.CreateSphere(
+        const basePlanet = MeshBuilder.CreateSphere(
             this.planet,
             { segments: 256, diameter: 30, updatable: true },
             this.scene,
         );
 
-        planet3.addLODLevel(50, planet2);
-        planet3.addLODLevel(80, planet1);
-        planet3.addLODLevel(100, planet);
-        var material = new StandardMaterial(this.planet, this.scene);
+        const material = new StandardMaterial(this.planet, this.scene);
         material.diffuseTexture = new Texture(`http://localhost:5000/assets/planets/${this.planet}`, this.scene);
+        if (!gasPlanets.includes(this.planet)) {
+            const planet = MeshBuilder.CreateSphere(
+                `${this.planet}0`,
+                { segments: 30, diameter: 30, updatable: true },
+                this.scene,
+            );
 
-        planet.applyDisplacementMap(heightMap, 0, 0.3);
-        planet1.applyDisplacementMap(heightMap, 0, 0.6);
-        planet2.applyDisplacementMap(heightMap, 0, 0.8);
-        planet3.applyDisplacementMap(heightMap, 0, 1);
-        (material.diffuseTexture as Texture).vScale = -1;
-        planet.material = material;
-        planet1.material = material;
-        planet2.material = material;
-        planet3.material = material;
+            const planet1 = MeshBuilder.CreateSphere(
+                `${this.planet}1`,
+                { segments: 100, diameter: 30, updatable: true },
+                this.scene,
+            );
 
-        this.planetMesh = planet3;
+            const planet2 = MeshBuilder.CreateSphere(
+                `${this.planet}2`,
+                { segments: 160, diameter: 30, updatable: true },
+                this.scene,
+            );
+
+            basePlanet.addLODLevel(50, planet2);
+            basePlanet.addLODLevel(80, planet1);
+            basePlanet.addLODLevel(100, planet);
+
+            planet.applyDisplacementMap(heightMap, 0, 0.3);
+            planet1.applyDisplacementMap(heightMap, 0, 0.6);
+            planet2.applyDisplacementMap(heightMap, 0, 0.8);
+            (material.diffuseTexture as Texture).vScale = -1;
+            planet.material = material;
+            planet1.material = material;
+            planet2.material = material;
+        }
+        basePlanet.applyDisplacementMap(heightMap, 0, 1);
+        basePlanet.material = material;
+
+        this.planetMesh = basePlanet;
     };
 
     addSatellites = (planetsData: PlanetData[]) => {
