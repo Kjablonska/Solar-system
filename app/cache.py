@@ -20,7 +20,6 @@ def get_cache_satellites():
     mydb = client["celestial-bodies"]
     planets_cache = mydb["satellitesCache"]
     res = list(planets_cache.find())
-    print(res)
     close_db_connection(client)
     return res
 

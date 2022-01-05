@@ -12,46 +12,8 @@ db.createUser(
 );
 
 db.createCollection('planets');
-db.createCollection('asteroids');
 db.createCollection('planetsCache');
 db.createCollection('satellitesCache');
-
-db.asteroids.insert(
-    [
-        {
-            "_id": "000001",
-            "name": "Ceres"
-        },
-        {
-            "_id": "101955",
-            "name": "Bennu"
-        },
-        {
-            "_id": "000004",
-            "name": "Vesta"
-        },
-        {
-            "_id": "000002",
-            "name": "Pallas"
-        },
-        {
-            "_id": "000016",
-            "name": "Psyche"
-        },
-        {
-            "_id": "243",
-            "name": "Ida"
-        },
-        {
-            "_id": "000433",
-            "name": "Eros"
-        },
-        {
-            "_id": "000511",
-            "name": "Davida"
-        }
-    ]
-);
 
 db.planets.insert(
     [
@@ -292,41 +254,3 @@ db.planets.insert(
         }
     ]
 );
-
-
-// {
-//     "_id": "000021",
-//     "name": "Lutetia"
-// },
-// {
-//     "_id": "000216",
-//     "name": "Kleopatra"
-// },
-// {
-//     "_id": "000253",
-//     "name": "Mathilde"
-// },
-// {
-//     "_id": "002867",
-//     "name": "Steins"
-// },
-// {
-//     "_id": "009969",
-//     "name": "Braille"
-// },
-// {
-//     "_id": "004015",
-//     "name": "WilsonHarringtonnnu"
-// },
-// {
-//     "_id": "004179",
-//     "name": "Toutatis"
-// }
-// {
-//     "_id": "951",
-//     "name": "Gaspra"
-// },
-// {
-//     "_id": "025143",
-//     "name": "Itokawa"
-// }

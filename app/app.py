@@ -87,27 +87,27 @@ def get_planet_texture_picture(planet):
     return get_planet_texture(planet)
 
 
-@app.route('/assets/satellites/<planet>')
-def get_satellite_texture_picture(planet):
-    return get_satellite_texture(planet)
+@app.route('/assets/satellites/<satellite>')
+def get_satellite_texture_picture(satellite):
+    return get_satellite_texture(satellite)
 
 
-@app.route('/assets/heightmaps/<planet>')
-def get_heightmap_picture(planet):
-    return get_heightmap(planet)
+@app.route('/assets/heightmaps/<body>')
+def get_heightmap_picture(body):
+    return get_heightmap(body)
 
 
+# Not used?
+# @app.route("/cachePlanets")
+# def get_planets_cache():
+#     res = get_cache_data()
+#     return json.dumps(res, default=str)
 
-@app.route("/cachePlanets")
-def get_planets_cache():
-    res = get_cache_data()
-    return json.dumps(res, default=str)
 
-
-@app.route("/cacheSatellites")
-def satellites_cache():
-    res = get_cache_satellites()
-    return json.dumps(res, default=str)
+# @app.route("/cacheSatellites")
+# def satellites_cache():
+#     res = get_cache_satellites()
+#     return json.dumps(res, default=str)
 
 
 def parse_names(names):

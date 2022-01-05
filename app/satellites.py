@@ -30,7 +30,7 @@ def get_satellites(planet, start, end, step):
     except (ex1.ConnectTimeout, ex2.MaxRetryError, ex2.ConnectTimeoutError) as error:
         abort(408, error)
     except ValueError:
-        abort(422, 'Invalid input data.')
+        abort(422, 'Invalid parameters data.')
     finally:
         close_db_connection(client)
     return data

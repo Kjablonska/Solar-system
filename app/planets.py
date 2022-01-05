@@ -73,7 +73,7 @@ def get_planets(names, mydb):
 def get_info(planet):
     planet_data = get_planet(planet)
     if planet_data is None:
-        abort(404, 'Not found')
+        abort(404, 'Info for {0} not found'.format(planet))
     return planet_data["info"]
 
 
