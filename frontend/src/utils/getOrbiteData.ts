@@ -23,13 +23,6 @@ export default async function getPlanetOrbitData({ objects, startDate, endDate, 
         );
 
         orbite = await response.json();
-        // const astreoids = await getAsteroidsOrbit(startDate, endDate, step)
-        // if (Object.keys(astreoids).length > 0) {
-        //     asteroidsPresent = true;
-        //     orbite = {...orbite, ...astreoids};
-        // }
-
-        // console.log("asteroids", astreoids, orbite);
     }
     const readyData: Map<string, Vector3[]> = new Map();
     for (const key in orbite) {
@@ -38,25 +31,4 @@ export default async function getPlanetOrbitData({ objects, startDate, endDate, 
         readyData.set(key, planetCurve.getPoints());
     }
     return {data: readyData, asteroidsPresent};
-}
-
-
-async function getAsteroidsOrbit(startDate: string, endDate: string, step: string) {
-    let data = [];
-    try {
-        console.log("ASTEROIDS")
-        const response = await fetch(
-            `http://localhost:5000/getAsteroidsJPLData?start=${startDate}&end=${endDate}&step=${step}`,
-        );
-        data = await response.json();
-    } catch (e: any) {
-        console.log(e)
-        console.log("unable to fetch ateroids")
-    }
-
-    finally {
-        console.log(data)
-        return data;
-    }
-
 }

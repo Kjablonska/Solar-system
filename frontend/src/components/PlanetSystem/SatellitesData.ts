@@ -69,7 +69,7 @@ export class SceneData {
     }
 
     addPlanet = () => {
-        const heightMap = `http://localhost:5000/assets/heightmaps/${this.planet}`;
+        const heightMap = `./assets/heightmaps/${this.planet}`;
 
         const isGasPlanet = gasPlanets.includes(this.planet);
 
@@ -83,7 +83,7 @@ export class SceneData {
         // );
 
         const material = new StandardMaterial(this.planet, this.scene);
-        material.diffuseTexture = new Texture(`http://localhost:5000/assets/planets/${this.planet}`, this.scene);
+        material.diffuseTexture = new Texture(`./assets/planets/${this.planet}`, this.scene);
         if (!isGasPlanet) {
             const planet = MeshBuilder.CreateSphere(
                 `${this.planet}0`,
@@ -135,7 +135,7 @@ export class SceneData {
             diameter = diameter !== undefined ? diameter : 5;
             const planet = MeshBuilder.CreateSphere(planetName, { diameter: diameter }, this.scene);
             var material = new StandardMaterial(planetName, this.scene);
-            material.diffuseTexture = new Texture(`http://localhost:5000/assets/satellites/${planetName}`, this.scene);
+            material.diffuseTexture = new Texture(`./assets/satellites/${planetName}`, this.scene);
 
             (material.diffuseTexture as Texture).vScale = -1;
             planet.material = material;
@@ -155,7 +155,7 @@ export class SceneData {
         const skybox = MeshBuilder.CreateBox('skyBox', { size: 1000.0 }, this.scene);
         const skyboxMaterial = new StandardMaterial('skyBox', this.scene);
         skyboxMaterial.backFaceCulling = false;
-        skyboxMaterial.reflectionTexture = new CubeTexture('http://localhost:5000/assets/stars', this.scene);
+        skyboxMaterial.reflectionTexture = new CubeTexture('./assets/stars', this.scene);
         skyboxMaterial.reflectionTexture.coordinatesMode = Texture.SKYBOX_MODE;
         skyboxMaterial.diffuseColor = new Color3(0, 0, 0);
         skyboxMaterial.specularColor = new Color3(0, 0, 0);

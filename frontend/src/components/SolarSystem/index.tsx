@@ -47,7 +47,6 @@ export const InitSceneData = () => {
                 readyData.push(newPlanetData);
             }
 
-            // await getAsteroidsOrbit(readyData);
             setPlanetsData([...readyData]);
         } catch (e: any) {
             console.log(e);
@@ -57,50 +56,26 @@ export const InitSceneData = () => {
         }
     }
 
-    async function getAsteroidsOrbit(readyData: PlanetData[]) {
-        try {
-            console.log("ASTEROIDS")
-            const response = await fetch(
-                `http://localhost:5000/getAsteroidsJPLData?start=${start}&end=${end}&step=${fetchData.step}`,
-            );
-            const data = await response.json();
-            console.log('fetch', data);
-            for (const key in data) {
-                const newPlanetData: PlanetData = { planet: key, position: rescaleData(data[key], key, false) };
-                readyData.push(newPlanetData);
-            }
-            console.log(" data", readyData)
-            // setPlanetsData([...readyData]);
-        } catch (e: any) {
-            console.log(e)
-            console.log("unable to fetch ateroids")
-        }
-    }
-
     useEffect(() => {
         setupData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-
     return (
         <>
             {isLoading && <Spinner />}
             {isError && <ErrorMessage onRetry={setupData} />}
-            {planetsData !== undefined &&
-                planetsData.length > 1 &&
-                visualisationOptions !== undefined &&
-                !isError && (
-                    <div id='my-canvas'>
-                        <SceneComponent
-                            antialias
-                            planetsData={planetsData}
-                            visualisationOptions={visualisationOptions}
-                            fetchData={fetchData}
-                            id='my-canvas'
-                        />
-                    </div>
-                )}
+            {planetsData !== undefined && planetsData.length > 1 && visualisationOptions !== undefined && !isError && (
+                <div id='my-canvas'>
+                    <SceneComponent
+                        antialias
+                        planetsData={planetsData}
+                        visualisationOptions={visualisationOptions}
+                        fetchData={fetchData}
+                        id='my-canvas'
+                    />
+                </div>
+            )}
         </>
     );
 };

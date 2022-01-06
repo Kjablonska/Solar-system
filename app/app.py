@@ -71,45 +71,6 @@ def get_JPL_asteroid_belt():
     return json.dumps(data)
 
 
-@app.route("/asteroid")
-def get_asteroids():
-    return get_asteroids()
-
-# Assets
-
-@app.route('/assets/<name>')
-def get_skybox_pictures(name):
-    return get_skybox(name)
-
-
-@app.route('/assets/planets/<planet>')
-def get_planet_texture_picture(planet):
-    return get_planet_texture(planet)
-
-
-@app.route('/assets/satellites/<satellite>')
-def get_satellite_texture_picture(satellite):
-    return get_satellite_texture(satellite)
-
-
-@app.route('/assets/heightmaps/<body>')
-def get_heightmap_picture(body):
-    return get_heightmap(body)
-
-
-# Not used?
-# @app.route("/cachePlanets")
-# def get_planets_cache():
-#     res = get_cache_data()
-#     return json.dumps(res, default=str)
-
-
-# @app.route("/cacheSatellites")
-# def satellites_cache():
-#     res = get_cache_satellites()
-#     return json.dumps(res, default=str)
-
-
 def parse_names(names):
     names = names.replace("[", "")
     names = names.replace("]", "")

@@ -51,7 +51,7 @@ export class SceneData {
         this.sun = MeshBuilder.CreateSphere('sun', { diameter: diameterMap.get('Sun') }, scene);
         this.sun.position.copyFrom(this.light.position);
         const material = new StandardMaterial('sunMaterial', scene);
-        material.diffuseTexture = new Texture(`http://localhost:5000/assets/planets/Sun`, scene);
+        material.diffuseTexture = new Texture(`./assets/planets/Sun`, scene);
         material.emissiveColor = this.light.diffuse;
         this.sun.material = material;
     };
@@ -77,7 +77,7 @@ export class SceneData {
                 diameter = 1;
             const planet = MeshBuilder.CreateSphere(planetName, { diameter: diameter }, this.scene);
             var material = new StandardMaterial(planetName, this.scene);
-            material.diffuseTexture = new Texture(`http://localhost:5000/assets/planets/${planetName}`, this.scene);
+            material.diffuseTexture = new Texture(`./assets/planets/${planetName}`, this.scene);
 
             (material.diffuseTexture as Texture).vScale = -1;
             (material.diffuseTexture as Texture).uScale = -1;
@@ -100,7 +100,7 @@ export class SceneData {
         const skybox = MeshBuilder.CreateBox('skyBox', { size: 1000.0 });
         const skyboxMaterial = new StandardMaterial('skyBox', this.scene);
         skyboxMaterial.backFaceCulling = false;
-        skyboxMaterial.reflectionTexture = new CubeTexture('http://localhost:5000/assets/stars', this.scene);
+        skyboxMaterial.reflectionTexture = new CubeTexture('./assets/skybox/stars', this.scene);
         skyboxMaterial.reflectionTexture.coordinatesMode = Texture.SKYBOX_MODE;
         skyboxMaterial.diffuseColor = new Color3(0, 0, 0);
         skyboxMaterial.specularColor = new Color3(0, 0, 0);
