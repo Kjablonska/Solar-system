@@ -50,7 +50,7 @@ const ParamsPicker: React.FC<ParamsPickerProps> = ({ visualisationMode }) => {
             endDate: endValue !== null ? formatDate(endValue) : undefined,
         };
         dispatch(setUserSelection(newUserOptions));
-        visualisationMode === 'solarSystem' ? history.push('/visualisation') : history.push('/planet');
+        visualisationMode === 'solarSystem' ? history.push('/solarSystem') : history.push('/satellites');
 
         return true;
     };

@@ -22,9 +22,11 @@ db.planets.insert(
             "name": "SolarSystem",
             "info": {
                 "Age": "~ 4.6 billion years",
-                "Number of planets": "8",
-                "Number of asteroids": "Over 1.113,527 (Nov 2021)",
+                "Planets": "8 planets: Mercury, Venus, Erth, Mars, Jupiter, Saturn, Uranus, Neptune",
+                "Number of asteroids": "Over 1.113,527",
+                "Number of moons": "Over 200",
                 "Diameter": "18.75 trillion km",
+                "Orbit time": "230 million years",
                 "Speed": "720,000 km/h",
                 "Galaxy": "Milky Way"
             },
@@ -74,7 +76,7 @@ db.planets.insert(
             "satellites": [
                 {
                     "_id": "301",
-                    "name": "Luna",
+                    "name": "Moon",
                 }
             ]
         },

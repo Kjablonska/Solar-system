@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Vector3 } from '@babylonjs/core';
-import { PlanetData, PositionData } from '../../types/planetInterfaces';
+import { PlanetData } from '../../types/planetInterfaces';
 import { defineStartingPeriod, findFetchParameters } from '../../utils/findFetchPeriod';
 import ErrorMessage from '../LandingPage/ErrorMessage';
 import Spinner from '../LandingPage/Spinner';

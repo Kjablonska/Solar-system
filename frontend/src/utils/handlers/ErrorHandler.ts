@@ -18,6 +18,7 @@ class ErrorHandler {
     }
 
     public openErrorHandler() {
+        this.stackPanel.isVisible = true;
         this.messageHandler.openMessageHandler();
         this.retryButton.isVisible = true;
     }
@@ -32,7 +33,7 @@ class ErrorHandler {
         const stackPanel = new StackPanel();
         stackPanel.height = '100%';
         stackPanel.width = '100%';
-        stackPanel.top = '120px';
+        stackPanel.top = '150px';
         stackPanel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
         stackPanel.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
         this.stackPanel = stackPanel;
@@ -42,6 +43,7 @@ class ErrorHandler {
 
     private initRetryButton() {
         const retryButton = Button.CreateSimpleButton('retry', 'Retry');
+        retryButton.isVisible = true;
         retryButton.width = '110px';
         retryButton.height = '30px';
         retryButton.color = 'white';

@@ -51,7 +51,7 @@ export class SceneData {
         this.sun = MeshBuilder.CreateSphere('sun', { diameter: diameterMap.get('Sun') }, scene);
         this.sun.position.copyFrom(this.light.position);
         const material = new StandardMaterial('sunMaterial', scene);
-        material.diffuseTexture = new Texture(`./assets/planets/Sun`, scene);
+        material.diffuseTexture = new Texture('./assets/planets/Sun.jpg', scene);
         material.emissiveColor = this.light.diffuse;
         this.sun.material = material;
     };
@@ -65,7 +65,7 @@ export class SceneData {
         this.camera.upperBetaLimit = Infinity;
     };
 
-    addPlanets = (planetsData: PlanetData[]) => {
+    addPlanets = async (planetsData: PlanetData[]) => {
         if (planetsData === undefined) return;
 
         for (const el of planetsData) {
@@ -77,7 +77,8 @@ export class SceneData {
                 diameter = 1;
             const planet = MeshBuilder.CreateSphere(planetName, { diameter: diameter }, this.scene);
             var material = new StandardMaterial(planetName, this.scene);
-            material.diffuseTexture = new Texture(`./assets/planets/${planetName}`, this.scene);
+            // material.diffuseTexture = new Texture(this.findTexture(planetName), this.scene);
+            material.diffuseTexture = new Texture(`./assets/planets/${planetName}.jpg`, this.scene);
 
             (material.diffuseTexture as Texture).vScale = -1;
             (material.diffuseTexture as Texture).uScale = -1;

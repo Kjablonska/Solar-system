@@ -14,10 +14,8 @@ import urllib.parse
 import json
 import numpy as np
 
-from asstes import get_skybox, get_planet_texture, get_satellite_texture, get_heightmap
 from satellites import get_satellites
 from planets import get_info, get_planets_data
-from asteroids import get_asteroids, get_asteroids_data
 from cache import get_cache_data, get_cache_satellites, search_satellites_cache_db, search_planets_cache_db
 
 app = Flask(__name__)
@@ -59,16 +57,6 @@ def get_planet_info():
     data = get_info(planet)
     return json.dumps(data)
 
-
-# Asteroids
-@app.route("/getAsteroidsJPLData")
-def get_JPL_asteroid_belt():
-    start = request.args.get('start')
-    end = request.args.get('end')
-    step = request.args.get('step')
-    data = get_asteroids_data(start, end, step)
-
-    return json.dumps(data)
 
 
 def parse_names(names):

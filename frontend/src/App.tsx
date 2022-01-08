@@ -13,8 +13,8 @@ const App = () => {
             <BrowserRouter>
                 <Switch>
                     <Route exact path='/' component={withRouter(LandingPage)} />
-                    <Route exact path='/planet' component={PlanetSystemScene} />
-                    <Route path='/visualisation' component={InitSceneData} />
+                    <Route exact path='/satellites' component={PlanetSystemScene} />
+                    <Route path='/solarSystem' component={InitSceneData} />
                 </Switch>
             </BrowserRouter>
         </Provider>

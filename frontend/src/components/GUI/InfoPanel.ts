@@ -5,7 +5,7 @@ class Info {
     public infoText: TextBlock = new TextBlock();
     public info: Button;
 
-    constructor (planet: string) {
+    constructor(planet: string) {
         this.planet = planet;
         this.infoButton();
         this.infoContainer();
@@ -22,26 +22,24 @@ class Info {
         info.left = '800px';
         info.onPointerUpObservable.add(() => {
             this.infoText.isVisible = this.infoText.isVisible ? false : true;
-            console.log(this.infoText.isVisible)
         });
         this.info = info;
 
         return info;
-    }
+    };
 
     private fetchInfoData = async () => {
-        const response = await fetch(
-            `http://localhost:5000/getPlanetInfo?planet=${this.planet}`,
-        );
+        const response = await fetch(`http://localhost:5000/getPlanetInfo?planet=${this.planet}`);
         const data = await response.json();
 
-        let formatted = `${this.planet} data:\n\n`;
+        const name = this.planet === 'SolarSystem' ? 'Solar System' : this.planet;
+        let formatted = `${name} data:\n\n`;
         for (const [key, val] of Object.entries(data)) {
             formatted += `${key}:\t${val}\n`;
         }
 
-        return formatted
-    }
+        return formatted;
+    };
 
     private infoContainer = async () => {
         this.infoText.isVisible = false;
@@ -56,21 +54,19 @@ class Info {
         this.infoText.resizeToFit = true;
         this.infoText.height = '100%';
         this.infoText.width = '100%';
-        this.infoText.lineSpacing = "5px";
+        this.infoText.lineSpacing = '5px';
         this.infoText.textWrapping = TextWrapping.WordWrap;
         const text = await this.fetchInfoData();
         this.infoText.text = text;
 
         return this.infoText;
-    }
+    };
 
     public setVisibility = () => {
         this.info.isVisible = !this.info.isVisible;
 
-        if (this.infoText.isVisible)
-            this.infoText.isVisible = false;
-    }
-
+        if (this.infoText.isVisible) this.infoText.isVisible = false;
+    };
 }
 
 export default Info;
