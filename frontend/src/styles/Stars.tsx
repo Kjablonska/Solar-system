@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import rocket from '../assets/rocket.png'
 
 export const Star1 = styled.div`
     position: absolute;
@@ -52,4 +53,14 @@ export const Star6 = styled.div`
     width: 20px;
     height: 20px;
     background: radial-gradient(50% 50% at 50% 50%, #ede5a6 0%, rgba(252, 210, 129, 0) 100%);
+`;
+
+export const Rocket = styled.div`
+    position: absolute;
+    top: 35%;
+    left: 75%;
+    height: 480px;
+    width: 280px;
+    background: url(${rocket}) no-repeat;
+    transform: rotate(-30deg);
 `;

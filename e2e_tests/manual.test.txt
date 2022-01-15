@@ -1,0 +1,56 @@
+All scenarios starts at Landing Page. Plase open the application and go to '/' route (default).
+
+"Solar System" mode.
+For all above select "Solar System" mode.
+
+1 Speed modes
+
+1.1 Real Time
+1. Select start date as today date.
+2. Select "Real Time" for speed mode.
+3. Click "Start" button.
+
+Output:
+The visualisation starts. The clock displays date and time. Time is updated by seconds.
+
+1.2 Medium
+1. Select start date as today date.
+2. Select "Medium" for speed mode.
+3. Click "Start" button.
+
+Output:
+The visualisation starts. The clock displays date. Time is updated by 2.4 hours after each move.
+
+
+1.1 Fast
+1. Select start date as today date.
+2. Select "Fast" for speed mode.
+3. Click "Start" button.
+
+Output:
+The visualisation starts. The clock displays date. Time is update by 4.8hours after each move. The orbit is drawn.
+The planets movement is smooth.
+
+
+1.2 Start & end date
+1. Select start date as today date.
+2. Select end date for any day next month.
+3. Select "Fast" for speed mode.
+4. Click "Start" button.
+
+Output:
+The visualisation starts. When the end date is reached the visualisation freezes.
+The message "End date reached" is dispalyed.
+The message can be hidden.
+The user can travell through the visualisation after it freezes.
+UI is available.
+
+
+
+Scenario 2. - "Planet & its satellites" mode.
+
+Scenatio 3. - "Solar System" mode cache.
+
+Scenario 4. - "Planet & its satellites" mode cache.
+
+Scenario 5. - 
