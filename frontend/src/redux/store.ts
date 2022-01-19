@@ -1,4 +1,4 @@
-import { applyMiddleware, combineReducers, createStore } from 'redux';
+import { applyMiddleware, createStore } from 'redux';
 import { persistReducer, persistStore } from 'redux-persist';
 import { userOptionsReducer } from '../redux/reducer';
 import { composeWithDevTools } from 'redux-devtools-extension';

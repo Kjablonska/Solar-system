@@ -1,9 +1,20 @@
 import styled from 'styled-components';
-import { Star1, Star2, Star3, Star5, Rocket } from '../../styles/Stars';
+import { Star1, Star2, Star3, Star5, Star7 } from '../../styles/Stars';
+import rocket from '../../assets/rocket.png'
 
 interface InfoProps {
     onClose: () => void;
 }
+
+export const Rocket = styled.div`
+    position: absolute;
+    top: 35%;
+    left: 75%;
+    height: 480px;
+    width: 280px;
+    background: url(${rocket}) no-repeat;
+    transform: rotate(-30deg);
+`;
 
 const InfoContainer = styled.div`
     position: relative;
@@ -35,7 +46,7 @@ const CloseButton = styled.button.attrs({ children: 'X' })`
 `;
 
 const ParamsTable = styled.table`
-    border: 1px solid #171738;
+    border: 0.5px solid #171738;
     border-collapse: collapse;
     width: 60%;
     margin-top: 30px;
@@ -43,13 +54,13 @@ const ParamsTable = styled.table`
 `;
 
 const TableHeader = styled.th`
-    border: 1px solid #171738;
-    height: 30px;
+    border: 0.5px solid #171738;
+    height: 25px;
 `;
 
 const TableContent = styled.td`
-    border: 1px solid #171738;
-    height: 40px;
+    border: 0.5px solid #171738;
+    height: 35px;
 `;
 
 const Info: React.FC<InfoProps> = ({ onClose }) => {
@@ -59,10 +70,11 @@ const Info: React.FC<InfoProps> = ({ onClose }) => {
             <Star2 />
             <Star3 />
             <Star5 />
+            <Star7 />
             <Rocket />
             <InfoContent>
                 <CloseButton onClick={onClose} />
-                <h1>Welcome to the Solar System visualisation! 🛸</h1>
+                <h1>Welcome to the Solar System Visualisation! 🛸</h1>
                 <p>This application presents the accurate solar system data as 3D modes.</p>
                 <h3>There are two available modes:</h3>
                 <li>
@@ -149,12 +161,13 @@ const Info: React.FC<InfoProps> = ({ onClose }) => {
                 <div>
                     When all parameters are correctly set, the start button apprears. On click, the visualisation
                     starts.
-                    <br></br>
+                    <br></br><br></br>
                     The visualisation contains of the rendered model and user interface containing:
-                        <li><b>Clock</b> - displays the current visusalisation date and time.</li>
-                        <li><b>Info button</b> - displays more info about the visible celestial bodies.</li>
-                        <li><b>Go back</b> - redirect to the parameter selection view.</li>
-                        <li><b>"X" close button</b> - toggles user interface.</li>
+                        <li style={{marginBottom: '5px', marginTop: '10px'}}><b>Clock</b> - displays the current visusalisation date and time.</li>
+                        <li style={{marginBottom: '5px'}}><b>"More info" button</b> - displays more info about the visible celestial bodies.</li>
+                        <li style={{marginBottom: '5px'}}><b>"Back" button</b> - redirect to the parameter selection view.</li>
+                        <li style={{marginBottom: '5px'}}><b>"X" button</b> - toggles user interface.</li>
+                        <li><b>"Show labels" button</b> - toggles labels.</li>
                 </div>
             </InfoContent>
         </InfoContainer>

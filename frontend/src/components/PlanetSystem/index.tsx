@@ -71,6 +71,7 @@ export const PlanetSystemScene = () => {
 
     useEffect(() => {
         getSatellitesData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

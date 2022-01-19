@@ -1,4 +1,4 @@
-import { Scene, LinesMesh, Vector3, Curve3, MeshBuilder, Mesh, Space } from '@babylonjs/core';
+import { Scene, LinesMesh, Vector3, Curve3, MeshBuilder, Mesh } from '@babylonjs/core';
 import { DatesPeriod, FetchData, VisualisationOptions } from '../../types/period';
 import { VisualisationData } from '../../types/planetInterfaces';
 import { findNewPeriod } from '../../utils/findFetchPeriod';
@@ -137,7 +137,7 @@ export class MovePlanets {
             this.currentPeriod = findNewPeriod(this.currentPeriod, this.fetchData.period);
             if (this.checkIfEndDateReached()) return;
 
-            const { data, asteroidsPresent } = await getPlanetOrbitData({
+            const { data } = await getPlanetOrbitData({
                 objects: this.visualisationOptions.objects,
                 startDate: this.currentPeriod.start,
                 endDate: this.currentPeriod.end,

@@ -18,8 +18,6 @@ export const userOptionsReducer = (
 ) => {
     switch (action.type) {
         case 'SELECT_OPTIONS':
-            const userOptions = action.payload.options;
-            const mode = userOptions.mode ? userOptions.mode : state.userOptions.mode;
             return {
                 ...state,
                 userOptions: action.payload.options,

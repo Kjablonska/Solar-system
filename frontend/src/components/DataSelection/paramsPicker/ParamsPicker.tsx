@@ -1,5 +1,5 @@
 import React from 'react'
-import { RootStateOrAny, useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import UserOptions from '../../../types/userOptions';
 import { setUserSelection } from '../../../redux/action';
