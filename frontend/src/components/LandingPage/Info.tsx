@@ -27,7 +27,7 @@ const InfoContainer = styled.div`
 `;
 
 const InfoContent = styled.div`
-    padding-top: 100px;
+    padding-top: 20px;
     padding-left: 200px;
     padding-right: 50px;
     /* color: #171738; */
@@ -83,49 +83,53 @@ const Info: React.FC<InfoProps> = ({ onClose }) => {
                     Earth, Mars, Jupiter, Saturn, Uranus and Neptune. The origin point of the Cartesian coordinate
                     system is the center of the Sun.
                     <ParamsTable>
-                        <tr>
-                            <TableHeader style={{ width: '200px' }}>Parameter</TableHeader>
-                            <TableHeader>Description</TableHeader>
-                        </tr>
-                        <tr>
-                            <TableContent>Start date</TableContent>
-                            <TableContent>
-                                Defines the beginning of the time frame used in the visualisation.
-                            </TableContent>
-                        </tr>
-                        <tr>
-                            <TableContent>End date</TableContent>
-                            <TableContent>
-                                Defines the end date of the time frame. The visualisation freezes once it reaches the
-                                end date. If not set, the visualisation will continue in real time.
-                            </TableContent>
-                        </tr>
-                        <tr>
-                            <TableContent>Speed mode</TableContent>
-                            <TableContent>
-                                Defines the visualisation speed which is defined by the time needed for one jump -
-                                transition between two subsequent orbit points.
-                            </TableContent>
-                        </tr>
+                        <tbody>
+                            <tr>
+                                <TableHeader style={{ width: '200px' }}>Parameter</TableHeader>
+                                <TableHeader>Description</TableHeader>
+                            </tr>
+                            <tr>
+                                <TableContent>Start date</TableContent>
+                                <TableContent>
+                                    Defines the beginning of the time frame used in the visualisation.
+                                </TableContent>
+                            </tr>
+                            <tr>
+                                <TableContent>End date</TableContent>
+                                <TableContent>
+                                    Defines the end date of the time frame. The visualisation freezes once it reaches the
+                                    end date. If not set, the visualisation will continue in real time.
+                                </TableContent>
+                            </tr>
+                            <tr>
+                                <TableContent>Speed mode</TableContent>
+                                <TableContent>
+                                    Defines the visualisation speed which is defined by the time needed for one jump -
+                                    transition between two subsequent orbit points.
+                                </TableContent>
+                            </tr>
+                        </tbody>
                     </ParamsTable>
                     Speed modes are defined as follows:
                     <ParamsTable style={{ width: '50%' }}>
-                        <tr>
-                            <TableHeader style={{ width: '200px' }}>Speed mode</TableHeader>
-                            <TableHeader>Description</TableHeader>
-                        </tr>
-                        <tr>
-                            <TableContent>Real Time</TableContent>
-                            <TableContent>One jump corresponds to 1 second in the real world.</TableContent>
-                        </tr>
-                        <tr>
-                            <TableContent>Medium</TableContent>
-                            <TableContent>One jump corresponds to 2.4 hours in the real world.</TableContent>
-                        </tr>
-                        <tr>
-                            <TableContent>Fast</TableContent>
-                            <TableContent>One jump corresponds to 4.8 hours in the real world.</TableContent>
-                        </tr>
+                        <tbody>
+                            <tr>
+                                <TableHeader style={{ width: '200px' }}>Speed mode</TableHeader>
+                                <TableHeader>Description</TableHeader>
+                            </tr>
+                            <tr>
+                                <TableContent>Real Time</TableContent>
+                                <TableContent>One jump corresponds to 1 second in the real world.</TableContent>
+                            </tr>
+                            <tr>
+                                <TableContent>Medium</TableContent>
+                                <TableContent>One jump corresponds to 2.4 hours in the real world.</TableContent>
+                            </tr>
+                            <tr>
+                                <TableContent>Fast</TableContent>
+                                <TableContent>One jump corresponds to 4.8 hours in the real world.</TableContent>
+                            </tr>
+                        </tbody>
                     </ParamsTable>
                 </li>
 
