@@ -14,7 +14,7 @@ import { PlanetData, VisualisationData } from '../../types/planetInterfaces';
 import { attacheCamera } from '../SceneInitData';
 
 const diameterMap = new Map<string, number>([
-    ['Luna', 8.2],
+    ['Moon', 8.2],
     ['Phobos', 0.1],
     ['Venus', 0.05],
     ['Io', 0.8],
@@ -100,7 +100,7 @@ export class SceneData {
 
             basePlanet.addLODLevel(50, planet2);
             basePlanet.addLODLevel(80, planet1);
-            basePlanet.addLODLevel(100, planet);
+            basePlanet.addLODLevel(120, planet);
 
             planet.applyDisplacementMap(heightMap, 0, 0.3);
             planet1.applyDisplacementMap(heightMap, 0, 0.6);
