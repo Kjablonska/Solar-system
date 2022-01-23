@@ -3,10 +3,10 @@ services:
   web:
     environment:
       PYTHONUNBUFFERED: 1
-      MONGODB_DATABASE: solar-system
-      MONGO_INITDB_ROOT_USERNAME: solar-system
-      MONGO_INITDB_ROOT_PASSWORD: solar-system
-      MONGODB_HOSTNAME: mongodb
+      MONGODB_DATABASE: ${DB_NAME}
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+      MONGODB_HOSTNAME: ${DB_HOSTNAME}
     build: .
     ports:
       - "5000:5000"
@@ -17,10 +17,10 @@ services:
   mongo:
     image: mongo
     environment:
-      MONGO_INITDB_ROOT_USERNAME: solar-system
-      MONGO_INITDB_ROOT_PASSWORD: solar-system
-      MONGO_INITDB_DATABASE: celestial-bodies
-      MONGODB_HOSTNAME: mongodb
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+      MONGO_INITDB_DATABASE: ${DB_NAME}
+      MONGODB_HOSTNAME: ${DB_HOSTNAME}
     ports:
       - "27017:27017"
     volumes:

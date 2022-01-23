@@ -63,22 +63,3 @@ def parse_names(names):
     names = names.replace("[", "")
     names = names.replace("]", "")
     return names.split(",")
-
-
-# Local db commands:
-# sudo service mongod start
-# db.user.remove({})
-# mongoimport --db celestialBodies --collection planets --file neptune.json
-
-# Docker commands:
-# docker run --name solar-system -p 27017:27017 mongo
-
-
-# mongo --username solar-system --password solar-system
-# sudo docker-compose build
-# sudo docker-compose up
-
-
-# See current containers:  sudo docker container ls
-# See logs:  sudo docker logs <id>
-# Run tests: sudo docker exec -it <id> pytest test.py
