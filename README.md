@@ -48,7 +48,9 @@ sudo docker container ls
 and find the ID of ```app_web``` image.
 
 To remove all images
+```
 docker prune -a
+```
 
 ## Description
 The system visualises the acctual Solar System data provided by the NASA JPL Horizons service (https://ssd.jpl.nasa.gov/horizons/).
