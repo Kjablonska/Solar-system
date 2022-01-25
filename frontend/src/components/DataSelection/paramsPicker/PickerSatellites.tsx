@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { planets } from '../../../utils/consts';
 import { PickerProps } from './ParamsPicker';
-import { Option, DropDown, ModeSelectionContainer, ParamsPickerContainer, SelectionText, StartButton } from './style';
+import { Option, DropDown, ModeSelectionContainer, ParamsPickerContainer, SelectionTextSatellites, StartButton } from './style';
 
 const PickerSatellites: React.FC<PickerProps> = ({ startVisualisation }) => {
     const [startValue, setStart] = useState<Date | null>(null);
@@ -35,11 +35,11 @@ const PickerSatellites: React.FC<PickerProps> = ({ startVisualisation }) => {
 
             <div>
                 <ModeSelectionContainer>
-                    <SelectionText>Planet:</SelectionText>
+                    <SelectionTextSatellites>Planet:</SelectionTextSatellites>
                     <DropDown onChange={handlePlanetSelection}>{generatePlanetsSelection()}</DropDown>
                 </ModeSelectionContainer>
                 <ModeSelectionContainer>
-                    <SelectionText>Start date:</SelectionText>
+                    <SelectionTextSatellites>Start date&time:</SelectionTextSatellites>
                     <DatePicker
                         isClearable
                         placeholderText='Select start date'
@@ -55,7 +55,7 @@ const PickerSatellites: React.FC<PickerProps> = ({ startVisualisation }) => {
                     />
                 </ModeSelectionContainer>
                 <ModeSelectionContainer>
-                    <SelectionText>End date:</SelectionText>
+                    <SelectionTextSatellites>End date:</SelectionTextSatellites>
                     <DatePicker
                         isClearable
                         placeholderText='Select end date'

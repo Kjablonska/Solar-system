@@ -3,15 +3,14 @@ import {
     Curve3,
     HemisphericLight,
     StandardMaterial,
-    Color3,
     Scene,
     MeshBuilder,
     Mesh,
-    CubeTexture,
     Texture,
+    ArcRotateCamera,
 } from '@babylonjs/core';
+import { generateSkyBox } from "../SceneInitData";
 import { PlanetData, VisualisationData } from '../../types/planetInterfaces';
-import { attacheCamera } from '../SceneInitData';
 
 const diameterMap = new Map<string, number>([
     ['Moon', 8.2],
@@ -57,7 +56,7 @@ export class SceneData {
 
     constructor(planetsData: PlanetData[], scene: Scene, refill: number, planet: string, minutes: number) {
         this.scene = scene;
-        attacheCamera(scene);
+        this.attacheCamera(scene);
         new HemisphericLight('light', new Vector3(0, 1, 0), scene);
         this.fill = refill;
         this.visualisationMinutes = minutes;
@@ -65,8 +64,19 @@ export class SceneData {
         this.addPlanet();
 
         this.addSatellites(planetsData);
-        this.generateSkyBox();
+        generateSkyBox(this.scene);
     }
+
+    attacheCamera = (scene: Scene) => {
+        const camera = new ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 4, 120, Vector3.Zero(), scene);
+        camera.setTarget(Vector3.Zero());
+        const canvas = scene.getEngine().getRenderingCanvas();
+        camera.wheelPrecision = 40;
+        camera.lowerRadiusLimit = 0.1;
+        camera.minZ = 0.1;
+        camera.attachControl(canvas, true);
+    
+    };
 
     addPlanet = () => {
         const heightMap = `./assets/heightmaps/${this.planet}.jpg`;
@@ -144,16 +154,5 @@ export class SceneData {
             };
             this.visualisationData.push(newPlanetData);
         }
-    };
-
-    generateSkyBox = () => {
-        const skybox = MeshBuilder.CreateBox('skyBox', { size: 1000.0 }, this.scene);
-        const skyboxMaterial = new StandardMaterial('skyBox', this.scene);
-        skyboxMaterial.backFaceCulling = false;
-        skyboxMaterial.reflectionTexture = new CubeTexture('./assets/skybox/stars', this.scene);
-        skyboxMaterial.reflectionTexture.coordinatesMode = Texture.SKYBOX_MODE;
-        skyboxMaterial.diffuseColor = new Color3(0, 0, 0);
-        skyboxMaterial.specularColor = new Color3(0, 0, 0);
-        skybox.material = skyboxMaterial;
-    };
+    }
 }

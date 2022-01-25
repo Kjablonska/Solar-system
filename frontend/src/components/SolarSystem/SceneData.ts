@@ -4,14 +4,12 @@ import {
     Curve3,
     PointLight,
     StandardMaterial,
-    Color3,
     Scene,
     MeshBuilder,
     Mesh,
-    CubeTexture,
     Texture,
 } from '@babylonjs/core';
-
+import { generateSkyBox } from "../SceneInitData";
 import { PlanetData, VisualisationData } from '../../types/planetInterfaces';
 
 const diameterMap = new Map<string, number>([
@@ -63,6 +61,8 @@ export class SceneData {
         this.camera.attachControl(canvas, true);
         this.camera.lowerBetaLimit = -Infinity;
         this.camera.upperBetaLimit = Infinity;
+        this.camera.wheelPrecision = 70;
+        this.camera.lowerRadiusLimit = 0.1;
     };
 
     addPlanets = async (planetsData: PlanetData[]) => {
@@ -72,12 +72,11 @@ export class SceneData {
             const planetName = el.planet;
             const planetCurve = Curve3.CreateCatmullRomSpline(el.position, this.fill, false);
             let diameter = diameterMap.get(planetName);
-            console.log(planetName, diameter)
             if (diameter === undefined)
                 diameter = 1;
+            
             const planet = MeshBuilder.CreateSphere(planetName, { diameter: diameter }, this.scene);
-            var material = new StandardMaterial(planetName, this.scene);
-            // material.diffuseTexture = new Texture(this.findTexture(planetName), this.scene);
+            const material = new StandardMaterial(planetName, this.scene);
             material.diffuseTexture = new Texture(`./assets/planets/${planetName}.jpg`, this.scene);
 
             (material.diffuseTexture as Texture).vScale = -1;
@@ -94,18 +93,6 @@ export class SceneData {
             this.visualisationData.push(newPlanetData);
         }
 
-        this.generateSkyBox();
+        generateSkyBox(this.scene);
     };
-
-    generateSkyBox = () => {
-        const skybox = MeshBuilder.CreateBox('skyBox', { size: 1000.0 });
-        const skyboxMaterial = new StandardMaterial('skyBox', this.scene);
-        skyboxMaterial.backFaceCulling = false;
-        skyboxMaterial.reflectionTexture = new CubeTexture('./assets/skybox/stars', this.scene);
-        skyboxMaterial.reflectionTexture.coordinatesMode = Texture.SKYBOX_MODE;
-        skyboxMaterial.diffuseColor = new Color3(0, 0, 0);
-        skyboxMaterial.specularColor = new Color3(0, 0, 0);
-        skybox.material = skyboxMaterial;
-    };
-
 }

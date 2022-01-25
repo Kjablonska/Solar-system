@@ -46,7 +46,7 @@ const PickerSolarSystem: React.FC<PickerProps> = ({ startVisualisation }) => {
                     />
                 </ModeSelectionContainer>
                 <ModeSelectionContainer>
-                    <SelectionText>Speed mode</SelectionText>
+                    <SelectionText>Speed mode:</SelectionText>
                     <DropDown onChange={handleSpeedModeSelection}>
                         <Option id='real-time' value={'RealTime'}>
                             Real-time

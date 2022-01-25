@@ -5,9 +5,17 @@ import paramsPickerBackground from '../../../assets/params_picker_background.png
 export const SelectionText = styled.div`
     color: #d6cfcb;
     -webkit-text-stroke: 0.3px black;
-    font-size: 22px;
+    font-size: 20px;
     height: 30px;
     width: 135px;
+`;
+
+export const SelectionTextSatellites = styled.div`
+    color: #d6cfcb;
+    -webkit-text-stroke: 0.3px black;
+    font-size: 20px;
+    height: 30px;
+    width: 160px;
 `;
 
 export const DropDown = styled.select`

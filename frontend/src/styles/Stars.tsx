@@ -22,7 +22,7 @@ export const Star3 = styled.div`
     position: absolute;
     width: 40px;
     height: 40px;
-    left: 60%;
+    left: 65%;
     top: 75%;
     background: radial-gradient(50% 50% at 50% 50%, #a6808c 0%, rgba(196, 196, 196, 0) 100%);
 `;

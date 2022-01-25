@@ -89,7 +89,7 @@ const DataSelection = () => {
                             id={VisualisationMode.Satellites}
                             onClick={() => handleModeSelection(VisualisationMode.Satellites)}
                         />
-                        <ModalText>Planet & its satellite</ModalText>
+                        <ModalText>Planet & its satellites</ModalText>
                     </ModeSelectionContainer>
                 </div>
             </DataSelectionContainer>

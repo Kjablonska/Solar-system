@@ -22,15 +22,13 @@ const InfoContainer = styled.div`
     width: 100%;
     height: 100%;
     font-size: 14px;
-    /* background: #F1EDEE; */
     background: #171738;
 `;
 
 const InfoContent = styled.div`
-    padding-top: 20px;
+    padding-top: 30px;
     padding-left: 200px;
     padding-right: 50px;
-    /* color: #171738; */
     color: #F1EDEE;
     width: 60%;
 `;
@@ -60,7 +58,7 @@ const TableHeader = styled.th`
 
 const TableContent = styled.td`
     border: 0.5px solid #171738;
-    height: 35px;
+    height: 30px;
 `;
 
 const Info: React.FC<InfoProps> = ({ onClose }) => {
@@ -138,27 +136,29 @@ const Info: React.FC<InfoProps> = ({ onClose }) => {
                     - presents selected planet with its planetary satellites. The origin point
                     of the Cartesian coordinate system is the center of the chosen planet.
                     <ParamsTable>
-                        <tr>
-                            <TableHeader style={{ width: '200px' }}>Parameter</TableHeader>
-                            <TableHeader>Description</TableHeader>
-                        </tr>
-                        <tr>
-                            <TableContent>Planet</TableContent>
-                            <TableContent>To be selected from the planets of the solar system.</TableContent>
-                        </tr>
-                        <tr>
-                            <TableContent>Start date</TableContent>
-                            <TableContent>
-                                Defines the beginning of the time frame used in the visualisation.
-                            </TableContent>
-                        </tr>
-                        <tr>
-                            <TableContent>End date</TableContent>
-                            <TableContent>
-                                Defines the end date of the time frame. The visualisation freezes once it reaches the
-                                end date. If not set, the visualisation will continue in real time.
-                            </TableContent>
-                        </tr>
+                        <tbody>
+                            <tr>
+                                <TableHeader style={{ width: '200px' }}>Parameter</TableHeader>
+                                <TableHeader>Description</TableHeader>
+                            </tr>
+                            <tr>
+                                <TableContent>Planet</TableContent>
+                                <TableContent>To be selected from the planets of the solar system.</TableContent>
+                            </tr>
+                            <tr>
+                                <TableContent>Start date</TableContent>
+                                <TableContent>
+                                    Defines the beginning of the time frame used in the visualisation.
+                                </TableContent>
+                            </tr>
+                            <tr>
+                                <TableContent>End date</TableContent>
+                                <TableContent>
+                                    Defines the end date of the time frame. The visualisation freezes once it reaches the
+                                    end date. If not set, the visualisation will continue in real time.
+                                </TableContent>
+                            </tr>
+                        </tbody>
                     </ParamsTable>
                 </li>
 
