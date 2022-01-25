@@ -23,6 +23,8 @@ yarn test
 ```
 
 ## Backend 
+For backend setup there is a need to create .env file under /app directory.
+
 To backend server and database locally:
 ```
 cd app
@@ -38,12 +40,17 @@ Run tests:
 sudo docker exec -it <app_image_id> pytest test.py
 ```
 
-Note! To check app_image_id please run 
+Useful docker commands:
+To check app_image_id please run 
 ```
 sudo docker container ls
 ```
 and find the ID of ```app_web``` image.
 
+To remove all images
+```
+docker prune -a
+```
 
 ## Description
 The system visualises the acctual Solar System data provided by the NASA JPL Horizons service (https://ssd.jpl.nasa.gov/horizons/).
