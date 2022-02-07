@@ -1,7 +1,7 @@
 import { Scene, AdvancedTimer, Mesh } from '@babylonjs/core';
 import { FetchData, VisualisationOptions } from '../../types/period';
 import { VisualisationData } from '../../types/planetInterfaces';
-import setMovementTimer from '../../utils/setMovementTimer';
+import setMovementTimer from './setMovementTimer';
 import { MovePlanets } from './MovePlanets';
 
 export class Timer {

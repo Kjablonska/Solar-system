@@ -47,18 +47,18 @@ const ParamsTable = styled.table`
     border: 0.5px solid #171738;
     border-collapse: collapse;
     width: 60%;
-    margin-top: 30px;
+    margin-top: 20px;
     margin-bottom: 30px;
 `;
 
 const TableHeader = styled.th`
     border: 0.5px solid #171738;
-    height: 25px;
+    height: 20px;
 `;
 
 const TableContent = styled.td`
     border: 0.5px solid #171738;
-    height: 30px;
+    height: 25px;
 `;
 
 const Info: React.FC<InfoProps> = ({ onClose }) => {
@@ -165,7 +165,7 @@ const Info: React.FC<InfoProps> = ({ onClose }) => {
                 <div>
                     When all parameters are correctly set, the start button apprears. On click, the visualisation
                     starts.
-                    <br></br><br></br>
+                    <br></br>
                     The visualisation contains of the rendered model and user interface containing:
                         <li style={{marginBottom: '5px', marginTop: '10px'}}><b>Clock</b> - displays the current visusalisation date and time.</li>
                         <li style={{marginBottom: '5px'}}><b>"More info" button</b> - displays more info about the visible celestial bodies.</li>

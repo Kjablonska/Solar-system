@@ -3,7 +3,7 @@ import { Scene, Mesh } from '@babylonjs/core';
 import { VisualisationData } from '../../types/planetInterfaces';
 import { FetchData, VisualisationOptions } from '../../types/period';
 import Info from './InfoPanel';
-import { Timer } from '../SolarSystem/Timer';
+import { Timer } from '../../utils/movement/Timer';
 import { Clock } from './Clock';
 import Label from './Label';
 import { TimeSelection } from '../../types/userOptions';

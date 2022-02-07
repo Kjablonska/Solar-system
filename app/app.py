@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request
 from flask_cors import CORS
 
 from astroquery.jplhorizons import Horizons
@@ -9,14 +9,11 @@ from astropy import units as u
 from astropy.coordinates import SkyCoord
 
 from astropy.table import Table
-import pymongo
-import urllib.parse
 import json
 import numpy as np
 
 from satellites import get_satellites
 from planets import get_info, get_planets_data
-from cache import get_cache_data, get_cache_satellites, search_satellites_cache_db, search_planets_cache_db
 
 app = Flask(__name__)
 

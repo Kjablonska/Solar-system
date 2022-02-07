@@ -40,7 +40,6 @@ export const InitSceneData = () => {
                 `http://localhost:5000/getPlanetsJPLData?name=${planets}&start=${start}&end=${end}&step=${fetchData.step}`,
             );
             const data = await response.json();
-            console.log('fetch', data);
             const readyData = [];
             for (const key in data) {
                 const newPlanetData: PlanetData = { planet: key, position: rescaleData(data[key], key, false) };
@@ -49,7 +48,6 @@ export const InitSceneData = () => {
 
             setPlanetsData([...readyData]);
         } catch (e: any) {
-            console.log(e);
             openError(true);
         } finally {
             openSpinner(false);

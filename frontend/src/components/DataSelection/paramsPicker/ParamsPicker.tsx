@@ -40,7 +40,6 @@ const ParamsPicker: React.FC<ParamsPickerProps> = ({ visualisationMode }) => {
             openError(true);
             return false;
         }
-        console.log(startValue, endValue);
         if (startValue === null) return;
         const newUserOptions: UserOptions = {
             mode: mode === undefined ? 'RealTime' : mode,

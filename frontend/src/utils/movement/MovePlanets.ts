@@ -1,11 +1,11 @@
 import { Scene, LinesMesh, Vector3, Curve3, MeshBuilder, Mesh } from '@babylonjs/core';
 import { DatesPeriod, FetchData, VisualisationOptions } from '../../types/period';
 import { VisualisationData } from '../../types/planetInterfaces';
-import { findNewPeriod } from '../../utils/findFetchPeriod';
-import getPlanetOrbitData from '../../utils/getOrbiteData';
-import ErrorHandler from '../../utils/handlers/ErrorHandler';
+import { findNewPeriod } from '../findFetchPeriod';
+import getPlanetOrbitData from '../getOrbiteData';
+import ErrorHandler from '../handlers/ErrorHandler';
 
-interface OribteDrawer {
+interface OribtDrawer {
     linesMesh: LinesMesh;
     initPosition: Vector3;
     buffer: Vector3[];
@@ -21,8 +21,8 @@ export class MovePlanets {
     stopFetch: boolean = false;
     errorHandler: ErrorHandler;
     scene: Scene;
-    linesMeshes: Map<string, OribteDrawer>;
-    oribteDrawerCounter: number = 0;
+    linesMeshes: Map<string, OribtDrawer>;
+    oribtDrawerCounter: number = 0;
     draw: boolean = true;
     stopClock: () => void;
     planet?: Mesh;
@@ -41,10 +41,9 @@ export class MovePlanets {
         this.fetchData = fetchData;
         this.errorHandler = new ErrorHandler(this.onDataEnd);
         this.scene = scene;
-        this.linesMeshes = new Map<string, OribteDrawer>();
+        this.linesMeshes = new Map<string, OribtDrawer>();
         this.stopClock = stopClock;
         for (let el of visualisationData) {
-            // if (planets.includes(el.planet.name)) {
             const initPoints = [];
 
             for (let i = 0; i < 10; i++) {
@@ -55,22 +54,22 @@ export class MovePlanets {
                 points: initPoints,
                 updatable: true,
             });
+
             this.linesMeshes.set(el.planet.name, {
                 linesMesh: lineMesh,
                 initPosition: el.orbit[10],
                 buffer: initPoints,
             });
-            // }
         }
 
         this.planet = planet;
     }
 
     movePlanet = async () => {
-        this.oribteDrawerCounter++;
-        if ((this.oribteDrawerCounter = 10)) {
+        this.oribtDrawerCounter++;
+        if ((this.oribtDrawerCounter = 10)) {
             this.draw = true;
-            this.oribteDrawerCounter = 0;
+            this.oribtDrawerCounter = 0;
         }
         if (this.visualisationData !== undefined && !this.stop && !this.checkIfEndDateReached()) {
             for (let data of this.visualisationData) {
@@ -149,7 +148,6 @@ export class MovePlanets {
                 const toModify = data.get(el.planet.name);
 
                 if (toModify !== undefined) {
-                    console.log(toModify);
                     el.length = el.orbit.length + toModify!.length;
                     el.orbit.push(...toModify!);
                     el.iter = 0;

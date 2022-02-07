@@ -19,7 +19,7 @@ export class Clock {
             time === undefined
                 ? `${visualisationOptions.start} 00:00:00`
                 : `${visualisationOptions.start} ${time!.hours}:${time!.minutes}:00`;
-        console.log('TIME', constructInitValue);
+
         this.startDate = new Date(constructInitValue);
         this.endDate = visualisationOptions.end !== undefined ? new Date(visualisationOptions.end) : undefined;
         this.findUpdateParameters(speedMode);
@@ -62,7 +62,6 @@ export class Clock {
     };
 
     public stopClock = () => {
-        console.log('stop clock');
         this.stop = true;
     };
 
@@ -86,19 +85,15 @@ export class Clock {
     public findNextValue = () => {
         if (this.stop) return;
 
-        // const update = this.startDate.getHours() + this.upadeValue;
         this.startDate.setTime(this.startDate.getTime() + (this.upadeValue*60*60*1000));
-        // this.startDate.setUTCHours(update);
-
-        if (this.checkIfEndDateReached()) {
-            console.log('end clock');
-            return;
-        }
 
         this.clock.text = `${this.startDate.getDate()} - ${
             this.startDate.getMonth() + 1
         } - ${this.startDate.getFullYear()}`;
 
+        if (this.checkIfEndDateReached()) {
+            return;
+        }
     };
 
     private checkIfEndDateReached = () => {
@@ -106,6 +101,7 @@ export class Clock {
 
         if (this.startDate.getTime() > this.endDate.getTime()) {
             this.onEndDateReached();
+            this.stop = true;
             new MessageHandler('End date reached.', '220px');
             return true;
         }

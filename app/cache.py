@@ -1,5 +1,4 @@
 from flask import abort
-import pymongo
 from datetime import datetime
 from database import connect_to_db, close_db_connection
 

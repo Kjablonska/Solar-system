@@ -1,5 +1,5 @@
 import { Scene, AdvancedTimer } from '@babylonjs/core';
-import { MovePlanets } from '../components/SolarSystem/MovePlanets';
+import { MovePlanets } from './MovePlanets';
 
 interface MovementTimer {
     scene: Scene;

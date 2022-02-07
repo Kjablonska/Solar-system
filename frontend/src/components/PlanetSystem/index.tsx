@@ -26,7 +26,6 @@ export const PlanetSystemScene = () => {
     const [planetsData, setPlanetsData] = useState<PlanetData[]>([]);
     const fetchData = findFetchParameters('Satellite');
     const options: UserOptions = useSelector((state: RootStateOrAny) => state.userOptions);
-    console.log('STATE', options);
     const { start, end } = defineStartingPeriod(fetchData.period, options.startDate);
 
     const satellitesNumber = satellitesMap.get(options.planet!);
@@ -49,7 +48,6 @@ export const PlanetSystemScene = () => {
                 `http://localhost:5000/getSatellitesJPLData?planet=${options.planet}&start=${start}&end=${end}&step=${fetchData.step}`,
             );
             resCode = response.status;
-            console.log(resCode)
             const data = await response.json();
             const readyData = [];
             for (const key in data) {
