@@ -1,6 +1,33 @@
 # Celestial Bodies Visualisation
 
-Web application developed as a bachelor thesis project.
+## Description
+The system visualises the acctual Solar System data provided by the NASA JPL Horizons service (https://ssd.jpl.nasa.gov/horizons/).
+There are two visualisation modes: 
+* Solar System,
+* Planet & its satellites. 
+
+Both are dependend on the user selected parameters.
+
+**"Solar System"** mode:
+* Start date  - Defines the beginning of the time frame used in the visualisation.  
+* End date (optional) - Defines the end date of the time frame. The visualisation freezes once it reaches the end date. If not set, the visualisation will continue in real time.  
+* Speed mode & Defines the visualisation speed which is defined by the time needed for one jump - transition between two subsequent orbit points.
+    The available speed modes are defined as follows:  
+        - Real Time - one jump* corresponds to 1 second in the real world.  
+        - Medium - one jump corresponds to 2.4 hours in the real world.   
+        - Fast - one jump corresponds to 4.8 hours in the real world.  
+        
+**"Planet & its satellites"** mode:  
+* Planet - To be selected from the planets of the solar system.   
+* Start date  - Defines the beginning of the time frame used in the visualisation.  
+* End date (optional) - Defines the end date of the time frame. The visualisation freezes once it reaches the end date. If not set, the visualisation will continue in real time.  
+* Speed mode & Defines the visualisation speed which is defined by the time needed for one jump - transition between two subsequent orbit points. 
+
+*jump* - trasnition from one orbit point to another
+
+# Technologies
+Frontend part is build using BabylonJS (https://www.babylonjs.com/) web rendering engine along with TypeScript and React for the UI.  
+Backend part is build using Flask and MongoDB.
 
 # Deploy
 
@@ -51,22 +78,3 @@ To remove all images
 ```
 docker prune -a
 ```
-
-## Description
-The system visualises the acctual Solar System data provided by the NASA JPL Horizons service (https://ssd.jpl.nasa.gov/horizons/).
-There are two visualisation modes: Solar System and Planet & its satellites. Both are dependend on the user selected parameters.
-
-"Solar System" mode:
-* Start date  - Defines the beginning of the time frame used in the visualisation.  
-* End date (optional) - Defines the end date of the time frame. The visualisation freezes once it reaches the end date. If not set, the visualisation will continue in real time.  
-* Speed mode & Defines the visualisation speed which is defined by the time needed for one jump - transition between two subsequent orbit points.
-    The available speed modes are defined as follows:  
-        - Real Time - one jump corresponds to 1 second in the real world.  
-        - Medium - one jump corresponds to 2.4 hours in the real world.   
-        - Fast - one jump corresponds to 4.8 hours in the real world.  
-        
-"Planet & its satellites" mode:  
-* Planet - To be selected from the planets of the solar system.   
-* Start date  - Defines the beginning of the time frame used in the visualisation.  
-* End date (optional) - Defines the end date of the time frame. The visualisation freezes once it reaches the end date. If not set, the visualisation will continue in real time.  
-* Speed mode & Defines the visualisation speed which is defined by the time needed for one jump - transition between two subsequent orbit points. 
