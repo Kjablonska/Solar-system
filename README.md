@@ -1,7 +1,9 @@
 # Celestial Bodies Visualisation
 
+This work is protected by the [CC BY-NC-ND 4. license](https://creativecommons.org/licenses/by-nc-nd/4.0/)
+
 ## Description
-The system visualises the acctual Solar System data provided by the NASA JPL Horizons service (https://ssd.jpl.nasa.gov/horizons/).
+The system visualises the acctual Solar System data provided by the [NASA JPL Horizons service](https://ssd.jpl.nasa.gov/horizons/).
 There are two visualisation modes: 
 * Solar System,
 * Planet & its satellites. 
@@ -26,7 +28,7 @@ Both are dependend on the user selected parameters.
 *jump* - trasnition from one orbit point to another
 
 # Technologies
-Frontend part is build using BabylonJS (https://www.babylonjs.com/) web rendering engine along with TypeScript and React for the UI.  
+Frontend part is build using [BabylonJS](https://www.babylonjs.com/) web rendering engine along with TypeScript and React for the UI.  
 Backend part is build using Flask and MongoDB.
 
 # Deploy
